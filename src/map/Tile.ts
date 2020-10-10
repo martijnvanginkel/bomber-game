@@ -2,29 +2,20 @@ import { game } from './../Game'
 
 export class Tile {
 
-    private width: number = 0
-    private height: number = 0
     private xPos: number = 0
     private yPos: number = 0
+    private width: number = 50
+    private height: number = 50
 
-    // private context: CanvasRenderingContext2D
-
-    constructor(xPos: number, yPos: number, width: number, height: number) {
+    constructor(xPos: number, yPos: number) {
         this.xPos = xPos
         this.yPos = yPos
-        this.width = width
-        this.height = height
         this.drawTile()
     }
 
-
     public drawTile() {
-        // console.log()
+        // console.log(this.xPos, this.yPos, this.width, this.height)
         game.context.fillStyle = 'blue'
-        console.log(this.xPos, this.yPos, this.width, this.height)
-        game.context.fillRect(this.xPos, this.yPos, this.width, this.height)
-        // game.context.fillStyle = 'red'
-        // rect.fill(rect)
+        game.context.fillRect(this.xPos * this.width, this.yPos * this.height, this.width, this.height)
     }
-    
 }
