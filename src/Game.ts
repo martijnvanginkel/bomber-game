@@ -1,4 +1,4 @@
-import { Preloader } from './images/preloader'
+import { Images } from './images/Images'
 import { Player } from './Player'
 import { Map } from './map/Map'
 
@@ -7,7 +7,7 @@ export class Game {
     private canvas: HTMLCanvasElement
     public context: CanvasRenderingContext2D
     public map: Map
-    // public playerImage: HTMLImageElement
+    public images: Images
 
     constructor() {
         this.canvas = document.getElementById('canvas') as HTMLCanvasElement
@@ -15,10 +15,10 @@ export class Game {
     }
 
     public intializeGame() {
-        // new Player('Player 1')
-        new Preloader() // this needs to be made into a generic loading image class
+        this.images = new Images()
         this.map = new Map()
-        // new Player(0, 0)
+
+        new Player(0, 0)
     }
 }
 

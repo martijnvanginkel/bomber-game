@@ -4,16 +4,18 @@ export class Player {
 
     private xPos: number = 0
     private yPos: number = 0
+    private image: HTMLImageElement
 
     constructor(startX: number ,startY: number) {
         this.xPos = startX
         this.yPos = startY
+        this.image = game.images.getImage('player')
         this.drawPlayer()
         this.intializeInput()
     }
 
     private drawPlayer() {
-        // game.context.drawImage(game.playerImage, this.xPos * game.map.tileSize, this.yPos * game.map.tileSize, 50, 50)
+        game.context.drawImage(this.image, this.xPos * game.map.tileSize, this.yPos * game.map.tileSize, 50, 50)
     }
 
     // sill needs checking for available tile
