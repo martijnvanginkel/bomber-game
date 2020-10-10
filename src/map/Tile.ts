@@ -19,8 +19,10 @@ export class Tile {
 
 
     public drawTile() {
+        // console.log()
         game.context.fillStyle = 'blue'
-        const rect = game.context.fillRect(this.xPos, this.yPos, this.width, this.height)
+        console.log(this.xPos, this.yPos, this.width, this.height)
+        game.context.fillRect(this.xPos, this.yPos, this.width, this.height)
         // game.context.fillStyle = 'red'
         // rect.fill(rect)
     }

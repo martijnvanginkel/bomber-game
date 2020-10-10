@@ -16,19 +16,16 @@ export class Player {
 
     private drawPlayer() {
         game.context.fillStyle = 'red'
-        const rect = game.context.fillRect(this.xPos, this.yPos, 50, 50)
-        // game.context.fill()
-        // game.context.clearRect(rect)
+        const rect = game.context.fillRect(this.xPos * game.map.tileSize, this.yPos * game.map.tileSize, 50, 50)
     }
 
-    private movePlayer() {
-
+    // sill needs checking for available tile
+    private movePlayer(newX: number, newY: number) {
+        console.log('move player')
         game.map.tileMap[this.xPos][this.yPos].drawTile()
-        // Map.
-        // game.context.clearRect(this.xPos, this.yPos, 50, 50)
-        // this.xPos += (x * this.speed)
-        // this.yPos += (y * this.speed)
-        // game.context.fillRect(this.xPos, this.yPos, this.width, this.height)
+        this.xPos += newX
+        this.yPos += newY
+        this.drawPlayer()
     }
 
     private inputManager() {
@@ -37,16 +34,20 @@ export class Player {
             switch (e.keyCode) {
                 case 37: // left
                 console.log('left')
+                    this.movePlayer(-1, 0)
                     // this.movePlayer(-1, 0)
                     break;
                 case 38: // up
+                    this.movePlayer(0, -1)
                 // this.movePlayer(0, 1)
                     break;
                 case 39: // right
-                    this.movePlayer()
+
+                    this.movePlayer(1, 0)
                     // this.movePlayer(1, 0)
                     break;
                 case 40: // down
+                    this.movePlayer(0, 1)
                     // this.movePlayer(0, -1)
                     break;
     

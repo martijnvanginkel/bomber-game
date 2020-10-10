@@ -15,7 +15,7 @@ export class Game {
     public intializeGame() {
         // new Player('Player 1')
         this.map = new Map()
-        new Player(0, 0)
+        new Player(1, 0)
     }
 
 
