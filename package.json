@@ -4,16 +4,24 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "serve": "webpack-dev-server",
+    "dev-server": "nodemon ./server.js localhost 8080",
+    "dev-client": "webpack-dev-server --port 3000",
     "build": "webpack",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "nodemon": "^2.0.4",
     "ts-loader": "^8.0.4",
     "typescript": "^4.0.3",
     "webpack": "^4.44.2",
     "webpack-cli": "^3.3.12"
+  },
+  "dependencies": {
+    "@types/socket.io-client": "^1.4.34",
+    "socket.io": "^2.3.0",
+    "socketio": "^1.0.0",
+    "webpack-dev-server": "^3.11.0"
   }
 }
