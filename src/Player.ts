@@ -11,7 +11,7 @@ export class Player {
         this.yPos = startY
         this.image = game.images.getImage('player')
         this.drawPlayer()
-        this.intializeInput()
+        this.watchPlayerMovement()
     }
 
     private drawPlayer() {
@@ -20,25 +20,37 @@ export class Player {
 
     // sill needs checking for available tile
     private movePlayer(newX: number, newY: number) {
-        game.map.tileMap[this.xPos][this.yPos].drawTile()
-        this.xPos += newX
-        this.yPos += newY
-        this.drawPlayer()
+
+        const xPos = this.xPos + newX
+        const yPos = this.yPos + newY
+
+        if (game.map.availableTile(xPos, yPos)) {
+            game.map.tileMap[this.xPos][this.yPos].drawTile()
+            // game.map.availableTile(newX, newY)
+            this.xPos += newX
+            this.yPos += newY
+            this.drawPlayer()
+        }
     }
 
-    private intializeInput() {
+    private watchPlayerAbilities() {
+
+    }
+
+    private watchPlayerMovement() {
         document.addEventListener('keydown', (e) => {
-            switch (e.keyCode) {
-                case 37: // left
+            console.log(e.key)
+            switch (e.code) {
+                case 'ArrowLeft': // left
                     this.movePlayer(-1, 0)
                     break;
-                case 38: // up
+                case 'ArrowUp': // up
                     this.movePlayer(0, -1)
                     break;
-                case 39: // right
+                case 'ArrowRight': // right
                     this.movePlayer(1, 0)
                     break;
-                case 40: // down
+                case 'ArrowDown': // down
                     this.movePlayer(0, 1)
                     break;
                 default:

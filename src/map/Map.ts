@@ -25,4 +25,21 @@ export class Map {
         }
     }
 
+    private exceedsMapBorders(xPos: number, yPos: number): boolean {
+        if (xPos < 0 || yPos < 0) {
+            return true
+        }
+        if (xPos > 9 || yPos > 9) {
+            return true
+        }
+        return false
+    }
+
+    public availableTile(xPos: number, yPos: number): boolean {
+        if (this.exceedsMapBorders(xPos, yPos)) {
+            return false
+        }
+        return true
+    }
+
 }
