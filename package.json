@@ -4,15 +4,16 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev-server": "nodemon ./server.js localhost 8080",
-    "dev-client": "webpack-dev-server --port 3000",
+    "dev-server": "nodemon ./server.js localhost:80",
+    "watch-bundle": "webpack --watch",
+    "dev-client": "webpack-dev-server --content-base './dist' --port 3000",
     "build": "webpack",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "nodemon": "^2.0.4",
+    "nodemon": "^2.0.6",
     "ts-loader": "^8.0.4",
     "typescript": "^4.0.3",
     "webpack": "^4.44.2",
@@ -20,6 +21,7 @@
   },
   "dependencies": {
     "@types/socket.io-client": "^1.4.34",
+    "npm-run-all": "^4.1.5",
     "socket.io": "^2.3.0",
     "socketio": "^1.0.0",
     "webpack-dev-server": "^3.11.0"

@@ -1,0 +1,2 @@
+ - Run npm run dev-server run backend
+ - Run npm run watch-bundle to update front-end

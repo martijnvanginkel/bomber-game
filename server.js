@@ -17,7 +17,16 @@ app.get('/', function(req, res) {
 
 
 io.on('connection', socket => {
-  console.log('new websocket')
+
+  io.sockets.emit('player_connected')
+  // io.sockets.emit('player_connected', 'asdfasdf');
+  // io.broadcast.emit('player_connected', 'hoi')
+  // io.sockets.
+  // console.log('new websocket')
+  // io.emit('connect', 'hello new player')
+  // io.emit('tweet', tweet);
 })
 
 server.listen(80, () => console.log('connected'));
+
+// run npm run dev-server to start project
