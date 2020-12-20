@@ -8,6 +8,7 @@ export class Game {
     public context: CanvasRenderingContext2D
     public map: Map
     public images: Images
+    public players: Player[]
 
     constructor() {
         this.canvas = document.getElementById('canvas') as HTMLCanvasElement
@@ -18,7 +19,11 @@ export class Game {
         this.images = new Images()
         this.map = new Map()
 
-        new Player(0, 0)
+        // new Player(0, 0)
+    }
+
+    public spawnPlayer(ID: string) {
+        // p
     }
 }
 

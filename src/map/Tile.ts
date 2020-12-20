@@ -14,8 +14,7 @@ export class Tile {
     }
 
     public drawTile() {
-        // console.log(this.xPos, this.yPos, this.width, this.height)
-        game.context.fillStyle = 'blue'
+        game.context.fillStyle = 'white'
         game.context.fillRect(this.xPos * this.width, this.yPos * this.height, this.width, this.height)
     }
 }

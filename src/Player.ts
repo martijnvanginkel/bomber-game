@@ -26,7 +26,6 @@ export class Player {
 
         if (game.map.availableTile(xPos, yPos)) {
             game.map.tileMap[this.xPos][this.yPos].drawTile()
-            // game.map.availableTile(newX, newY)
             this.xPos += newX
             this.yPos += newY
             this.drawPlayer()
@@ -39,7 +38,6 @@ export class Player {
 
     private watchPlayerMovement() {
         document.addEventListener('keydown', (e) => {
-            console.log(e.key)
             switch (e.code) {
                 case 'ArrowLeft': // left
                     this.movePlayer(-1, 0)
