@@ -11,12 +11,26 @@ app.get('/', function(req, res) {
   res.sendFile(__dirname + '/dist/index.html');
 });
 
-
 io.on('connection', socket => {
+  console.log('connected yeah')
 
   const ID = uniqueId()
-  socket.broadcast.emit('player_connected', ID)
+  // socket.emit('connected', ID)
+  io.emit('connected', ID)
+
+  socket.on('shareID', function (data) {
+    socket.broadcast.emit('enemyID', data)
+      console.log(`data received is '${data}'`)
+  });
+  
+  // players.push(ID)
+  // socket.broadcast.emit('player_connected', ID)
   // io.sockets.emit('player_connected')
 })
 
-server.listen(80, () => console.log('connected'));
+// io.on('share_myself', (message) => {
+//   console.log('share myself')
+// })
+
+
+server.listen(80, () => undefined);

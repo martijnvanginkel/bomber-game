@@ -2,11 +2,20 @@ import { game } from './Game'
 
 export class Player {
 
+    private ID: string
     private xPos: number = 0
     private yPos: number = 0
     private image: HTMLImageElement
 
-    constructor(startX: number ,startY: number) {
+    constructor(ID: string) {
+        this.ID = ID
+    }
+
+    get playerID() {
+        return this.ID
+    }
+    
+    public initializePlayer(startX: number ,startY: number) {
         this.xPos = startX
         this.yPos = startY
         this.image = game.images.getImage('player')
