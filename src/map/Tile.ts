@@ -1,4 +1,4 @@
-import { game } from './../Game'
+import { game } from './../index'
 
 export class Tile {
 

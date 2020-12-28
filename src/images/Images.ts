@@ -1,4 +1,4 @@
-import { error } from './../messages'
+import { error } from '../utils/messages'
 
 interface ImageInfo {
     fileName: string

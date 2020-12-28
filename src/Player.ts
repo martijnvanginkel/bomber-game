@@ -1,4 +1,4 @@
-import { game } from './Game'
+import { game } from './index'
 
 export class Player {
 
@@ -6,14 +6,27 @@ export class Player {
     private xPos: number = 0
     private yPos: number = 0
     private image: HTMLImageElement
+    private me: boolean
 
     constructor(ID: string) {
         this.ID = ID
     }
 
-    get playerID() {
+    get getID() {
         return this.ID
     }
+
+    get isMe() {
+        return this.me
+    }
+
+    set isMe(itsMe) {
+        this.me = itsMe
+    }
+
+    // get isMe() {
+    //     return this.isMe
+    // }
     
     public initializePlayer(startX: number ,startY: number) {
         this.xPos = startX
@@ -23,17 +36,19 @@ export class Player {
         this.watchPlayerMovement()
     }
 
+    public spawn() {
+
+    }
+
     private drawPlayer() {
         game.context.drawImage(this.image, this.xPos * game.map.tileSize, this.yPos * game.map.tileSize, 50, 50)
     }
 
-    // sill needs checking for available tile
     private movePlayer(newX: number, newY: number) {
+        const nextXPos = this.xPos + newX
+        const nextYPos = this.yPos + newY
 
-        const xPos = this.xPos + newX
-        const yPos = this.yPos + newY
-
-        if (game.map.availableTile(xPos, yPos)) {
+        if (game.map.availableTile(nextXPos, nextYPos)) {
             game.map.tileMap[this.xPos][this.yPos].drawTile()
             this.xPos += newX
             this.yPos += newY
@@ -48,16 +63,16 @@ export class Player {
     private watchPlayerMovement() {
         document.addEventListener('keydown', (e) => {
             switch (e.code) {
-                case 'ArrowLeft': // left
+                case 'ArrowLeft':
                     this.movePlayer(-1, 0)
                     break;
-                case 'ArrowUp': // up
+                case 'ArrowUp':
                     this.movePlayer(0, -1)
                     break;
-                case 'ArrowRight': // right
+                case 'ArrowRight':
                     this.movePlayer(1, 0)
                     break;
-                case 'ArrowDown': // down
+                case 'ArrowDown':
                     this.movePlayer(0, 1)
                     break;
                 default:

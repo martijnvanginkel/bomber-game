@@ -7,7 +7,6 @@ export class Map {
 
     // find solution for this
     public tileSize: number = 50
-    
     public tileMap: Tile[][] = []
 
     constructor() {
@@ -26,7 +25,7 @@ export class Map {
     }
 
     private exceedsMapBorders(xPos: number, yPos: number): boolean {
-        if (xPos < 0 || yPos < 0) {
+        if (xPos < 0  || yPos < 0) {
             return true
         }
         if (xPos > 9 || yPos > 9) {

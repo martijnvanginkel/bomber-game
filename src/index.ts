@@ -1,29 +1,20 @@
-import { game } from './Game'
-import io from 'socket.io-client';
-// import SocketIO from "socket.io-client";
+import { Game } from './Game'
+import { ConnectionManager } from './services/ConnectionManager'
 
-const socket: SocketIOClient.Socket = io('http://localhost');
-// const socket: SocketIOClient.Socket = SocketIO('http://localhost');
-
+export const game = new Game()
 game.intializeGame()
 
-socket.on('connected', (ID: string) => {
-    // set my own ID
-    if (game.player === undefined) {
-        game.spawnPlayer(ID)
-        socket.emit('shareID', ID)
-        console.log('my ID: ', ID)
-    }
-
-    socket.on('enemyID', (ID: string) => {
-        if (game.enemy === undefined) {
-            game.spawnEnemy(ID)
-            socket.emit('shareID', game.player.playerID)
-            console.log('enemyid', ID)
-        }
-    })
-
-})
+new ConnectionManager(game)
 
 
 
+// create connection manager
+// zet connection manager op de game
+
+// vanuit de speler zou ik dit willen doen: CommunicateInput(a)
+
+// vanuit de CommunicationManager zou ik dan iets willen koppelen aan de keycode
+
+
+
+// ik heb een connectionmanager die een
