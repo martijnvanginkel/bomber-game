@@ -12,8 +12,8 @@ app.get('/', function(req, res) {
   res.sendFile(__dirname + '/dist/index.html');
 });
 
-
 io.on('connection', socket => {
+  // registering connections
   const ID = uniqueId()
   io.emit('connected', ID)
   socket.on('shareMyID', (data) => socket.broadcast.emit('incomingID', data))

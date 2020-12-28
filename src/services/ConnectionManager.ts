@@ -22,12 +22,12 @@ export class ConnectionManager {
         this.socket.emit('shareMyID', ID)
 
         this.socket.on('incomingID', (ID: string) => {
-            this.socket.emit('lastIncomingID', this.game.getMyself)
-            this.game.addPlayerTogame(ID)
+            this.socket.emit('lastIncomingID', this.game.getMyPlayerID)
+            this.game.addOtherToGame(ID)
         })
         // share last incoming ID one more time for the last client
         this.socket.on('lastIncomingID', (ID: string) => {
-            this.game.addPlayerTogame(ID)
+            this.game.addOtherToGame(ID)
         })
 
         this.socket.on('playerLeft', (ID: string) => {

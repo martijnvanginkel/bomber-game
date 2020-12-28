@@ -23,10 +23,6 @@ export class Player {
     set isMe(itsMe) {
         this.me = itsMe
     }
-
-    // get isMe() {
-    //     return this.isMe
-    // }
     
     public initializePlayer(startX: number ,startY: number) {
         this.xPos = startX
@@ -34,10 +30,6 @@ export class Player {
         this.image = game.images.getImage('player')
         this.drawPlayer()
         this.watchPlayerMovement()
-    }
-
-    public spawn() {
-
     }
 
     private drawPlayer() {
@@ -54,10 +46,6 @@ export class Player {
             this.yPos += newY
             this.drawPlayer()
         }
-    }
-
-    private watchPlayerAbilities() {
-
     }
 
     private watchPlayerMovement() {
