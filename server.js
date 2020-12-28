@@ -21,7 +21,7 @@ io.on('connection', socket => {
   socket.on('disconnect', function () {
     io.emit('playerLeft', ID)
   })
-
+  
 })
 
 server.listen(80, () => undefined);

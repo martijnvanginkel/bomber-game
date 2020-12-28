@@ -22,22 +22,24 @@ export class Game {
         // new Player(0, 0)
     }
 
-    get getAllPlayerIDs(): string[] {
+    get getAllPlayerIDs() {
         return this.players.map((player: Player) => player.getID)
     }
 
-    get getMyPlayerID(): string | undefined {
+    get getMyPlayerID() {
         return this.players.find(player => player.isMe === true)?.getID
     }
 
     public addMyselfToGame(ID: string) {
         const playerExists = this.players.find(player => player.isMe === true)
-        if (!playerExists) {
+        if (playerExists) {
             return
         }
         const newPlayer = new Player(ID)
         newPlayer.isMe = true
         this.players.push(newPlayer)
+        this.players[0].initializePlayer(0, 0)
+        console.log(this.getAllPlayerIDs)
     }
     
     public addOtherToGame(ID: string) {
