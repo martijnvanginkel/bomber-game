@@ -11,109 +11,27 @@ export class ConnectionManager {
 
     constructor(game: Game) {
         this.game = game
-        this.establishConnection()
-    }
-
-    private establishConnection() {
         this.socket = io(`${this.address}:${this.port.toString()}`);
-
-
-
         this.socket.on('connected', (ID: string) => {
-            // set my own ID
-            // console.log('con')
-
-            // console.log(this.iAmConnected)
-            // if (!this.iAmConnected) {
-            this.game.addMyselfToGame(ID)
-            // console.log('me ', ID)
-            // this.
-            this.socket.emit('shareMyself', ID)
-
-            this.socket.on('otherConnected', (ID2: string) => {
-                // console.log('other ', ID2)
-                this.socket.emit('extraEmit', this.game.getMyself)
-                this.game.addPlayerTogame(ID2)
-            })
-
-            this.socket.on('extraEmit', (ID: string) => {
-                this.game.addPlayerTogame(ID)
-                // console.log()
-            })
-
-            this.socket.on('disconnect', () => {
-                this.socket.removeAllListeners()
-            })
-           
-
+            this.establishConnection(ID)
         })
-        
-        
-
-        // this.socket.on('connectMe', (ID: string) => {
-        //     this.connectMyself(ID)
-        //     this.socket.on('connectOther', (ID: string) => {
-        //         this.connectOther(ID)
-        //     })
-        // })
-
     }
 
-    private get iAmConnected() {
-        return this.game.players.find(player => player.isMe === true) ? true : false
-    } 
+    private establishConnection(ID: string) {
+        this.game.addMyselfToGame(ID)
+        this.socket.emit('shareMyID', ID)
 
-    private hasConnection(ID: string) {
-        return this.game.getPlayerIDs.find(playerId => playerId === ID) ? true : false
-    }
+        this.socket.on('incomingID', (ID: string) => {
+            this.socket.emit('lastIncomingID', this.game.getMyself)
+            this.game.addPlayerTogame(ID)
+        })
+        // share last incoming ID one more time for the last client
+        this.socket.on('lastIncomingID', (ID: string) => {
+            this.game.addPlayerTogame(ID)
+        })
 
-    // private connectPlayer(ID: string) {
-
-    //     if (!this.iAmConnected) {
-    //         this.connectMyself(ID)
-    //     }
-    //     else {
-    //         this.connectOther(ID)
-    //     }
-    //     // console.log(findMe)
-    // }
-
-    // private connectOther(ID: string) {
-
-    //     this.socket.emit('shareIDs', this.game.getPlayerIDs)
-
-    //     const newPlayer = new Player(ID)
-    //     this.game.players.push(newPlayer)
-
-    //     this.socket.on('shareIDs', (IDs: string[]) => {
-
-    //         console.log(IDs)
-    //         for (const ID in IDs) {
-    //             const IDExists = this.game.getPlayerIDs.find(playerID => playerID === ID)
-    //             if (!IDExists) {
-    //                 const newPlayer = new Player(ID)
-    //                 this.game.players.push(newPlayer)
-    //                 console.log('other found: ', ID)
-    //             }
-    //         }
-
-    //     })
-    // }
-
-    private connectOther(ID: string) {
-        if (!this.hasConnection(ID)) {
-            const newPlayer = new Player(ID)
-            this.game.players.push(newPlayer)
-            console.log('other: ', ID)
-        }
-    }
-
-    private connectMyself(ID: string) {
-        if (!this.iAmConnected) {
-            const newPlayer = new Player(ID)
-            newPlayer.isMe = true
-            this.game.players.push(newPlayer)
-            console.log('me: ', ID)
-        }
+        this.socket.on('playerLeft', (ID: string) => {
+            this.game.removePlayerFromGame(ID)
+        })
     }
 }

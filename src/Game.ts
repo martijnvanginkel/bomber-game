@@ -40,15 +40,7 @@ export class Game {
         const newPlayer = new Player(ID)
         newPlayer.isMe = true
         this.players.push(newPlayer)
-        // console.log('me ', ID)
     }
-
-    // public addPlayerToGame(IDs: string[]) {
-
-    //     IDs.forEach((ID: string) => {
-    //     })
-        
-    // }
     
     public addPlayerTogame(ID: string) {
         const playerExists = this.players.find(player => player.getID === ID)
@@ -59,20 +51,12 @@ export class Game {
         this.players.push(player)
         console.log(this.getPlayerIDs)
     }
-    // public spawnPlayer(ID: string) {
-    //     if (!this.player) {
-    //         // console.log('spawnplayer if')
-    //         this.player = new Player(ID)
-    //     }
-    // }
 
-    // public spawnEnemy(ID: string) {
-    //     const findEnemy = this.players.find((player: Player) => player.playerID === ID)
-    //     if (!findEnemy) {
-    //         const newEnemy = new Player(ID)
-    //         this.players.push(newEnemy)
-    //         // this.enemy = new Player(ID)
-    //     }
-    // }
+    public removePlayerFromGame(ID: string) {
+        // while ()
+        this.players = this.players.filter((player: Player) => player.getID !== ID)
+
+        // this.players.
+    }
 
 }
