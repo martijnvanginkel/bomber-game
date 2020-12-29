@@ -1,7 +1,7 @@
 import { Images } from './images/Images'
 import { Player } from './Player'
 import { Map } from './map/Map'
-import { ClientInfo } from './services/ConnectionManager'
+import { ClientInfo, ShareLocationType } from './services/ConnectionManager'
 
 export class Game {
 
@@ -35,12 +35,32 @@ export class Game {
         return this.players.find(player => player.isMe === true)?.getClientInfo
     }
 
+    private findPlayerByID(ID: string) {
+        return this.players.find(player => player.getID === ID)
+    }
+
+    // this should be on the map class?
+    public movePlayer(location: ShareLocationType) {
+        const player = this.findPlayerByID(location.ID)
+
+    }
+    // this should maybe be combined and called by the same function
+    public moveOther(location: ShareLocationType) {
+        const player = this.findPlayerByID(location.ID)
+        const myID = this.getMyPlayerID
+        if (player?.getID === myID) {
+            return
+        }
+        player?.move(location)
+
+    }
+
     public addMyselfToGame(client: ClientInfo) {
         const playerExists = this.players.find(player => player.isMe === true)
         if (playerExists) {
             return
         }
-        console.log('me: ', client.index)
+        // console.log('me: ', client.index)
         const newPlayer = new Player(client)
         newPlayer.isMe = true
         this.players.push(newPlayer)
@@ -55,10 +75,10 @@ export class Game {
         if (playerExists) {
             return
         }
-        console.log('other ', client.index)
+        // console.log('other ', client.index)
         const player = new Player(client)
         this.players.push(player)
-        console.log(this.getAllPlayerIDs)
+        // console.log(this.getAllPlayerIDs)
     }
 
     public removePlayerFromGame(ID: string) {

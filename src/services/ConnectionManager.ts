@@ -27,11 +27,22 @@ export class ConnectionManager {
         this.socket.on('connected', (client: ClientInfo) => {
             this.client = client
             this.establishConnection()
+            this.incomingLocation()
         })
     }
 
     public shareLocation(location: ShareLocationType) {
+        console.log('share location')
         this.socket.emit('shareLocation', location)
+    }
+
+    private incomingLocation() {
+        this.socket.on('incomingLocation', (location: ShareLocationType) => {
+            this.game.moveOther(location)
+            // console.log('incoming location')
+            // console.log(location)
+            // this.game.movePlayer(location)
+        })
     }
 
     private establishConnection() {

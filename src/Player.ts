@@ -42,8 +42,8 @@ export class Player {
     private initializePlayer() {
         this.image = game.images.getImage('player')
         this.drawPlayer()
-        console.log('here')
-        connection.shareLocation(this.location)
+        // console.log('here')
+        // connection.shareLocation(this.location)
         // this.
 
         this.watchPlayerMovement()
@@ -63,9 +63,18 @@ export class Player {
                 this.location.xPos += newX
                 this.location.yPos += newY
                 this.drawPlayer()
+                console.log('share move player')
+                connection.shareLocation(this.location)
             }
         }
+    }
 
+    public move(location: ShareLocationType) {
+        game.map.tileMap[this.location.xPos][this.location.yPos].drawTile()
+        this.location = location
+        // this.location.xPos += newX
+        // this.location.yPos += newY
+        this.drawPlayer()
     }
 
     private watchPlayerMovement() {
