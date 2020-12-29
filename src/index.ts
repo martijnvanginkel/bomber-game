@@ -4,7 +4,7 @@ import { ConnectionManager } from './services/ConnectionManager'
 export const game = new Game()
 game.intializeGame()
 
-new ConnectionManager(game)
+export const connection = new ConnectionManager(game)
 
 
 

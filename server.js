@@ -12,16 +12,28 @@ app.get('/', function(req, res) {
   res.sendFile(__dirname + '/dist/index.html');
 });
 
+let clients = []
+
 io.on('connection', socket => {
   // registering connections
+  
   const ID = uniqueId()
-  io.emit('connected', ID)
+  clients.push(ID)
+  io.emit('connected', { ID: ID, index: clients.length })
   socket.on('shareMyID', (data) => socket.broadcast.emit('incomingID', data))
   socket.on('lastIncomingID', (data) => socket.broadcast.emit('lastIncomingID', data))
   socket.on('disconnect', function () {
     io.emit('playerLeft', ID)
+    clients = clients.filter((cl) => cl !== ID)
   })
-  
+
+
+  socket.on('shareLocation', (data) => {
+    socket.broadcast.emit('incomingLocation', data)
+  })
+
+
+
 })
 
 server.listen(80, () => undefined);

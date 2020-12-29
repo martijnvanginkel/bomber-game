@@ -1,19 +1,34 @@
-import { game } from './index'
+import { game, connection } from './index'
+import { ClientInfo, ShareLocationType } from './services/ConnectionManager'
 
 export class Player {
 
-    private ID: string
-    private xPos: number = 0
-    private yPos: number = 0
+    // private ID: string
+    // private xPos: number = 0
+    // private yPos: number = 0
+
+
+    private location: ShareLocationType
     private image: HTMLImageElement
+    private client: ClientInfo
     private me: boolean
 
-    constructor(ID: string) {
-        this.ID = ID
+    constructor(client: ClientInfo) {
+        this.client = client
+        this.location = {
+            xPos: client.index,
+            yPos: client.index,
+            ID: client.ID,
+        }
+        this.initializePlayer()
     }
 
     get getID() {
-        return this.ID
+        return this.client.ID
+    }
+
+    get getClientInfo() {
+        return this.client
     }
 
     get isMe() {
@@ -24,31 +39,37 @@ export class Player {
         this.me = itsMe
     }
     
-    public initializePlayer(startX: number ,startY: number) {
-        this.xPos = startX
-        this.yPos = startY
+    private initializePlayer() {
         this.image = game.images.getImage('player')
         this.drawPlayer()
+        console.log('here')
+        connection.shareLocation(this.location)
+        // this.
+
         this.watchPlayerMovement()
     }
 
     private drawPlayer() {
-        game.context.drawImage(this.image, this.xPos * game.map.tileSize, this.yPos * game.map.tileSize, 50, 50)
+        game.context.drawImage(this.image, this.location.xPos * game.map.tileSize, this.location.yPos * game.map.tileSize, 50, 50)
     }
 
     private movePlayer(newX: number, newY: number) {
-        const nextXPos = this.xPos + newX
-        const nextYPos = this.yPos + newY
-
-        if (game.map.availableTile(nextXPos, nextYPos)) {
-            game.map.tileMap[this.xPos][this.yPos].drawTile()
-            this.xPos += newX
-            this.yPos += newY
-            this.drawPlayer()
+        if (this.isMe) {
+            const nextXPos = this.location.xPos + newX
+            const nextYPos = this.location.yPos + newY
+    
+            if (game.map.availableTile(nextXPos, nextYPos)) {
+                game.map.tileMap[this.location.xPos][this.location.yPos].drawTile()
+                this.location.xPos += newX
+                this.location.yPos += newY
+                this.drawPlayer()
+            }
         }
+
     }
 
     private watchPlayerMovement() {
+        // console.log('this')
         document.addEventListener('keydown', (e) => {
             switch (e.code) {
                 case 'ArrowLeft':

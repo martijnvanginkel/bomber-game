@@ -1,6 +1,7 @@
 import { Images } from './images/Images'
 import { Player } from './Player'
 import { Map } from './map/Map'
+import { ClientInfo } from './services/ConnectionManager'
 
 export class Game {
 
@@ -30,24 +31,32 @@ export class Game {
         return this.players.find(player => player.isMe === true)?.getID
     }
 
-    public addMyselfToGame(ID: string) {
+    get getMyPlayerClientInfo() {
+        return this.players.find(player => player.isMe === true)?.getClientInfo
+    }
+
+    public addMyselfToGame(client: ClientInfo) {
         const playerExists = this.players.find(player => player.isMe === true)
         if (playerExists) {
             return
         }
-        const newPlayer = new Player(ID)
+        console.log('me: ', client.index)
+        const newPlayer = new Player(client)
         newPlayer.isMe = true
         this.players.push(newPlayer)
-        this.players[0].initializePlayer(0, 0)
-        console.log(this.getAllPlayerIDs)
+        // newPlayer.initializePlayer(0,0)
+        // newPlayer.initializePlayer(client.index, client.index)
+        // this.players[0].initializePlayer(0, 0)
+        // console.log(this.getAllPlayerIDs)
     }
     
-    public addOtherToGame(ID: string) {
-        const playerExists = this.players.find(player => player.getID === ID)
+    public addOtherToGame(client: ClientInfo) {
+        const playerExists = this.players.find(player => player.getID === client.ID)
         if (playerExists) {
             return
         }
-        const player = new Player(ID)
+        console.log('other ', client.index)
+        const player = new Player(client)
         this.players.push(player)
         console.log(this.getAllPlayerIDs)
     }

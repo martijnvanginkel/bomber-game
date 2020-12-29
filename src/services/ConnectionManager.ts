@@ -1,6 +1,17 @@
 import io from 'socket.io-client';
-import { Player } from '../Player';
+// import { Player } from '../Player';
 import { Game } from './../Game';
+
+export interface ClientInfo {
+    ID: string
+    index: number
+}
+
+export interface ShareLocationType {
+    xPos: number
+    yPos: number
+    ID: string
+}
 
 export class ConnectionManager {
 
@@ -8,27 +19,33 @@ export class ConnectionManager {
     private address: string = 'http://localhost'
     private port: number = 80
     private game: Game
+    private client: ClientInfo
 
     constructor(game: Game) {
         this.game = game
         this.socket = io(`${this.address}:${this.port.toString()}`);
-        this.socket.on('connected', (ID: string) => {
-            this.establishConnection(ID)
+        this.socket.on('connected', (client: ClientInfo) => {
+            this.client = client
+            this.establishConnection()
         })
     }
 
-    private establishConnection(ID: string) {
-        // console.log('establish')
-        this.game.addMyselfToGame(ID)
-        this.socket.emit('shareMyID', ID)
+    public shareLocation(location: ShareLocationType) {
+        this.socket.emit('shareLocation', location)
+    }
 
-        this.socket.on('incomingID', (ID: string) => {
-            this.socket.emit('lastIncomingID', this.game.getMyPlayerID)
-            this.game.addOtherToGame(ID)
+    private establishConnection() {
+        // console.log('establish')
+        this.game.addMyselfToGame(this.client)
+        this.socket.emit('shareMyID', this.client)
+
+        this.socket.on('incomingID', (client: ClientInfo) => {
+            this.socket.emit('lastIncomingID', this.game.getMyPlayerClientInfo)
+            this.game.addOtherToGame(client)
         })
         // share last incoming ID one more time for the last client
-        this.socket.on('lastIncomingID', (ID: string) => {
-            this.game.addOtherToGame(ID)
+        this.socket.on('lastIncomingID', (client: ClientInfo) => {
+            this.game.addOtherToGame(client)
         })
 
         this.socket.on('playerLeft', (ID: string) => {
