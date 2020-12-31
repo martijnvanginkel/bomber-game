@@ -1,3 +1,4 @@
+import { LocationType, ShareLocationType } from '../services/ConnectionManager'
 import { Tile } from './Tile'
 
 export class Map {
@@ -24,6 +25,21 @@ export class Map {
         }
     }
 
+    public getTileByCoords(xPos: number, yPos: number): Tile | undefined {
+        return this.tileMap[xPos][yPos]
+    }
+
+    private isOccupiedTile(xPos: number, yPos: number): boolean {
+        const tile = this.getTileByCoords(xPos, yPos)
+        if (!tile) {
+            return true
+        }
+        if (tile.isOccupied) {
+            return true
+        }
+        return false
+    }
+
     private exceedsMapBorders(xPos: number, yPos: number): boolean {
         if (xPos < 0  || yPos < 0) {
             return true
@@ -38,7 +54,15 @@ export class Map {
         if (this.exceedsMapBorders(xPos, yPos)) {
             return false
         }
+        if (this.isOccupiedTile(xPos, yPos)) {
+            return false
+        }
         return true
+    }
+
+    public setTileOccupied(location: LocationType) {
+        const tile = this.getTileByCoords(location.xPos, location.yPos)
+        tile?.setOccupied(true)
     }
 
 }

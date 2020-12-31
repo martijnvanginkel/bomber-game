@@ -1,7 +1,7 @@
 import { Images } from './images/Images'
 import { Player } from './Player'
 import { Map } from './map/Map'
-import { ClientInfo, ShareLocationType } from './services/ConnectionManager'
+import { ClientInfo, DoubleLocationType, ShareLocationType } from './services/ConnectionManager'
 
 export class Game {
 
@@ -20,7 +20,6 @@ export class Game {
     public intializeGame() {
         this.images = new Images()
         this.map = new Map()
-        // new Player(0, 0)
     }
 
     get getAllPlayerIDs() {
@@ -45,13 +44,15 @@ export class Game {
 
     }
     // this should maybe be combined and called by the same function
-    public moveOther(location: ShareLocationType) {
-        const player = this.findPlayerByID(location.ID)
+    public moveOther(doubleLocation: DoubleLocationType) { // shouldn't be any
+        const player = this.findPlayerByID(doubleLocation.ID)
         const myID = this.getMyPlayerID
         if (player?.getID === myID) {
             return
         }
-        player?.move(location)
+        player?.moveOther(doubleLocation)
+        // player?.moveOther(location)
+        // player?.moveOther(data)
 
     }
 
@@ -60,14 +61,9 @@ export class Game {
         if (playerExists) {
             return
         }
-        // console.log('me: ', client.index)
         const newPlayer = new Player(client)
         newPlayer.isMe = true
         this.players.push(newPlayer)
-        // newPlayer.initializePlayer(0,0)
-        // newPlayer.initializePlayer(client.index, client.index)
-        // this.players[0].initializePlayer(0, 0)
-        // console.log(this.getAllPlayerIDs)
     }
     
     public addOtherToGame(client: ClientInfo) {
@@ -75,10 +71,8 @@ export class Game {
         if (playerExists) {
             return
         }
-        // console.log('other ', client.index)
         const player = new Player(client)
         this.players.push(player)
-        // console.log(this.getAllPlayerIDs)
     }
 
     public removePlayerFromGame(ID: string) {

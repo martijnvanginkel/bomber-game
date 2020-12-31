@@ -13,6 +13,17 @@ export interface ShareLocationType {
     ID: string
 }
 
+export interface LocationType {
+    xPos: number
+    yPos: number
+}
+
+export interface DoubleLocationType {
+    oldLoc: LocationType
+    newLoc: LocationType
+    ID: string
+}
+
 export class ConnectionManager {
 
     private socket: SocketIOClient.Socket
@@ -31,14 +42,14 @@ export class ConnectionManager {
         })
     }
 
-    public shareLocation(location: ShareLocationType) {
-        console.log('share location')
-        this.socket.emit('shareLocation', location)
+    public shareLocation(doubleLocation: DoubleLocationType) {
+        // console.log('share location')
+        this.socket.emit('shareLocation', doubleLocation)
     }
 
     private incomingLocation() {
-        this.socket.on('incomingLocation', (location: ShareLocationType) => {
-            this.game.moveOther(location)
+        this.socket.on('incomingLocation', (doubleLocation: DoubleLocationType) => {
+            this.game.moveOther(doubleLocation)
             // console.log('incoming location')
             // console.log(location)
             // this.game.movePlayer(location)
