@@ -60,7 +60,7 @@ export class Map {
         return true
     }
 
-    public setTileOccupied(location: LocationType) {
+    public setTileOccupied(location: LocationType, ID: string) {
         const tile = this.getTileByCoords(location.xPos, location.yPos)
         tile?.setOccupied(true)
     }

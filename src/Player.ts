@@ -43,7 +43,7 @@ export class Player {
     }
 
     private spawnPlayer() {
-        game.map.setTileOccupied(this.location)
+        game.map.setTileOccupied(this.location, this.getID) // this should be a general search
         this.drawPlayer()
         this.watchInput()
     }
@@ -68,6 +68,7 @@ export class Player {
 
         const currentTile = game.map.getTileByCoords(this.location.xPos, this.location.yPos)
         currentTile?.drawTile()
+        currentTile?.setOccupied(false)
         
         const doubleLocation: DoubleLocationType = {
             oldLoc: this.location,
@@ -76,6 +77,10 @@ export class Player {
         }
 
         this.location = nextLocation
+
+        const nextTile = game.map.getTileByCoords(this.location.xPos, this.location.yPos)
+        nextTile?.setOccupied(true, this.getID)
+
         this.drawPlayer()
 
 
@@ -89,10 +94,17 @@ export class Player {
         }
 
         console.log(doubleLocation)
-    
-        game.map.tileMap[doubleLocation.oldLoc.xPos][doubleLocation.oldLoc.yPos].drawTile()
+
+        const oldTile = game.map.tileMap[doubleLocation.oldLoc.xPos][doubleLocation.oldLoc.yPos]
+        oldTile?.drawTile()
+        oldTile?.setOccupied(false)
+
 
         this.location = doubleLocation.newLoc
+
+        const newTile = game.map.tileMap[doubleLocation.newLoc.xPos][doubleLocation.newLoc.yPos]
+        newTile.setOccupied(true, doubleLocation.ID)
+
         this.drawPlayer()
     }
 

@@ -43,16 +43,12 @@ export class ConnectionManager {
     }
 
     public shareLocation(doubleLocation: DoubleLocationType) {
-        // console.log('share location')
         this.socket.emit('shareLocation', doubleLocation)
     }
 
     private incomingLocation() {
         this.socket.on('incomingLocation', (doubleLocation: DoubleLocationType) => {
             this.game.moveOther(doubleLocation)
-            // console.log('incoming location')
-            // console.log(location)
-            // this.game.movePlayer(location)
         })
     }
 
