@@ -65,4 +65,14 @@ export class Map {
         tile?.setOccupied(true)
     }
 
+    public setNewTileOccupied(oldLoc: LocationType, newLoc: LocationType, ID: string) {
+
+        const currentTile = this.getTileByCoords(oldLoc.xPos, oldLoc.yPos)
+        currentTile?.drawTile()
+        currentTile?.setOccupied(false)
+
+        const nextTile = this.getTileByCoords(newLoc.xPos, newLoc.yPos)
+        nextTile?.setOccupied(true, ID)
+    }
+
 }

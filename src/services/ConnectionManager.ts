@@ -53,7 +53,6 @@ export class ConnectionManager {
     }
 
     private establishConnection() {
-        // console.log('establish')
         this.game.addMyselfToGame(this.client)
         this.socket.emit('shareMyID', this.client)
 

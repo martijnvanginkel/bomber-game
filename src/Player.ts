@@ -3,12 +3,7 @@ import { ClientInfo, ShareLocationType, DoubleLocationType, LocationType } from 
 
 export class Player {
 
-    // private ID: string
-    // private xPos: number = 0
-    // private yPos: number = 0
-
-
-    private location: LocationType // this needs to be different
+    private location: LocationType
     private image: HTMLImageElement
     private client: ClientInfo
     private me: boolean
@@ -21,9 +16,6 @@ export class Player {
             yPos: client.index,
         }
         this.spawnPlayer()
-        // game.map.set
-        // this.drawPlayer()
-        // this.watchPlayerMovement()
     }
 
     get getID() {
@@ -57,54 +49,22 @@ export class Player {
             return
         }
         
-        const nextLocation: LocationType = {
+        const newLoc: LocationType = {
             xPos: this.location.xPos + xIncrement,
             yPos: this.location.yPos + yIncrement
         }
         
-        if (!game.map.availableTile(nextLocation.xPos, nextLocation.yPos)) {
+        if (!game.map.availableTile(newLoc.xPos, newLoc.yPos)) {
             return
         }
-
-        const currentTile = game.map.getTileByCoords(this.location.xPos, this.location.yPos)
-        currentTile?.drawTile()
-        currentTile?.setOccupied(false)
-        
-        const doubleLocation: DoubleLocationType = {
-            oldLoc: this.location,
-            newLoc: nextLocation,
-            ID: this.getID
-        }
-
-        this.location = nextLocation
-
-        const nextTile = game.map.getTileByCoords(this.location.xPos, this.location.yPos)
-        nextTile?.setOccupied(true, this.getID)
-
-        this.drawPlayer()
-
-
-        connection.shareLocation(doubleLocation)
-        
+   
+        connection.shareLocation({oldLoc: this.location, newLoc: newLoc, ID: this.getID})
+        this.movePlayer(this.location, newLoc, this.getID)        
     }
 
-    public moveOther(doubleLocation: DoubleLocationType) { 
-        if (this.isMe) {
-            return
-        }
-
-        console.log(doubleLocation)
-
-        const oldTile = game.map.tileMap[doubleLocation.oldLoc.xPos][doubleLocation.oldLoc.yPos]
-        oldTile?.drawTile()
-        oldTile?.setOccupied(false)
-
-
-        this.location = doubleLocation.newLoc
-
-        const newTile = game.map.tileMap[doubleLocation.newLoc.xPos][doubleLocation.newLoc.yPos]
-        newTile.setOccupied(true, doubleLocation.ID)
-
+    public movePlayer(oldLoc: LocationType, newLoc: LocationType, ID: string) {
+        game.map.setNewTileOccupied(oldLoc, newLoc, ID)
+        this.location = newLoc
         this.drawPlayer()
     }
 

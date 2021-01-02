@@ -1,0 +1,7 @@
+- remove player on disconnect from the game also
+- connect the tiles with the movement of the player and the map and the game. it's all over the place now and needs better organisation.
+I want to just say player moves and then get it handled with the tiles and map and game automatically.
+- 
+    - in Player: moveMyself and moveOther need to be better. preferably just something dynamic for myself and others
+    - in map: setTileOccupied doesn't feel right
+    - in Game: the movement and adding players need to be better organised

@@ -1,7 +1,7 @@
 import { Images } from './images/Images'
 import { Player } from './Player'
 import { Map } from './map/Map'
-import { ClientInfo, DoubleLocationType, ShareLocationType } from './services/ConnectionManager'
+import { ClientInfo, DoubleLocationType } from './services/ConnectionManager'
 
 export class Game {
 
@@ -38,22 +38,14 @@ export class Game {
         return this.players.find(player => player.getID === ID)
     }
 
-    // this should be on the map class?
-    public movePlayer(location: ShareLocationType) {
-        const player = this.findPlayerByID(location.ID)
-
-    }
     // this should maybe be combined and called by the same function
-    public moveOther(doubleLocation: DoubleLocationType) { // shouldn't be any
-        const player = this.findPlayerByID(doubleLocation.ID)
+    public moveOther(doubleLoc: DoubleLocationType) {
+        const player = this.findPlayerByID(doubleLoc.ID)
         const myID = this.getMyPlayerID
         if (player?.getID === myID) {
             return
         }
-        player?.moveOther(doubleLocation)
-        // player?.moveOther(location)
-        // player?.moveOther(data)
-
+        player?.movePlayer(doubleLoc.oldLoc, doubleLoc.newLoc, doubleLoc.ID)
     }
 
     public addMyselfToGame(client: ClientInfo) {
