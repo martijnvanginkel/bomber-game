@@ -41,7 +41,7 @@ export class Player {
         this.watchInput()
     }
 
-    private drawImageRot(img: any,x: any,y: any,width: any,height: any,deg: any){
+    private drawImageRot(img: HTMLImageElement, x: number, y: number, width: number, height: number, deg: number){
         // Store the current context state (i.e. rotation, translation etc..)
         game.context.save()
     
@@ -63,17 +63,6 @@ export class Player {
 
     private drawPlayer(direction: number) {
         this.drawImageRot(this.image, this.location.xPos * game.map.tileSize, this.location.yPos * game.map.tileSize, 50, 50, direction)
-        // game.context.save();
-        // game.context.translate( 25, 25 );
-        // game.context.rotate( 1.2 );
-        // game.context.translate( -25, -25 );
-        // game.context.drawImage( this.image, this.location.xPos * game.map.tileSize, this.location.yPos * game.map.tileSize );
-        // game.context.restore();
-        // game.context.restore(); // restore original states (no rotation etc)
-
-        // game.context.rotate(90*Math.PI/180);
-        // game.context.drawImage(this.image, this.location.xPos * game.map.tileSize, this.location.yPos * game.map.tileSize, 50, 50)
-
     }
 
     private decideMovement(xIncrement: number, yIncrement: number, direction: number) {
