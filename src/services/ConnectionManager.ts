@@ -7,21 +7,16 @@ export interface ClientInfo {
     index: number
 }
 
-export interface ShareLocationType {
-    xPos: number
-    yPos: number
-    ID: string
-}
-
 export interface LocationType {
     xPos: number
     yPos: number
 }
 
-export interface DoubleLocationType {
+export interface ShareLocationType {
     oldLoc: LocationType
     newLoc: LocationType
     ID: string
+    direction: number
 }
 
 export class ConnectionManager {
@@ -42,13 +37,13 @@ export class ConnectionManager {
         })
     }
 
-    public shareLocation(doubleLocation: DoubleLocationType) {
-        this.socket.emit('shareLocation', doubleLocation)
+    public shareLocation(shareLocation: ShareLocationType) {
+        this.socket.emit('shareLocation', shareLocation)
     }
 
     private incomingLocation() {
-        this.socket.on('incomingLocation', (doubleLocation: DoubleLocationType) => {
-            this.game.moveOther(doubleLocation)
+        this.socket.on('incomingLocation', (shareLocation: ShareLocationType) => {
+            this.game.moveOther(shareLocation)
         })
     }
 

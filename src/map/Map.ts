@@ -1,4 +1,4 @@
-import { LocationType, ShareLocationType } from '../services/ConnectionManager'
+import { LocationType } from '../services/ConnectionManager'
 import { Tile } from './Tile'
 
 export class Map {

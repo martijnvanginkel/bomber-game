@@ -1,7 +1,7 @@
 import { Images } from './images/Images'
 import { Player } from './Player'
 import { Map } from './map/Map'
-import { ClientInfo, DoubleLocationType } from './services/ConnectionManager'
+import { ClientInfo, ShareLocationType } from './services/ConnectionManager'
 
 export class Game {
 
@@ -39,13 +39,13 @@ export class Game {
     }
 
     // this should maybe be combined and called by the same function
-    public moveOther(doubleLoc: DoubleLocationType) {
-        const player = this.findPlayerByID(doubleLoc.ID)
+    public moveOther(shareLocation: ShareLocationType) {
+        const player = this.findPlayerByID(shareLocation.ID)
         const myID = this.getMyPlayerID
         if (player?.getID === myID) {
             return
         }
-        player?.movePlayer(doubleLoc.oldLoc, doubleLoc.newLoc, doubleLoc.ID)
+        player?.movePlayer(shareLocation)
     }
 
     public addMyselfToGame(client: ClientInfo) {

@@ -1,9 +1,10 @@
 import { game, connection } from './index'
-import { ClientInfo, ShareLocationType, DoubleLocationType, LocationType } from './services/ConnectionManager'
+import { ClientInfo, ShareLocationType, LocationType } from './services/ConnectionManager'
 
 export class Player {
 
     private location: LocationType
+    private direction: number
     private image: HTMLImageElement
     private client: ClientInfo
     private me: boolean
@@ -36,52 +37,89 @@ export class Player {
 
     private spawnPlayer() {
         game.map.setTileOccupied(this.location, this.getID) // this should be a general search
-        this.drawPlayer()
+        this.drawPlayer(0)
         this.watchInput()
     }
 
-    private drawPlayer() {
-        game.context.drawImage(this.image, this.location.xPos * game.map.tileSize, this.location.yPos * game.map.tileSize, 50, 50)
+    private drawImageRot(img: any,x: any,y: any,width: any,height: any,deg: any){
+        // Store the current context state (i.e. rotation, translation etc..)
+        game.context.save()
+    
+        //Convert degrees to radian 
+        var rad = deg * Math.PI / 180;
+    
+        //Set the origin to the center of the image
+        game.context.translate(x + width / 2, y + height / 2);
+    
+        //Rotate the canvas around the origin
+        game.context.rotate(rad);
+    
+        //draw the image    
+        game.context.drawImage(img,width / 2 * (-1),height / 2 * (-1),width,height);
+    
+        // Restore canvas state as saved from above
+        game.context.restore();
     }
 
-    private decideMovement(xIncrement: number, yIncrement: number) {
+    private drawPlayer(direction: number) {
+        this.drawImageRot(this.image, this.location.xPos * game.map.tileSize, this.location.yPos * game.map.tileSize, 50, 50, direction)
+        // game.context.save();
+        // game.context.translate( 25, 25 );
+        // game.context.rotate( 1.2 );
+        // game.context.translate( -25, -25 );
+        // game.context.drawImage( this.image, this.location.xPos * game.map.tileSize, this.location.yPos * game.map.tileSize );
+        // game.context.restore();
+        // game.context.restore(); // restore original states (no rotation etc)
+
+        // game.context.rotate(90*Math.PI/180);
+        // game.context.drawImage(this.image, this.location.xPos * game.map.tileSize, this.location.yPos * game.map.tileSize, 50, 50)
+
+    }
+
+    private decideMovement(xIncrement: number, yIncrement: number, direction: number) {
         if (!this.isMe) {
             return
         }
-        
-        const newLoc: LocationType = {
-            xPos: this.location.xPos + xIncrement,
-            yPos: this.location.yPos + yIncrement
+
+        const shareLocation: ShareLocationType = {
+            oldLoc: this.location,
+            newLoc: {
+                xPos: this.location.xPos + xIncrement,
+                yPos: this.location.yPos + yIncrement,
+            },
+            ID: this.getID,
+            direction: direction,
         }
         
-        if (!game.map.availableTile(newLoc.xPos, newLoc.yPos)) {
+        if (!game.map.availableTile(shareLocation.newLoc.xPos, shareLocation.newLoc.yPos)) {
             return
         }
    
-        connection.shareLocation({oldLoc: this.location, newLoc: newLoc, ID: this.getID})
-        this.movePlayer(this.location, newLoc, this.getID)        
+        connection.shareLocation(shareLocation)
+        this.movePlayer(shareLocation)        
     }
 
-    public movePlayer(oldLoc: LocationType, newLoc: LocationType, ID: string) {
-        game.map.setNewTileOccupied(oldLoc, newLoc, ID)
-        this.location = newLoc
-        this.drawPlayer()
+    public movePlayer(shareLocation: ShareLocationType) {
+        game.map.setNewTileOccupied(shareLocation.oldLoc, shareLocation.newLoc, shareLocation.ID)
+        this.location = shareLocation.newLoc
+        this.direction = shareLocation.direction
+        this.drawPlayer(shareLocation.direction)
     }
 
     private watchInput() {
         document.addEventListener('keydown', (e) => {
             switch (e.code) {
                 case 'ArrowLeft':
-                    this.decideMovement(-1, 0)
+                    this.decideMovement(-1, 0, 270)
                     break;
                 case 'ArrowUp':
-                    this.decideMovement(0, -1)
+                    this.decideMovement(0, -1, 0)
                     break;
                 case 'ArrowRight':
-                    this.decideMovement(1, 0)
+                    this.decideMovement(1, 0, 90)
                     break;
                 case 'ArrowDown':
-                    this.decideMovement(0, 1)
+                    this.decideMovement(0, 1, 180)
                     break;
                 default:
                     break;
