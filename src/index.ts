@@ -1,10 +1,10 @@
 import { Game } from './Game'
-import { ConnectionManager } from './services/ConnectionManager'
+// import { ConnectionManager } from './services/MessageManager'
 
 export const game = new Game()
-game.intializeGame()
+// game.intializeGame()
 
-export const connection = new ConnectionManager(game)
+// export const connection = new ConnectionManager(game)
 
 
 
