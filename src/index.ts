@@ -1,7 +1,11 @@
 import { Game } from './Game'
+import { Images } from './images/Images'
+import { Map } from './map/Map'
 // import { ConnectionManager } from './services/MessageManager'
 
+export const images = new Images()
 export const game = new Game()
+export const map = new Map()
 // game.intializeGame()
 
 // export const connection = new ConnectionManager(game)

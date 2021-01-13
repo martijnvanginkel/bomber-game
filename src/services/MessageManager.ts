@@ -1,7 +1,9 @@
 import io from 'socket.io-client';
-import { MessageReceiver } from './MessageReceiver';
-import { MessageSender } from './MessageSender';
-import { EventEmitter } from 'events'
+// import { MessageReceiver } from './MessageReceiver';
+// import { MessageSender } from './MessageSender';
+// import { EventEmitter } from 'events'
+// import { Game } from '../Game';
+import { Player } from '../Player';
 // import { Game } from '../Game';
 // import  from 'MessageSender'
 // import MessageReceiver, { MessageReceiver, MessageReceiver, MessageReceiver } from 'MessageReceiver'
@@ -12,53 +14,65 @@ export interface ClientInfo {
     index: number
 }
 
-export interface LocationType {
-    xPos: number
-    yPos: number
-}
+// export interface LocationType {
+//     xPos: number
+//     yPos: number
+// }
 
-export interface ShareLocationType {
-    oldLoc: LocationType
-    newLoc: LocationType
-    ID: string
-    direction: number
-}
+// export interface ShareLocationType {
+//     oldLoc: LocationType
+//     newLoc: LocationType
+//     ID: string
+//     direction: number
+// }
 
 export class MessageManager {
 
     private socket: SocketIOClient.Socket
-    private address: string = 'http://localhost'
-    private port: number = 80
+    private player: Player
 
-    public eventEmitter: EventEmitter
-    private messageReceiver: MessageReceiver
-    private messageSender: MessageSender
-    // private game: Game
-    // private client: ClientInfo
+    // public eventEmitter: EventEmitter
+    // private messageReceiver: MessageReceiver
+    // private messageSender: MessageSender
+
+
+    // MessageManager luistert naar de Player. Wanneer de player iets doet met zijn input, 
+    // dan luistert de MessageManager daarnaar en stuurt het vervolgens naar de enemies
+
+    // De MessageManager heeft ook een listening gedeelte. Hierbij luistert hij naar de socket events
+    // die vanuit de server komen. Deze stuurt het vervolgens naar de Player maar deze kunnen ook naar andere enemies gestuurd worden
+    // er moet een functie 
+
+
 
     constructor() {
-        // this.game = game
-        this.socket = io(`${this.address}:${this.port.toString()}`);
+        const port: number = 80
+        const url: string = 'http://localhost'
 
-        // this.eventEmitter = new EventEmitter()
-        // console.log('im here')
+        this.socket = io(`${url}:${port.toString()}`);
 
-        this.socket.on('connected', async (client: ClientInfo) => {
-            const events = new EventEmitter()
+        this.socket.on('connected', (client: ClientInfo) => {
+            this.establishConnection(client)
+        })
+    }
 
-            this.messageReceiver = await new MessageReceiver(this.socket, events)
+    private establishConnection(client: ClientInfo) {
+        // add my own client and player to game
 
-            this.messageSender = new MessageSender(this.socket, events)
+        this.player = new Player(client)
+        
+        this.socket.emit('shareClient', client)
+
+        this.socket.on('incomingClient', (incomingClient: ClientInfo) => {
+            // add enemy
+            this.socket.emit('secondShareClient', client)
         })
 
-        // this.establish()
-
-        // this.socket.on('connected', (client: ClientInfo) => {
-        //     // this.client = client
-        //     this.establishConnection()
-        //     // this.incomingLocation()
-        // })
+        this.socket.on('secondIncomingClient', (incomingClient: ClientInfo) => {
+            // add enemy
+        })
     }
+
 
     // private establish() {
     //     this.socket = io(`${this.address}:${this.port.toString()}`);

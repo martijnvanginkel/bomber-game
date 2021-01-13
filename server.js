@@ -20,8 +20,9 @@ io.on('connection', socket => {
   const ID = uniqueId()
   clients.push(ID)
   io.emit('connected', { ID: ID, index: clients.length })
-  socket.on('shareMyID', (data) => socket.broadcast.emit('incomingID', data))
-  socket.on('lastIncomingID', (data) => socket.broadcast.emit('lastIncomingID', data))
+  socket.on('shareClient', (data) => socket.broadcast.emit('incomingClient', data))
+  socket.on('secondShareClient', (data) => socket.broadcast.emit('secondIncomingClient', data))
+
   socket.on('disconnect', function () {
     io.emit('playerLeft', ID)
     clients = clients.filter((cl) => cl !== ID)

@@ -1,4 +1,4 @@
-import { game } from './../index'
+import { map } from './../index'
 
 export class Tile {
 
@@ -17,8 +17,8 @@ export class Tile {
     }
 
     public drawTile() {
-        game.context.fillStyle = 'white'
-        game.context.fillRect(this.xPos * this.width, this.yPos * this.height, this.width, this.height)
+        map.getContext.fillStyle = 'white'
+        map.getContext.fillRect(this.xPos * this.width, this.yPos * this.height, this.width, this.height)
     }
 
     get isOccupied() {

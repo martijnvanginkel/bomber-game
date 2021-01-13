@@ -1,7 +1,10 @@
-import { LocationType } from '../services/MessageManager'
+import { LocationType } from './../utils/types'
 import { Tile } from './Tile'
 
 export class Map {
+
+    private canvas: HTMLCanvasElement
+    private context: CanvasRenderingContext2D
 
     private width: number = 10
     private height: number = 10
@@ -11,7 +14,14 @@ export class Map {
     public tileMap: Tile[][] = []
 
     constructor() {
+        this.canvas = document.getElementById('canvas') as HTMLCanvasElement
+        this.context = this.canvas.getContext('2d') as CanvasRenderingContext2D
+        
         this.drawMap()
+    }
+
+    public get getContext() {
+        return this.context
     }
 
     private drawMap() {

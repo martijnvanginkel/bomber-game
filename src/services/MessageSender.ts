@@ -1,7 +1,8 @@
 import { EventEmitter } from 'events'
+import { ClientInfo } from './MessageManager'
 
 export class MessageSender {
-    constructor(private socket: SocketIOClient.Socket, private events: EventEmitter){
+    constructor(private socket: SocketIOClient.Socket, private events: EventEmitter, private client: ClientInfo){
         this.sendTest()
     }
 

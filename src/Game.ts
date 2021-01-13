@@ -1,23 +1,23 @@
 import { Images } from './images/Images'
 // import { Player } from './Player'
 import { Map } from './map/Map'
-import { ClientInfo, MessageManager, ShareLocationType } from './services/MessageManager'
-import { MessageReceiver } from './services/MessageReceiver'
+import { ClientInfo, MessageManager } from './services/MessageManager'
+// import { MessageReceiver } from './services/MessageReceiver'
 import { MessageSender } from './services/MessageSender'
 
 export class Game {
 
-    private canvas: HTMLCanvasElement
-    public context: CanvasRenderingContext2D
-    public map: Map
-    public images: Images
+    // private canvas: HTMLCanvasElement
+    // public context: CanvasRenderingContext2D
+    // public map: Map
+    // public images: Images
     // public players: Player[]
 
     constructor() {
-        this.canvas = document.getElementById('canvas') as HTMLCanvasElement
-        this.context = this.canvas.getContext('2d') as CanvasRenderingContext2D
+        // this.canvas = document.getElementById('canvas') as HTMLCanvasElement
+        // this.context = this.canvas.getContext('2d') as CanvasRenderingContext2D
         // this.players = new Array()
-        this.images = new Images()
+        // this.images = new Images()
         // this.map = new Map()
         new MessageManager() // not sure about this
     }
