@@ -2,14 +2,15 @@
 import { ClientInfo } from "services/MessageManager"
 import { LocationType } from "utils/types"
 import { map } from './index'
+import { EventEmitter } from 'events'
 
-export abstract class Character {
+export abstract class Character extends EventEmitter {
 
     private location: LocationType
     private direction: number
-    // private image: HTMLImageElement
 
     constructor(protected clientInfo: ClientInfo, protected image: HTMLImageElement) {
+        super()
         this.location = { xPos: clientInfo.index, yPos: clientInfo.index }
         this.spawn()
     }
