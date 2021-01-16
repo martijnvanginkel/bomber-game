@@ -1,24 +1,20 @@
-import { map } from './../index'
+import { Map } from './Map'
 
 export class Tile {
 
-    private xPos: number = 0
-    private yPos: number = 0
     private width: number = 50
     private height: number = 50
     private occupied: boolean = false
     private occupantID: string | null
 
-    constructor(xPos: number, yPos: number) {
-        this.xPos = xPos
-        this.yPos = yPos
+    constructor(private xPos: number, private yPos: number, private map: Map) {
         this.occupantID = null
         this.drawTile()
     }
 
     public drawTile() {
-        map.getContext.fillStyle = 'white'
-        map.getContext.fillRect(this.xPos * this.width, this.yPos * this.height, this.width, this.height)
+        this.map.getContext.fillStyle = 'white'
+        this.map.getContext.fillRect(this.xPos * this.width, this.yPos * this.height, this.width, this.height)
     }
 
     get isOccupied() {

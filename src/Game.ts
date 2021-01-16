@@ -19,7 +19,7 @@ export class Game {
         // this.players = new Array()
         // this.images = new Images()
         // this.map = new Map()
-        new MessageManager() // not sure about this
+        // new MessageManager() // not sure about this
     }
 
     // get getAllPlayerIDs() {

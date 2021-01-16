@@ -5,8 +5,9 @@ import { Character } from "./Character";
 
 export class Player extends Character {
     constructor(protected clientInfo: ClientInfo) {
-        super(clientInfo)
-        this.setImage(images.getImage('Player'))
+        super(clientInfo, images.getImage('player'))
+        // console.log('player here')
+        // this.setImage(images.getImage('Player'))
     }
 
 

@@ -58,9 +58,9 @@ export class MessageManager {
 
     private establishConnection(client: ClientInfo) {
         // add my own client and player to game
-
+        // console.log('asdf')
         this.player = new Player(client)
-        
+
         this.socket.emit('shareClient', client)
 
         this.socket.on('incomingClient', (incomingClient: ClientInfo) => {

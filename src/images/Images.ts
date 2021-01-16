@@ -32,6 +32,7 @@ export class Images {
                 image: newImage
             } as ImageFormat)
         })
+        console.log(images)
         return images
     }
 

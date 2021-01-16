@@ -7,9 +7,9 @@ export abstract class Character {
 
     private location: LocationType
     private direction: number
-    private image: HTMLImageElement
+    // private image: HTMLImageElement
 
-    constructor(protected clientInfo: ClientInfo) {
+    constructor(protected clientInfo: ClientInfo, protected image: HTMLImageElement) {
         this.location = { xPos: clientInfo.index, yPos: clientInfo.index }
         this.spawn()
     }
@@ -17,14 +17,18 @@ export abstract class Character {
     protected get getClientInfo() {
         return this.clientInfo
     }
+
+    protected get getID() {
+        return this.clientInfo.ID
+    }
     
-    protected setImage(image: HTMLImageElement) {
-        this.image = image
-    } 
+    // protected setImage(image: HTMLImageElement) {
+    //     this.image = image
+    // } 
 
     private spawn() {
-        // game.map.setTileOccupied(this.location, this.getID) // this should be a general search
-        // this.draw(0)
+        map.setTileOccupied(this.location, this.getID) // this should be a general search
+        this.draw(0)
     }
 
     private drawImageRot(img: HTMLImageElement, x: number, y: number, width: number, height: number, deg: number){

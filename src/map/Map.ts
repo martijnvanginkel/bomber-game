@@ -28,7 +28,7 @@ export class Map {
         for (let i = 0; i < this.height; i++) {
             const line: Array<Tile> = []
             for (let j = 0; j < this.width; j++) {
-                const tile = new Tile(i, j)
+                const tile = new Tile(i, j, this)
                 line.push(tile)
             }
             this.tileMap.push(line)

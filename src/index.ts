@@ -1,11 +1,17 @@
 import { Game } from './Game'
 import { Images } from './images/Images'
 import { Map } from './map/Map'
-// import { ConnectionManager } from './services/MessageManager'
+import { MessageManager } from './services/MessageManager'
+
 
 export const images = new Images()
-export const game = new Game()
 export const map = new Map()
+export const messageManager = new MessageManager()
+
+// console.log(images.getImage('player'))
+// export const game = new Game()
+
+
 // game.intializeGame()
 
 // export const connection = new ConnectionManager(game)
