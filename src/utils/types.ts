@@ -1,4 +1,4 @@
 export interface LocationType {
-    xPos: number
-    yPos: number
+    x: number
+    y: number
 }

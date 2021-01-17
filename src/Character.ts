@@ -4,14 +4,13 @@ import { LocationType } from "utils/types"
 import { map } from './index'
 import { EventEmitter } from 'events'
 
-export abstract class Character extends EventEmitter {
+export abstract class Character {
 
     private location: LocationType
     private direction: number
 
     constructor(protected clientInfo: ClientInfo, protected image: HTMLImageElement) {
-        super()
-        this.location = { xPos: clientInfo.index, yPos: clientInfo.index }
+        this.location = { x: clientInfo.index, y: clientInfo.index }
         this.spawn()
     }
 
@@ -22,10 +21,10 @@ export abstract class Character extends EventEmitter {
     protected get getID() {
         return this.clientInfo.ID
     }
-    
-    // protected setImage(image: HTMLImageElement) {
-    //     this.image = image
-    // } 
+
+    protected get getLocation() {
+        return this.location
+    }
 
     private spawn() {
         map.setTileOccupied(this.location, this.getID) // this should be a general search
@@ -53,7 +52,11 @@ export abstract class Character extends EventEmitter {
     }
 
     private draw(direction: number) {
-        this.drawImageRot(this.image, this.location.xPos * map.tileSize, this.location.yPos * map.tileSize, 50, 50, direction)
+        this.drawImageRot(this.image, this.location.x * map.tileSize, this.location.y * map.tileSize, 50, 50, direction)
+    }
+
+    private move() {
+
     }
 
 }

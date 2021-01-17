@@ -3,7 +3,7 @@ import { Images } from './images/Images'
 import { Map } from './map/Map'
 import { ClientInfo, MessageManager } from './services/MessageManager'
 // import { MessageReceiver } from './services/MessageReceiver'
-import { MessageSender } from './services/MessageSender'
+// import { MessageSender } from './services/MessageSender'
 
 export class Game {
 

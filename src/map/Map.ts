@@ -35,12 +35,12 @@ export class Map {
         }
     }
 
-    public getTileByCoords(xPos: number, yPos: number): Tile | undefined {
-        return this.tileMap[xPos][yPos]
+    public getTileByCoords(x: number, y: number): Tile | undefined {
+        return this.tileMap[x][y]
     }
 
-    private isOccupiedTile(xPos: number, yPos: number): boolean {
-        const tile = this.getTileByCoords(xPos, yPos)
+    private isOccupiedTile(x: number, y: number): boolean {
+        const tile = this.getTileByCoords(x, y)
         if (!tile) {
             return true
         }
@@ -50,38 +50,38 @@ export class Map {
         return false
     }
 
-    private exceedsMapBorders(xPos: number, yPos: number): boolean {
-        if (xPos < 0  || yPos < 0) {
+    private exceedsMapBorders(x: number, y: number): boolean {
+        if (x < 0  || y < 0) {
             return true
         }
-        if (xPos > 9 || yPos > 9) {
+        if (x > 9 || y > 9) {
             return true
         }
         return false
     }
 
-    public availableTile(xPos: number, yPos: number): boolean {
-        if (this.exceedsMapBorders(xPos, yPos)) {
+    public availableTile(x: number, y: number): boolean {
+        if (this.exceedsMapBorders(x, y)) {
             return false
         }
-        if (this.isOccupiedTile(xPos, yPos)) {
+        if (this.isOccupiedTile(x, y)) {
             return false
         }
         return true
     }
 
     public setTileOccupied(location: LocationType, ID: string) {
-        const tile = this.getTileByCoords(location.xPos, location.yPos)
+        const tile = this.getTileByCoords(location.x, location.y)
         tile?.setOccupied(true)
     }
 
     public setNewTileOccupied(oldLoc: LocationType, newLoc: LocationType, ID: string) {
 
-        const currentTile = this.getTileByCoords(oldLoc.xPos, oldLoc.yPos)
+        const currentTile = this.getTileByCoords(oldLoc.x, oldLoc.y)
         currentTile?.drawTile()
         currentTile?.setOccupied(false)
 
-        const nextTile = this.getTileByCoords(newLoc.xPos, newLoc.yPos)
+        const nextTile = this.getTileByCoords(newLoc.x, newLoc.y)
         nextTile?.setOccupied(true, ID)
     }
 
