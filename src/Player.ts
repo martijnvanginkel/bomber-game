@@ -59,7 +59,7 @@ export class Player extends Character {
     
 
     private preAbility() {
-        triggerAbility(this.getLocation)
+        triggerAbility(this.getLocation, this.getDirection)
     }
 
     private preMove(key: Key, direction: Direction) {

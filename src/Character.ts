@@ -6,6 +6,7 @@ import { map } from './index'
 export abstract class Character {
 
     private location: LocationType
+    private direction: Direction
 
     constructor(protected clientInfo: ClientInfo, protected image: HTMLImageElement) {
         this.location = { x: clientInfo.index, y: clientInfo.index }
@@ -24,10 +25,15 @@ export abstract class Character {
         return this.location
     }
 
+    protected get getDirection() {
+        return this.direction
+    }
+
     private spawn() {
         const tile = map.getTileByLocation(this.location)
         tile?.setOccupied(this.getID)
         this.draw(Direction.NORTH)
+        this.direction = Direction.NORTH
     }
 
     private drawImageRot(img: HTMLImageElement, x: number, y: number, width: number, height: number, deg: number){
@@ -49,6 +55,7 @@ export abstract class Character {
         oldTile?.setUnoccupied()
         newTile?.setOccupied(ID)
         this.location = newLocation
+        this.direction = direction
         this.draw(direction)
     }
 }
