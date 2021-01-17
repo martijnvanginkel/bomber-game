@@ -1,4 +1,4 @@
-import { LocationType, Arrow } from './utils/types'
+import { LocationType, Arrow } from './types'
 
 export const moves = {
     basic: {
@@ -8,7 +8,6 @@ export const moves = {
         [Arrow.RIGHT]: { x: 1, y: 0 } as LocationType,
     }
 }
-
 
 export function mergeLocations(...locations: LocationType[]) {
     return locations.reduce((accumulator: LocationType, current: LocationType) => {

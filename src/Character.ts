@@ -43,7 +43,7 @@ export abstract class Character {
         this.drawImageRot(this.image, this.location.x * map.tileSize, this.location.y * map.tileSize, 50, 50, direction)
     }
 
-    protected move(oldLocation: LocationType, newLocation: LocationType, ID: string, direction: Direction) {
+    public move(oldLocation: LocationType, newLocation: LocationType, ID: string, direction: Direction) {
         const oldTile = map.getTileByLocation(oldLocation)
         const newTile = map.getTileByLocation(newLocation)
         oldTile?.setUnoccupied()
@@ -51,5 +51,4 @@ export abstract class Character {
         this.location = newLocation
         this.draw(direction)
     }
-
 }

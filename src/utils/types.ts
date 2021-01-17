@@ -1,3 +1,10 @@
+export interface ShareLocationType {
+    oldLocation: LocationType
+    newLocation: LocationType,
+    ID: string
+    direction: Direction
+}
+
 export interface LocationType {
     x: number
     y: number

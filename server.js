@@ -16,10 +16,9 @@ let clients = []
 
 io.on('connection', socket => {
   // registering connections
-  
   const ID = uniqueId()
   clients.push(ID)
-  io.emit('connected', { ID: ID, index: clients.length })
+  socket.emit('connected', { ID: ID, index: clients.length }) // io.emit on bug?
   socket.on('shareClient', (data) => socket.broadcast.emit('incomingClient', data))
   socket.on('secondShareClient', (data) => socket.broadcast.emit('secondIncomingClient', data))
 
