@@ -1,18 +1,11 @@
-import { LocationType } from './utils/types'
-
-export enum Direction {
-    UP,
-    DOWN,
-    LEFT,
-    RIGHT,
-}
+import { LocationType, Arrow } from './utils/types'
 
 export const moves = {
     basic: {
-        [Direction.UP]: { x: 0, y: -1 } as LocationType,
-        [Direction.DOWN]: { x: 0, y: 1 } as LocationType,
-        [Direction.LEFT]: { x: -1, y: 0 } as LocationType,
-        [Direction.RIGHT]: { x: 1, y: 0 } as LocationType,
+        [Arrow.UP]: { x: 0, y: -1 } as LocationType,
+        [Arrow.DOWN]: { x: 0, y: 1 } as LocationType,
+        [Arrow.LEFT]: { x: -1, y: 0 } as LocationType,
+        [Arrow.RIGHT]: { x: 1, y: 0 } as LocationType,
     }
 }
 

@@ -1,48 +1,41 @@
-// import { Character } from "./Character";
 import { ClientInfo } from "./services/MessageManager";
 import { images, map } from './index'
 import { Character } from "./Character";
-import { moves, Direction, mergeLocations } from './movements'
-import { LocationType } from "./utils/types";
+import { moves, mergeLocations } from './movements'
+import { Arrow, Direction } from "./utils/types";
 
 export class Player extends Character {
     constructor(protected clientInfo: ClientInfo) {
         super(clientInfo, images.getImage('player'))
-        this.input()
+        this.movementInput()
     }
 
-    private input() {
+    private movementInput() {
         document.addEventListener('keydown', (e) => {
             switch (e.code) {
                 case 'ArrowLeft':
-                    // move(Direction.LEFT)
-                    this.preMove(Direction.LEFT)
-                    // this.decideMovement(-1, 0, 270)
+                    this.preMove(Arrow.LEFT, Direction.WEST)
                     break;
                 case 'ArrowUp':
-                    this.preMove(Direction.UP)
-                    // this.decideMovement(0, -1, 0)
+                    this.preMove(Arrow.UP, Direction.NORTH)
                     break;
                 case 'ArrowRight':
-                    this.preMove(Direction.RIGHT)
-                    // this.decideMovement(1, 0, 90)
+                    this.preMove(Arrow.RIGHT, Direction.EAST)
                     break;
                 case 'ArrowDown':
-                    this.preMove(Direction.DOWN)
-                    // this.decideMovement(0, 1, 180)
+                    this.preMove(Arrow.DOWN, Direction.SOUTH)
                     break;
             }
         })
     }
 
-    private preMove(direction: Direction) {
-
-        const newLocation = mergeLocations(this.getLocation, moves.basic[direction])
+    private preMove(arrow: Arrow, direction: Direction) {
+        const newLocation = mergeLocations(this.getLocation, moves.basic[arrow])
 
         if (!map.availableLocation(newLocation)) {
             return
         }
 
-        this.move(this.getLocation, newLocation, this.getID)
+        this.move(this.getLocation, newLocation, this.getID, direction)
     }
 }

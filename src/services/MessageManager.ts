@@ -14,18 +14,6 @@ export interface ClientInfo {
     index: number
 }
 
-// export interface LocationType {
-//     xPos: number
-//     yPos: number
-// }
-
-// export interface ShareLocationType {
-//     oldLoc: LocationType
-//     newLoc: LocationType
-//     ID: string
-//     direction: number
-// }
-
 export class MessageManager {
 
     private socket: SocketIOClient.Socket
