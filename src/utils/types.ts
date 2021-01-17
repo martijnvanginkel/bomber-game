@@ -10,11 +10,12 @@ export interface LocationType {
     y: number
 }
 
-export enum Arrow {
+export enum Key {
     UP,
     DOWN,
     LEFT,
     RIGHT,
+    // Q,
 }
 
 export enum Direction {

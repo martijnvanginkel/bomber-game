@@ -2,8 +2,9 @@ import { ClientInfo } from "./services/MessageManager";
 import { images, map } from './index'
 import { Character } from "./Character";
 import { moves, mergeLocations } from './utils/movements'
-import { Arrow, Direction } from "./utils/types";
+import { Key, Direction } from "./utils/types";
 import { EventEmitter } from 'events'
+import { triggerAbility } from './utils/abilities'
 
 export class Player extends Character {
 
@@ -12,35 +13,57 @@ export class Player extends Character {
     constructor(protected clientInfo: ClientInfo) {
         super(clientInfo, images.getImage('player'))
         this.events = new EventEmitter()
-        this.movementInput()
+        this.watchInput()
     }
 
     public get playerEvents() {
         return this.events
     }
 
-    private movementInput() {
+    private watchInput() {
         document.addEventListener('keydown', (e) => {
             switch (e.code) {
                 case 'ArrowLeft':
-                    this.preMove(Arrow.LEFT, Direction.WEST)
-                    break;
+                    this.preMove(Key.LEFT, Direction.WEST)
+                    break
                 case 'ArrowUp':
-                    this.preMove(Arrow.UP, Direction.NORTH)
-                    break;
+                    this.preMove(Key.UP, Direction.NORTH)
+                    break
                 case 'ArrowRight':
-                    this.preMove(Arrow.RIGHT, Direction.EAST)
-                    break;
+                    this.preMove(Key.RIGHT, Direction.EAST)
+                    break
                 case 'ArrowDown':
-                    this.preMove(Arrow.DOWN, Direction.SOUTH)
-                    break;
+                    this.preMove(Key.DOWN, Direction.SOUTH)
+                    break
+                case 'KeyQ':
+                    this.preAbility()
+                    break
+                case 'KeyW':
+                    // this.preAbility()
+                    break
+                case 'KeyE':
+                    // this.preAbility()
+                    break
+                case 'KeyR':
+                    // this.preAbility()
+                    break
             }
         })
     }
 
-    private preMove(arrow: Arrow, direction: Direction) {
-        const newLocation = mergeLocations(this.getLocation, moves.basic[arrow])
-        console.log('premove')
+    // bepaal tiles eerst met een soort tekening die preload voor de game start
+    // bepaal de volgorde van de tiles (zelfde nummer === zelfde moment)
+    // bepaal interval tussen tiles
+    // bepaal interval voor ability
+
+    
+
+    private preAbility() {
+        triggerAbility(this.getLocation)
+    }
+
+    private preMove(key: Key, direction: Direction) {
+        const newLocation = mergeLocations(this.getLocation, moves.basic[key])
 
         if (!map.availableLocation(newLocation)) {
             return
