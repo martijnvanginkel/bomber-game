@@ -21,12 +21,14 @@ export class Tile {
         return this.occupied
     }
 
-    public setOccupied(occupied: boolean, ID?: string) {
-        this.occupied = occupied
-        if (ID) {
-            this.occupantID = ID
-        } else {
-            this.occupantID = null
-        }
+    public setOccupied(ID: string) {
+        this.occupied = true
+        this.occupantID = ID
+    }
+
+    public setUnoccupied() {
+        this.drawTile()
+        this.occupied = false
+        this.occupantID = null
     }
 }

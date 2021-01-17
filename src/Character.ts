@@ -27,7 +27,9 @@ export abstract class Character {
     }
 
     private spawn() {
-        map.setTileOccupied(this.location, this.getID) // this should be a general search
+        const tile = map.getTileByLocation(this.location)
+        tile?.setOccupied(this.getID)
+        // map.setTileOccupied(this.location, this.getID) // this should be a general search
         this.draw(0)
     }
 
@@ -55,8 +57,13 @@ export abstract class Character {
         this.drawImageRot(this.image, this.location.x * map.tileSize, this.location.y * map.tileSize, 50, 50, direction)
     }
 
-    private move() {
-
+    protected move(oldLocation: LocationType, newLocation: LocationType, ID: string) {
+        const oldTile = map.getTileByLocation(oldLocation)
+        const newTile = map.getTileByLocation(newLocation)
+        oldTile?.setUnoccupied()
+        newTile?.setOccupied(ID)
+        this.location = newLocation
+        this.draw(0)
     }
 
 }

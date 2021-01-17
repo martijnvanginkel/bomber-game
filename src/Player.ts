@@ -1,6 +1,6 @@
 // import { Character } from "./Character";
 import { ClientInfo } from "./services/MessageManager";
-import { images } from './index'
+import { images, map } from './index'
 import { Character } from "./Character";
 import { moves, Direction, mergeLocations } from './movements'
 import { LocationType } from "./utils/types";
@@ -39,36 +39,10 @@ export class Player extends Character {
 
         const newLocation = mergeLocations(this.getLocation, moves.basic[direction])
 
-        
+        if (!map.availableLocation(newLocation)) {
+            return
+        }
 
-        // const newLocation = mergeLocations
-
-        // const newLocation = fruits.reduce((basket, fruit) => {
-        //     for (const [fruitName, fruitCount] of Object.entries(fruit)) {
-        //         if (!basket[fruitName]) {
-        //             basket[fruitName] = 0;
-        //         }
-        
-        //         basket[fruitName] += fruitCount;
-        //     }
-        
-        //     return basket;
-        // }, {});
-
-        // const newLocation: LocationType = {...this.getLocation, ...moves.basic[direction] }
-
-        // const newLocation = this.getLocation => Object.values(moves.basic[direction]).reduce((a, b) => a + b);
-        // const newLocation = this.getLocation + moves.basic[direction]
-
-        // const newLocation = this.getLocation + moves.basic[direction]
-
-        // moves.basic[direction]
-
-        // console.log(newLocation)
-        // Object.keys(moves.basic).
+        this.move(this.getLocation, newLocation, this.getID)
     }
-
-
-
-
 }

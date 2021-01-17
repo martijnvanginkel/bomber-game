@@ -35,12 +35,12 @@ export class Map {
         }
     }
 
-    public getTileByCoords(x: number, y: number): Tile | undefined {
-        return this.tileMap[x][y]
+    public getTileByLocation(location: LocationType): Tile | undefined {
+        return this.tileMap[location.x][location.y]
     }
 
-    private isOccupiedTile(x: number, y: number): boolean {
-        const tile = this.getTileByCoords(x, y)
+    private isOccupiedTile(location: LocationType): boolean {
+        const tile = this.getTileByLocation(location)
         if (!tile) {
             return true
         }
@@ -60,29 +60,13 @@ export class Map {
         return false
     }
 
-    public availableTile(x: number, y: number): boolean {
-        if (this.exceedsMapBorders(x, y)) {
+    public availableLocation(location: LocationType): boolean {
+        if (this.exceedsMapBorders(location.x, location.y)) {
             return false
         }
-        if (this.isOccupiedTile(x, y)) {
+        if (this.isOccupiedTile(location)) {
             return false
         }
         return true
     }
-
-    public setTileOccupied(location: LocationType, ID: string) {
-        const tile = this.getTileByCoords(location.x, location.y)
-        tile?.setOccupied(true)
-    }
-
-    public setNewTileOccupied(oldLoc: LocationType, newLoc: LocationType, ID: string) {
-
-        const currentTile = this.getTileByCoords(oldLoc.x, oldLoc.y)
-        currentTile?.drawTile()
-        currentTile?.setOccupied(false)
-
-        const nextTile = this.getTileByCoords(newLoc.x, newLoc.y)
-        nextTile?.setOccupied(true, ID)
-    }
-
 }
