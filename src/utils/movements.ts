@@ -8,13 +8,3 @@ export const moves = {
         [Key.RIGHT]: { x: 1, y: 0 } as LocationType,
     }
 }
-
-// needs to be moved
-export function mergeLocations(...locations: LocationType[]) {
-    return locations.reduce((accumulator: LocationType, current: LocationType) => {
-        return {
-            x: accumulator.x + current.x,
-            y: accumulator.y + current.y,
-        }
-    })
-}

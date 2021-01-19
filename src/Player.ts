@@ -1,10 +1,11 @@
 import { ClientInfo } from "./services/MessageManager";
 import { images, map } from './index'
 import { Character } from "./Character";
-import { moves, mergeLocations } from './utils/movements'
+import { moves } from './utils/movements'
 import { Key, Direction } from "./utils/types";
 import { EventEmitter } from 'events'
-import { triggerAbility } from './utils/abilities'
+import { triggerAbility } from './utils/abilityService'
+import { mergeLocations } from "./utils/locations";
 
 export class Player extends Character {
 
@@ -41,12 +42,12 @@ export class Player extends Character {
                 case 'KeyW':
                     // this.preAbility()
                     break
-                case 'KeyE':
-                    // this.preAbility()
-                    break
-                case 'KeyR':
-                    // this.preAbility()
-                    break
+                // case 'KeyE':
+                //     // this.preAbility()
+                //     break
+                // case 'KeyR':
+                //     // this.preAbility()
+                //     break
             }
         })
     }
@@ -59,6 +60,12 @@ export class Player extends Character {
     
 
     private preAbility() {
+
+        // give type of player to constructor of Character
+
+        // send it here to the triggerAbility
+
+        // location, direction, type of player, key
         triggerAbility(this.getLocation, this.getDirection)
     }
 
