@@ -13,18 +13,20 @@ export interface AttackBlob {
 }
 
 // give basic attack as a dynamic parameter somehow
-export const triggerAbility = (playerLocation: LocationType, direction: Direction) => {
+export const triggerAbility = async (playerLocation: LocationType, direction: Direction) => {
     
     let blobs = basic
 
     for (const blob of blobs) {
         const turnedLocation = turnLocationToDirection(blob.location, direction)
-        const blobLocation = mergeLocations(turnedLocation, playerLocation)        
+        const blobLocation = mergeLocations(turnedLocation, playerLocation)
+
+        
         const tile = map.getTileByLocation(blobLocation)
         if (!tile) {
             continue
         }
-        tile?.drawTile('red')
+        tile?.drawTile('yellow')
         setTimeout(() => {
             tile?.drawTile()
         }, 500);
