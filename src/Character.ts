@@ -36,7 +36,7 @@ export abstract class Character {
         this.direction = Direction.NORTH
     }
 
-    private drawImageRot(img: HTMLImageElement, x: number, y: number, width: number, height: number, deg: number){
+    private drawImageRot(img: HTMLImageElement, x: number, y: number, width: number, height: number, deg: number) {
         const rad = deg * Math.PI / 180;
         map.getContext.save()
         map.getContext.translate(x + width / 2, y + height / 2);
