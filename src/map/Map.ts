@@ -36,7 +36,9 @@ export class Map {
     }
 
     public getTileByLocation(location: LocationType): Tile | undefined {
-        return this.tileMap[location.x][location.y]
+        if (!this.exceedsMapBorders(location.x, location.y)) {
+            return this.tileMap[location.x][location.y]
+        }
     }
 
     private isOccupiedTile(location: LocationType): boolean {

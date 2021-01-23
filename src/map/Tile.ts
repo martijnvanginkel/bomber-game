@@ -12,8 +12,9 @@ export class Tile {
         this.drawTile()
     }
 
-    public drawTile() {
-        this.map.getContext.fillStyle = 'white'
+    public drawTile(color?: string) {
+        const fillColor: string = color ? color : 'white'
+        this.map.getContext.fillStyle = fillColor
         this.map.getContext.fillRect(this.xPos * this.width, this.yPos * this.height, this.width, this.height)
     }
 
