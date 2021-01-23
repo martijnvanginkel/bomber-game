@@ -1,6 +1,6 @@
 export interface ShareLocationType {
     oldLocation: LocationType
-    newLocation: LocationType,
+    newLocation: LocationType
     ID: string
     direction: Direction
 }
@@ -10,12 +10,15 @@ export interface LocationType {
     y: number
 }
 
-export enum Key {
-    UP,
-    DOWN,
-    LEFT,
-    RIGHT,
-    // Q,
+export enum ArrowKey {
+    UP = 'UP',
+    DOWN = 'DOWN',
+    LEFT = 'LEFT',
+    RIGHT = 'RIGHT',
+}
+
+export enum AbilityKey {
+    Q = 'Q',
 }
 
 export enum Direction {

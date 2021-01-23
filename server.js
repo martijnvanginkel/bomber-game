@@ -32,6 +32,10 @@ io.on('connection', socket => {
     socket.broadcast.emit('incomingLocation', data)
   })
 
+  socket.on('shareAbility', (data) => {
+    socket.broadcast.emit('incomingAbility', data)
+  })
+
 
 
 })

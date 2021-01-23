@@ -1,13 +1,21 @@
-import { AttackBlob } from "./abilityService";
+import { LocationType } from '../../utils/types'
 
-export const basic: AttackBlob[] = [
+export type Ability = AttackBlob[]
+
+export interface AttackBlob {
+    location: LocationType
+    wait: number
+    duration: number
+}
+
+export const basicAttack: Ability = [
     {
         location: {
             x: 1,
             y: 0,
         },
         wait: 0,
-        length: 50
+        duration: 50,
     },
     {
         location: {
@@ -15,18 +23,18 @@ export const basic: AttackBlob[] = [
             y: 0,
         },
         wait: 200,
-        length: 50
+        duration: 50,
     },
 ]
 
-export const spin: AttackBlob[] = [
+export const spinAttack: Ability = [
     {
         location: {
             x: 1,
             y: 0,
         },
         wait: 0,
-        length: 20
+        duration: 20,
     },
     {
         location: {
@@ -34,7 +42,7 @@ export const spin: AttackBlob[] = [
             y: 1,
         },
         wait: 15,
-        length: 20
+        duration: 20,
     },
     {
         location: {
@@ -42,7 +50,7 @@ export const spin: AttackBlob[] = [
             y: 1,
         },
         wait: 15,
-        length: 20
+        duration: 20,
     },
     {
         location: {
@@ -50,7 +58,7 @@ export const spin: AttackBlob[] = [
             y: 1,
         },
         wait: 15,
-        length: 20
+        duration: 20,
     },
     {
         location: {
@@ -58,7 +66,7 @@ export const spin: AttackBlob[] = [
             y: 0,
         },
         wait: 15,
-        length: 20
+        duration: 20,
     },
     {
         location: {
@@ -66,7 +74,7 @@ export const spin: AttackBlob[] = [
             y: -1,
         },
         wait: 15,
-        length: 20
+        duration: 20,
     },
     {
         location: {
@@ -74,7 +82,7 @@ export const spin: AttackBlob[] = [
             y: -1,
         },
         wait: 15,
-        length: 20
+        duration: 20,
     },
     {
         location: {
@@ -82,6 +90,6 @@ export const spin: AttackBlob[] = [
             y: -1,
         },
         wait: 15,
-        length: 20
+        duration: 20,
     },
 ]
