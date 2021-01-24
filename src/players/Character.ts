@@ -5,6 +5,7 @@ import { map } from '../index'
 import { Ability } from './actions/abilities'
 import { waitForTime } from '../utils/general'
 import { Tile } from '../map/Tile'
+import _ from 'lodash'
 
 export abstract class Character {
     private location: LocationType
@@ -108,6 +109,43 @@ export abstract class Character {
         }
     }
 
+    private moveThroughTiles(tiles: Tile[]) {
+        const increment: number = 5
+
+        // callback at the end of every tile?
+        const firstTile = tiles[0]
+        const secondTile = tiles[1]
+
+        const firstPos = firstTile.getCanvasPosition
+        const secondPos = secondTile.getCanvasPosition
+
+        const xNegative: number = firstPos.x <= secondPos.x ? 1 : -1
+        const yNegative: number = firstPos.y <= secondPos.y ? 1 : -1
+
+        const xDiff: number = Math.abs(firstPos.x - secondPos.x) * xNegative
+        const yDiff: number = Math.abs(firstPos.y - secondPos.y) * yNegative
+
+        const xIncrement = xDiff === 0 ? 0 : increment * xNegative
+        const yIncrement = yDiff === 0 ? 0 : increment * yNegative
+
+        let startLoc = firstPos
+        const endLoc = secondPos
+
+        function draw() {
+            map.getPlayerContext.beginPath()
+            map.getPlayerContext.fillStyle = '#0095DD'
+            map.getPlayerContext.rect(startLoc.x, startLoc.y, 20, 20)
+            map.getPlayerContext.fill()
+            if (!_.isEqual(startLoc, endLoc)) {
+                startLoc.x = startLoc.x + xIncrement
+                startLoc.y = startLoc.y + yIncrement
+
+                window.requestAnimationFrame(draw)
+            }
+        }
+        window.requestAnimationFrame(draw)
+    }
+
     public move(
         oldLocation: LocationType,
         newLocation: LocationType,
@@ -121,45 +159,7 @@ export abstract class Character {
         oldTile.setUnoccupied()
         newTile.setOccupied(ID)
 
-        let oldPos: LocationType = oldTile.getCanvasPosition
-        const newPos: LocationType = newTile.getCanvasPosition
-
-        const increment: LocationType = this.decideLocationIncrement(
-            oldPos,
-            newPos,
-        )
-
-        // console.log(this.decideLocationIncrement(oldPos, newPos))
-
-        // this.location = newLocation
-        // this.direction = direction
-        // this.draw(direction)
-
-        console.log(oldPos, newPos)
-
-        function draw() {
-            oldPos.x += increment.x
-            oldPos.y += increment.y
-            // oldPos.x += increment.x
-            // oldPos.y += increment.y
-            // let x = 20
-            // requestAnimationFrame(draw)
-            // map.getContext.clearRect(20, 20, 20, 20)
-            map.getPlayerContext.beginPath()
-            map.getPlayerContext.fillStyle = '#0095DD'
-            map.getPlayerContext.rect(oldPos.x, oldPos.y, 20, 20)
-            map.getPlayerContext.fill()
-            if (oldPos.x !== newPos.x && oldPos.y !== newPos.y) {
-                // x += 2
-                oldPos.x += increment.x
-                oldPos.y += increment.y
-                // oldPos
-                window.requestAnimationFrame(draw)
-            }
-            // x += (timestamp - last) / 10
-            // last = timestamp
-        }
-        window.requestAnimationFrame(draw)
+        this.moveThroughTiles([oldTile, newTile])
 
         this.direction = direction
     }
