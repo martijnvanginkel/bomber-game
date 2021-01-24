@@ -83,34 +83,13 @@ export abstract class Character {
 
     private draw(x: number, y: number) {
         map.getPlayerContext.beginPath()
-        map.getPlayerContext.fillStyle = 'red'
+        map.getPlayerContext.fillStyle = '0095DD'
         map.getPlayerContext.rect(x, y, 50, 50) // 50 for now cause of tile size
         map.getPlayerContext.fill()
     }
 
-    // might want to move this somewhere else
-    private decideLocationIncrement(
-        oldLocation: LocationType,
-        newLocation: LocationType,
-    ) {
-        const xDiff: number = Math.abs(oldLocation.x - newLocation.x)
-        const yDiff: number = Math.abs(oldLocation.y - newLocation.y)
-
-        const xNegative: number = oldLocation.x < newLocation.x ? 1 : -1
-        const yNegative: number = oldLocation.y < newLocation.y ? 1 : -1
-
-        console.log(xDiff, yDiff)
-
-        return {
-            increment: {
-                x: xDiff === 0 ? 0 : (xDiff / 5) * xNegative,
-                y: yDiff === 0 ? 0 : (yDiff / 5) * yNegative,
-            },
-        }
-    }
-
     private moveThroughTiles(tiles: Tile[]) {
-        const increment: number = 5
+        const increment: number = 50 / 10 // tilesize = 50
 
         // callback at the end of every tile?
         const firstTile = tiles[0]
@@ -132,14 +111,19 @@ export abstract class Character {
         const endLoc = secondPos
 
         function draw() {
+            map.getPlayerContext.clearRect(
+                startLoc.x - xIncrement,
+                startLoc.y - yIncrement,
+                50,
+                50,
+            )
             map.getPlayerContext.beginPath()
             map.getPlayerContext.fillStyle = '#0095DD'
-            map.getPlayerContext.rect(startLoc.x, startLoc.y, 20, 20)
+            map.getPlayerContext.rect(startLoc.x, startLoc.y, 50, 50)
             map.getPlayerContext.fill()
             if (!_.isEqual(startLoc, endLoc)) {
                 startLoc.x = startLoc.x + xIncrement
                 startLoc.y = startLoc.y + yIncrement
-
                 window.requestAnimationFrame(draw)
             }
         }
@@ -161,6 +145,7 @@ export abstract class Character {
 
         this.moveThroughTiles([oldTile, newTile])
 
+        this.location = newLocation
         this.direction = direction
     }
 
