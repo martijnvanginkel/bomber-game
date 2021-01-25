@@ -2,9 +2,8 @@ import { LocationType } from './../utils/types'
 import { Tile } from './Tile'
 
 export class Map {
-
-    private canvas: HTMLCanvasElement
-    private context: CanvasRenderingContext2D
+    private mapContext: CanvasRenderingContext2D
+    private playerContext: CanvasRenderingContext2D
 
     private width: number = 10
     private height: number = 10
@@ -14,14 +13,20 @@ export class Map {
     public tileMap: Tile[][] = []
 
     constructor() {
-        this.canvas = document.getElementById('canvas') as HTMLCanvasElement
-        this.context = this.canvas.getContext('2d') as CanvasRenderingContext2D
-        
+        const mapCanvas = document.getElementById('mapcanvas') as HTMLCanvasElement
+        const playerCanvas = document.getElementById('playercanvas') as HTMLCanvasElement
+        this.mapContext = mapCanvas.getContext('2d') as CanvasRenderingContext2D
+        this.playerContext = playerCanvas.getContext('2d') as CanvasRenderingContext2D
+
         this.drawMap()
     }
 
-    public get getContext() {
-        return this.context
+    public get getMapContext() {
+        return this.mapContext
+    }
+
+    public get getPlayerContext() {
+        return this.playerContext
     }
 
     private drawMap() {
@@ -36,7 +41,9 @@ export class Map {
     }
 
     public getTileByLocation(location: LocationType): Tile | undefined {
-        return this.tileMap[location.x][location.y]
+        if (!this.exceedsMapBorders(location.x, location.y)) {
+            return this.tileMap[location.x][location.y]
+        }
     }
 
     private isOccupiedTile(location: LocationType): boolean {
@@ -51,7 +58,7 @@ export class Map {
     }
 
     private exceedsMapBorders(x: number, y: number): boolean {
-        if (x < 0  || y < 0) {
+        if (x < 0 || y < 0) {
             return true
         }
         if (x > 9 || y > 9) {

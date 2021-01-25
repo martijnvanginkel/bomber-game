@@ -1,20 +1,20 @@
 import { Map } from './Map'
 
 export class Tile {
-
     private width: number = 50
     private height: number = 50
     private occupied: boolean = false
     private occupantID: string | null
 
-    constructor(private xPos: number, private yPos: number, private map: Map) {
+    constructor(private x: number, private y: number, private map: Map) {
         this.occupantID = null
         this.drawTile()
     }
 
-    public drawTile() {
-        this.map.getContext.fillStyle = 'white'
-        this.map.getContext.fillRect(this.xPos * this.width, this.yPos * this.height, this.width, this.height)
+    public drawTile(color?: string) {
+        const fillColor: string = color ? color : 'white'
+        this.map.getMapContext.fillStyle = fillColor
+        this.map.getMapContext.fillRect(this.x * this.width, this.y * this.height, this.width, this.height)
     }
 
     get isOccupied() {

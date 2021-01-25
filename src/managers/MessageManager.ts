@@ -1,7 +1,8 @@
-import io from 'socket.io-client';
-import { Player } from './../Player';
-import { Enemy } from './../Enemy'
+import io from 'socket.io-client'
+import { Player } from './../players/Player'
+import { Enemy } from './../players/Enemy'
 import { ShareLocationType } from './../utils/types'
+import { Ability } from './../players/actions/abilities'
 
 export interface ClientInfo {
     ID: string
@@ -9,7 +10,6 @@ export interface ClientInfo {
 }
 
 export class MessageManager {
-
     private socket: SocketIOClient.Socket
     private player: Player
     private enemies: Enemy[]
@@ -18,7 +18,7 @@ export class MessageManager {
         const port: number = 80
         const url: string = 'http://localhost'
 
-        this.socket = io(`${url}:${port.toString()}`);
+        this.socket = io(`${url}:${port.toString()}`)
         this.enemies = new Array()
 
         this.socket.on('connected', (client: ClientInfo) => {
@@ -29,7 +29,6 @@ export class MessageManager {
     }
 
     private establishConnection(client: ClientInfo) {
-        
         this.player = new Player(client)
         this.socket.emit('shareClient', client)
 
@@ -44,19 +43,30 @@ export class MessageManager {
     }
 
     private outgoingPlayerEvents() {
-        this.player.playerEvents.on('move', (data) => {
+        this.player.playerEvents.on('move', (data: ShareLocationType) => {
             this.socket.emit('shareLocation', data)
+        })
+        this.player.playerEvents.on('ability', (ability: Ability) => {
+            this.socket.emit('shareAbility', ability)
         })
     }
 
     private incomingEnemyEvents() {
         this.socket.on('incomingLocation', (data: ShareLocationType) => {
-            this.enemies.forEach((enemy: Enemy) => enemy.move(
-                data.oldLocation,
-                data.newLocation,
-                data.ID,
-                data.direction
-            ))
+            this.enemies.forEach((enemy: Enemy) =>
+                enemy.move(
+                    data.oldLocation,
+                    data.newLocation,
+                    data.ID,
+                    data.direction,
+                ),
+            )
+        })
+
+        this.socket.on('incomingAbility', (ability: Ability) => {
+            this.enemies.forEach((enemy: Enemy) => {
+                enemy.fireAbility(ability)
+            })
         })
     }
 }
