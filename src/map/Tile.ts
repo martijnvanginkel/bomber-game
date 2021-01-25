@@ -1,4 +1,3 @@
-import { LocationType } from '../utils/types'
 import { Map } from './Map'
 
 export class Tile {
@@ -12,22 +11,10 @@ export class Tile {
         this.drawTile()
     }
 
-    public get getCanvasPosition(): LocationType {
-        return {
-            x: this.x * this.width,
-            y: this.y * this.height,
-        }
-    }
-
     public drawTile(color?: string) {
         const fillColor: string = color ? color : 'white'
         this.map.getMapContext.fillStyle = fillColor
-        this.map.getMapContext.fillRect(
-            this.x * this.width,
-            this.y * this.height,
-            this.width,
-            this.height,
-        )
+        this.map.getMapContext.fillRect(this.x * this.width, this.y * this.height, this.width, this.height)
     }
 
     get isOccupied() {

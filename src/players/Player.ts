@@ -6,10 +6,7 @@ import { EventEmitter } from 'events'
 import { Ability } from './actions/abilities'
 import { Move } from './actions/movements'
 import { formatAbilityToLocation } from './actions/utils/abilityUtils'
-import {
-    findCharacterAbility,
-    findCharacterMove,
-} from './actions/utils/characterUtils'
+import { findCharacterAbility, findCharacterMove } from './actions/utils/characterUtils'
 import { mergeLocations } from '../utils/general'
 
 export class Player extends Character {
@@ -48,20 +45,17 @@ export class Player extends Character {
     }
 
     private prepareAbility(key: AbilityKey) {
-        const foundAbility: Ability = findCharacterAbility(
-            key,
-            this.getCharacterType,
-        )
-        const ability = formatAbilityToLocation(
-            foundAbility,
-            this.getLocation,
-            this.getDirection,
-        )
+        const foundAbility: Ability = findCharacterAbility(key, this.getCharacterType)
+        const ability = formatAbilityToLocation(foundAbility, this.getLocation, this.getDirection)
         this.events.emit('ability', ability)
         this.fireAbility(ability)
     }
 
     private prepareMove(key: ArrowKey, direction: Direction) {
+        if (this.isMoving) {
+            return
+        }
+
         const move: Move = findCharacterMove(key, this.getCharacterType)
         const newLocation = mergeLocations(this.getLocation, move)
         if (!map.availableLocation(newLocation)) {

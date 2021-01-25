@@ -13,16 +13,10 @@ export class Map {
     public tileMap: Tile[][] = []
 
     constructor() {
-        const mapCanvas = document.getElementById(
-            'mapcanvas',
-        ) as HTMLCanvasElement
-        const playerCanvas = document.getElementById(
-            'playercanvas',
-        ) as HTMLCanvasElement
+        const mapCanvas = document.getElementById('mapcanvas') as HTMLCanvasElement
+        const playerCanvas = document.getElementById('playercanvas') as HTMLCanvasElement
         this.mapContext = mapCanvas.getContext('2d') as CanvasRenderingContext2D
-        this.playerContext = playerCanvas.getContext(
-            '2d',
-        ) as CanvasRenderingContext2D
+        this.playerContext = playerCanvas.getContext('2d') as CanvasRenderingContext2D
 
         this.drawMap()
     }
@@ -34,10 +28,6 @@ export class Map {
     public get getPlayerContext() {
         return this.playerContext
     }
-
-    // public get getCanvas() {
-    //     return this.canvas
-    // }
 
     private drawMap() {
         for (let i = 0; i < this.height; i++) {
