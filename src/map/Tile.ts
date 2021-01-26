@@ -21,6 +21,10 @@ export class Tile {
         return this.occupied
     }
 
+    public get getOccupant() {
+        return this.occupantID
+    }
+
     public setOccupied(ID: string) {
         this.occupied = true
         this.occupantID = ID

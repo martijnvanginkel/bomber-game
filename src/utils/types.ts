@@ -10,6 +10,17 @@ export interface LocationType {
     y: number
 }
 
+export interface BounceData {
+    victimID: string
+    incomingDirection: Direction
+}
+
+export enum TileStatus {
+    AVAILABLE,
+    OCCUPIED,
+    NONEXISTENT,
+}
+
 export enum ArrowKey {
     UP = 'UP',
     DOWN = 'DOWN',

@@ -1,7 +1,7 @@
 import { ClientInfo } from '../managers/MessageManager'
 import { images, map } from '../index'
 import { Character } from './Character'
-import { Direction, ArrowKey, AbilityKey } from '../utils/types'
+import { Direction, ArrowKey, AbilityKey, TileStatus } from '../utils/types'
 import { EventEmitter } from 'events'
 import { Ability } from './actions/abilities'
 import { Move } from './actions/movements'
@@ -58,9 +58,28 @@ export class Player extends Character {
 
         const move: Move = findCharacterMove(key, this.getCharacterType)
         const newLocation = mergeLocations(this.getLocation, move)
-        if (!map.availableLocation(newLocation)) {
+
+        // I need to find a more elegant solution to not have to write if statements
+        const tileStatus: TileStatus = map.getTileStatus(newLocation)
+        if (tileStatus === TileStatus.NONEXISTENT) {
             return
         }
+        if (tileStatus === TileStatus.OCCUPIED) {
+            const tile = map.getTileByLocation(newLocation)!
+            const occupantID = tile.getOccupant
+            this.events.emit('bounce', {
+                victimID: occupantID,
+                incomingDirection: direction,
+            })
+            // console.log(occupantID)
+            // console.log('occupied')
+            return
+        }
+
+        // if (!map.availableLocation(newLocation)) {
+        //     console.log()
+        //     return
+        // }
 
         this.events.emit('move', {
             oldLocation: this.getLocation,

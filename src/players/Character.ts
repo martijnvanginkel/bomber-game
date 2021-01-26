@@ -7,6 +7,7 @@ import { waitForTime } from '../utils/general'
 import { Tile } from '../map/Tile'
 import { CharacterAnimator } from './CharacterAnimator'
 import _ from 'lodash'
+import { bounceMovement } from './actions/movements'
 
 export abstract class Character {
     private location: LocationType
@@ -27,7 +28,7 @@ export abstract class Character {
         return this.clientInfo
     }
 
-    protected get getID() {
+    public get getID() {
         return this.clientInfo.ID
     }
 
@@ -86,5 +87,11 @@ export abstract class Character {
                 tile?.drawTile()
             }, blob.duration)
         }
+    }
+
+    public receiveBounce(incomingDirection: Direction) {
+        console.log('receive bounce')
+        console.log(bounceMovement[incomingDirection])
+        console.log(incomingDirection)
     }
 }

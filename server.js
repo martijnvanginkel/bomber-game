@@ -36,6 +36,10 @@ io.on('connection', socket => {
     socket.broadcast.emit('incomingAbility', data)
   })
 
+  socket.on('shareBounce', (data) => {
+    io.emit('incomingBounce', data)
+  })
+
 
 
 })

@@ -1,7 +1,7 @@
 import io from 'socket.io-client'
 import { Player } from './../players/Player'
 import { Enemy } from './../players/Enemy'
-import { ShareLocationType } from './../utils/types'
+import { BounceData, ShareLocationType } from './../utils/types'
 import { Ability } from './../players/actions/abilities'
 
 export interface ClientInfo {
@@ -49,17 +49,15 @@ export class MessageManager {
         this.player.playerEvents.on('ability', (ability: Ability) => {
             this.socket.emit('shareAbility', ability)
         })
+        this.player.playerEvents.on('bounce', (data: BounceData) => {
+            this.socket.emit('shareBounce', data)
+        })
     }
 
     private incomingEnemyEvents() {
         this.socket.on('incomingLocation', (data: ShareLocationType) => {
             this.enemies.forEach((enemy: Enemy) =>
-                enemy.move(
-                    data.oldLocation,
-                    data.newLocation,
-                    data.ID,
-                    data.direction,
-                ),
+                enemy.move(data.oldLocation, data.newLocation, data.ID, data.direction),
             )
         })
 
@@ -67,6 +65,11 @@ export class MessageManager {
             this.enemies.forEach((enemy: Enemy) => {
                 enemy.fireAbility(ability)
             })
+        })
+
+        this.socket.on('incomingBounce', (data: BounceData) => {
+            const enemy = this.enemies.find((enemy) => enemy.getID === data.victimID)
+            enemy?.receiveBounce(data.incomingDirection)
         })
     }
 }
