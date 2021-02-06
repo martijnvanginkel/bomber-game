@@ -1,7 +1,7 @@
-import { ClientInfo } from '../managers/MessageManager'
+import { ClientInfo } from '../managers/MessageDistributor'
 import { images, map } from '../index'
 import { Character } from './Character'
-import { Direction, ArrowKey, AbilityKey } from '../utils/types'
+import { Direction, ArrowKey, AbilityKey, TileStatus, LocationType } from '../utils/types'
 import { EventEmitter } from 'events'
 import { Ability } from './actions/abilities'
 import { Move } from './actions/movements'
@@ -13,7 +13,7 @@ export class Player extends Character {
     private events: EventEmitter
 
     constructor(protected clientInfo: ClientInfo) {
-        super(clientInfo, images.getImage('player'))
+        super(clientInfo, images.getImage('player'), 'green')
         this.events = new EventEmitter()
         this.watchInput()
     }
@@ -55,20 +55,44 @@ export class Player extends Character {
         if (this.isMoving) {
             return
         }
-
         const move: Move = findCharacterMove(key, this.getCharacterType)
         const newLocation = mergeLocations(this.getLocation, move)
-        if (!map.availableLocation(newLocation)) {
-            return
-        }
+        const tileStatus: TileStatus = map.getTileStatus(newLocation)
 
+        switch (tileStatus) {
+            case TileStatus.NONEXISTENT:
+                break
+            case TileStatus.OCCUPIED:
+                this.triggerBounce(newLocation, direction)
+                break
+            case TileStatus.AVAILABLE:
+                this.triggerMove(newLocation, direction)
+                break
+            default:
+                throw new Error('Unknown tile status?')
+                break
+        }
+    }
+
+    private triggerMove(newLocation: LocationType, direction: Direction) {
+        this.move(this.getLocation, newLocation, this.getID, direction)
         this.events.emit('move', {
             oldLocation: this.getLocation,
             newLocation: newLocation,
             ID: this.getID,
             direction: direction,
         })
+    }
 
-        this.move(this.getLocation, newLocation, this.getID, direction)
+    private triggerBounce(newLocation: LocationType, incomingDirection: Direction) {
+        const tile = map.getTileByLocation(newLocation)
+        if (!tile) {
+            return
+        }
+        const occupantID = tile.getOccupant
+        this.events.emit('bounce', {
+            victimID: occupantID,
+            incomingDirection: incomingDirection,
+        })
     }
 }

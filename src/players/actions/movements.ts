@@ -1,4 +1,4 @@
-import { LocationType } from '../../utils/types'
+import { Direction, LocationType } from '../../utils/types'
 
 export type Move = LocationType
 
@@ -20,4 +20,11 @@ export const basicLeft: Move = {
 export const basicRight: Move = {
     x: 1,
     y: 0,
+}
+
+export const directionToCoordinates = {
+    [Direction.NORTH]: basicUp,
+    [Direction.SOUTH]: basicDown,
+    [Direction.WEST]: basicLeft,
+    [Direction.EAST]: basicRight,
 }

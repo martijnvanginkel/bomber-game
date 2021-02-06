@@ -2,7 +2,6 @@ var express = require('express')
 const app = express()
 const http = require('http')
 const server = http.createServer(app)
-// const serverSockets = require('./serverSockets')
 const io = require('socket.io')(server)
 const uniqueId = require('lodash.uniqueid');
 
@@ -36,8 +35,9 @@ io.on('connection', socket => {
     socket.broadcast.emit('incomingAbility', data)
   })
 
-
-
+  socket.on('shareBounce', (data) => {
+    socket.broadcast.emit('incomingBounce', data)
+  })
 })
 
 server.listen(80, () => undefined);

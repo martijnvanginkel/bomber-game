@@ -1,4 +1,4 @@
-import { LocationType } from './../utils/types'
+import { TileStatus, LocationType } from './../utils/types'
 import { Tile } from './Tile'
 
 export class Map {
@@ -67,13 +67,13 @@ export class Map {
         return false
     }
 
-    public availableLocation(location: LocationType): boolean {
+    public getTileStatus(location: LocationType): TileStatus {
         if (this.exceedsMapBorders(location.x, location.y)) {
-            return false
+            return TileStatus.NONEXISTENT
         }
         if (this.isOccupiedTile(location)) {
-            return false
+            return TileStatus.OCCUPIED
         }
-        return true
+        return TileStatus.AVAILABLE
     }
 }
