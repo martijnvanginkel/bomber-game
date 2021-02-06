@@ -22,7 +22,7 @@ export const basicRight: Move = {
     y: 0,
 }
 
-export const bounceMovement = {
+export const directionToCoordinates = {
     [Direction.NORTH]: basicUp,
     [Direction.SOUTH]: basicDown,
     [Direction.WEST]: basicLeft,

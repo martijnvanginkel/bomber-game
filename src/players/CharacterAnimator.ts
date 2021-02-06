@@ -5,10 +5,12 @@ import { mergeLocations } from '../utils/general'
 import _ from 'lodash'
 
 export class CharacterAnimator {
+    public constructor(protected color: string) {}
+
     private drawPosition(x: number, y: number) {
         // map.getPlayerContext.drawImage(this.image, x, y, 50, 50) // future image implementation
         map.getPlayerContext.beginPath()
-        map.getPlayerContext.fillStyle = '#0095DD'
+        map.getPlayerContext.fillStyle = this.color
         map.getPlayerContext.rect(x, y, 50, 50) // 50 for now cause of tile size
         map.getPlayerContext.fill()
     }

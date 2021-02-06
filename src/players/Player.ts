@@ -13,7 +13,7 @@ export class Player extends Character {
     private events: EventEmitter
 
     constructor(protected clientInfo: ClientInfo) {
-        super(clientInfo, images.getImage('player'))
+        super(clientInfo, images.getImage('player'), 'green')
         this.events = new EventEmitter()
         this.watchInput()
     }
@@ -55,6 +55,7 @@ export class Player extends Character {
         if (this.isMoving) {
             return
         }
+        console.log('trig')
 
         const move: Move = findCharacterMove(key, this.getCharacterType)
         const newLocation = mergeLocations(this.getLocation, move)
@@ -80,6 +81,9 @@ export class Player extends Character {
         //     console.log()
         //     return
         // }
+        console.log('playermove')
+
+        this.move(this.getLocation, newLocation, this.getID, direction)
 
         this.events.emit('move', {
             oldLocation: this.getLocation,
@@ -87,7 +91,5 @@ export class Player extends Character {
             ID: this.getID,
             direction: direction,
         })
-
-        this.move(this.getLocation, newLocation, this.getID, direction)
     }
 }

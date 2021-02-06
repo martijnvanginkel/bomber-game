@@ -1,13 +1,13 @@
 import { ClientInfo } from '../managers/MessageManager'
-import { LocationType, Direction } from '../utils/types'
+import { LocationType, Direction, TileStatus } from '../utils/types'
 import { CharacterType } from './actions/characters'
 import { map } from '../index'
 import { Ability } from './actions/abilities'
-import { waitForTime } from '../utils/general'
+import { mergeLocations, waitForTime } from '../utils/general'
 import { Tile } from '../map/Tile'
 import { CharacterAnimator } from './CharacterAnimator'
 import _ from 'lodash'
-import { bounceMovement } from './actions/movements'
+import { directionToCoordinates } from './actions/movements'
 
 export abstract class Character {
     private location: LocationType
@@ -16,8 +16,8 @@ export abstract class Character {
     private animator: CharacterAnimator
     private moving: boolean
 
-    constructor(protected clientInfo: ClientInfo, protected image: HTMLImageElement) {
-        this.animator = new CharacterAnimator()
+    constructor(protected clientInfo: ClientInfo, protected image: HTMLImageElement, protected color: string) {
+        this.animator = new CharacterAnimator(color)
         this.character = CharacterType.BASIC
         this.location = { x: clientInfo.index, y: clientInfo.index }
         this.setMoving(false)
@@ -61,18 +61,21 @@ export abstract class Character {
     }
 
     public async move(oldLocation: LocationType, newLocation: LocationType, ID: string, direction: Direction) {
+        // console.log('move')
+
         const oldTile: Tile = map.getTileByLocation(oldLocation)!
         const newTile: Tile = map.getTileByLocation(newLocation)!
 
         oldTile.setUnoccupied()
-        newTile.setOccupied(ID)
 
         this.setMoving(true)
         await this.animator.move(oldLocation, newLocation)
         this.setMoving(false)
 
+        newTile.setOccupied(ID)
         this.location = newLocation
         this.direction = direction
+        // console.log(this.location)
     }
 
     public async fireAbility(ability: Ability) {
@@ -90,8 +93,11 @@ export abstract class Character {
     }
 
     public receiveBounce(incomingDirection: Direction) {
-        console.log('receive bounce')
-        console.log(bounceMovement[incomingDirection])
-        console.log(incomingDirection)
+        const newLocation: LocationType = mergeLocations(this.getLocation, directionToCoordinates[incomingDirection])
+        const tileStatus: TileStatus = map.getTileStatus(newLocation)
+        if (tileStatus === TileStatus.NONEXISTENT) {
+            return
+        }
+        this.move(this.getLocation, newLocation, this.getID, incomingDirection)
     }
 }
