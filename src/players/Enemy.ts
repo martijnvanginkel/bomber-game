@@ -1,4 +1,4 @@
-import { ClientInfo } from '../managers/MessageManager'
+import { ClientInfo } from '../managers/MessageDistributor'
 import { images } from '../index'
 import { Character } from './Character'
 

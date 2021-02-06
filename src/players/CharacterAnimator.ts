@@ -2,12 +2,13 @@ import { map } from '../index'
 import { mapLocationToCanvasLocation } from '../map/utils/general'
 import { LocationType } from '../utils/types'
 import { mergeLocations } from '../utils/general'
-import _ from 'lodash'
+import _, { first } from 'lodash'
 
 export class CharacterAnimator {
     public constructor(protected color: string) {}
 
     private drawPosition(x: number, y: number) {
+        console.log(x, y)
         // map.getPlayerContext.drawImage(this.image, x, y, 50, 50) // future image implementation
         map.getPlayerContext.beginPath()
         map.getPlayerContext.fillStyle = this.color
@@ -27,10 +28,14 @@ export class CharacterAnimator {
         let start = mapLocationToCanvasLocation(curLoc)
         const end = mapLocationToCanvasLocation(endLoc)
         const increment = this.getLocationIncrement(start, end)
+        let firstFrame: boolean = true
 
         return new Promise<void>((resolve) => {
             const draw = () => {
-                this.clearPosition(start.x - increment.x, start.y - increment.y)
+                if (!firstFrame) {
+                    this.clearPosition(start.x - increment.x, start.y - increment.y)
+                }
+                firstFrame = false
                 this.drawPosition(start.x, start.y)
                 if (!_.isEqual(start, end)) {
                     start = mergeLocations(start, increment)

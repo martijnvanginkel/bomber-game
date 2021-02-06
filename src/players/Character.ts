@@ -1,4 +1,4 @@
-import { ClientInfo } from '../managers/MessageManager'
+import { ClientInfo } from '../managers/MessageDistributor'
 import { LocationType, Direction, TileStatus } from '../utils/types'
 import { CharacterType } from './actions/characters'
 import { map } from '../index'
@@ -6,7 +6,6 @@ import { Ability } from './actions/abilities'
 import { mergeLocations, waitForTime } from '../utils/general'
 import { Tile } from '../map/Tile'
 import { CharacterAnimator } from './CharacterAnimator'
-import _ from 'lodash'
 import { directionToCoordinates } from './actions/movements'
 
 export abstract class Character {
@@ -60,22 +59,21 @@ export abstract class Character {
         this.direction = Direction.NORTH
     }
 
-    public async move(oldLocation: LocationType, newLocation: LocationType, ID: string, direction: Direction) {
-        // console.log('move')
-
+    public async move(oldLocation: LocationType, newLocation: LocationType, ID: string, direction?: Direction) {
         const oldTile: Tile = map.getTileByLocation(oldLocation)!
         const newTile: Tile = map.getTileByLocation(newLocation)!
 
         oldTile.setUnoccupied()
+        newTile.setOccupied(ID)
 
         this.setMoving(true)
         await this.animator.move(oldLocation, newLocation)
         this.setMoving(false)
 
-        newTile.setOccupied(ID)
         this.location = newLocation
-        this.direction = direction
-        // console.log(this.location)
+        if (direction) {
+            this.direction = direction
+        }
     }
 
     public async fireAbility(ability: Ability) {
@@ -98,6 +96,6 @@ export abstract class Character {
         if (tileStatus === TileStatus.NONEXISTENT) {
             return
         }
-        this.move(this.getLocation, newLocation, this.getID, incomingDirection)
+        this.move(this.getLocation, newLocation, this.getID)
     }
 }
