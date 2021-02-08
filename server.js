@@ -1,43 +1,43 @@
-var express = require('express')
-const app = express()
-const http = require('http')
-const server = http.createServer(app)
-const io = require('socket.io')(server)
-const uniqueId = require('lodash.uniqueid');
+// var express = require('express')
+// const app = express()
+// const http = require('http')
+// const server = http.createServer(app)
+// const io = require('socket.io')(server)
+// const uniqueId = require('lodash.uniqueid');
 
-app.use(express.static(__dirname + '/dist/'));
+// app.use(express.static(__dirname + '/dist/'));
 
-app.get('/', function(req, res) {
-  res.sendFile(__dirname + '/dist/index.html');
-});
+// app.get('/', function(req, res) {
+//   res.sendFile(__dirname + '/dist/index.html');
+// });
 
-let clients = []
+// let clients = []
 
-io.on('connection', socket => {
-  // registering connections
-  const ID = uniqueId()
-  clients.push(ID)
-  socket.emit('connected', { ID: ID, index: clients.length }) // io.emit on bug?
-  socket.on('shareClient', (data) => socket.broadcast.emit('incomingClient', data))
-  socket.on('secondShareClient', (data) => socket.broadcast.emit('secondIncomingClient', data))
+// io.on('connection', socket => {
+//   // registering connections
+//   const ID = uniqueId()
+//   clients.push(ID)
+//   socket.emit('connected', { ID: ID, index: clients.length }) // io.emit on bug?
+//   socket.on('shareClient', (data) => socket.broadcast.emit('incomingClient', data))
+//   socket.on('secondShareClient', (data) => socket.broadcast.emit('secondIncomingClient', data))
 
-  socket.on('disconnect', function () {
-    io.emit('playerLeft', ID)
-    clients = clients.filter((cl) => cl !== ID)
-  })
+//   socket.on('disconnect', function () {
+//     io.emit('playerLeft', ID)
+//     clients = clients.filter((cl) => cl !== ID)
+//   })
 
 
-  socket.on('shareLocation', (data) => {
-    socket.broadcast.emit('incomingLocation', data)
-  })
+//   socket.on('shareLocation', (data) => {
+//     socket.broadcast.emit('incomingLocation', data)
+//   })
 
-  socket.on('shareAbility', (data) => {
-    socket.broadcast.emit('incomingAbility', data)
-  })
+//   socket.on('shareAbility', (data) => {
+//     socket.broadcast.emit('incomingAbility', data)
+//   })
 
-  socket.on('shareBounce', (data) => {
-    socket.broadcast.emit('incomingBounce', data)
-  })
-})
+//   socket.on('shareBounce', (data) => {
+//     socket.broadcast.emit('incomingBounce', data)
+//   })
+// })
 
-server.listen(80, () => undefined);
+// server.listen(80, () => undefined);

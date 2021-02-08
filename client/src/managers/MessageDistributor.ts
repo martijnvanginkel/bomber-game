@@ -1,4 +1,8 @@
 import io from 'socket.io-client'
+// import { io } from './../../node_modules/socket.io/client-di'
+// import io from 'socket.io'
+// import io from 'socket.io'
+// import io from 'socket.io'
 import { Player } from '../players/Player'
 import { Enemy } from '../players/Enemy'
 import { BounceData, Direction, ShareLocationType } from '../utils/types'
@@ -12,22 +16,30 @@ export interface ClientInfo {
 }
 
 export class MessageDistributor {
-    private socket: SocketIOClient.Socket
+    private socket: any //SocketIOClient.Socket
     private playerEvents: EventEmitter
     private actions: ActionDistributor
 
     constructor() {
-        const port: number = 80
+        const port: number = 9000
         const url: string = 'http://localhost'
 
-        this.socket = io(`${url}:${port.toString()}`)
-        this.actions = new ActionDistributor()
+        // const test = io()
+        // const socket = io.Socket.
 
-        this.socket.on('connected', (client: ClientInfo) => {
-            this.establishConnection(client)
-            this.outgoingPlayerEvents()
-            this.incomingEnemyEvents()
-        })
+        const socket = io()
+        // console.log(socket.on)
+        // this.socket = io(`${url}:${port.toString()}`)
+        this.actions = new ActionDistributor()
+        console.log('here')
+        // console.log(this.socket.io.on)
+        // this.socket.
+        // this.socket.on('connected', (client: ClientInfo) => {
+        //     console.log('connected')
+        //     this.establishConnection(client)
+        //     this.outgoingPlayerEvents()
+        //     this.incomingEnemyEvents()
+        // })
     }
 
     private establishConnection(client: ClientInfo) {
@@ -35,6 +47,7 @@ export class MessageDistributor {
         this.playerEvents = player.playerEvents
         this.actions.addPlayer(player)
         this.socket.emit('shareClient', client)
+        console.log('asdfasdf')
 
         this.socket.on('incomingClient', (incomingClient: ClientInfo) => {
             this.actions.addEnemy(new Enemy(incomingClient))
