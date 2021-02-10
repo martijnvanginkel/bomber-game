@@ -26,7 +26,7 @@ export class MessageDistributor {
 
         // const test = io()
         // const socket = io.Socket.
-
+        console.log('message')
         const socket = io()
         // console.log(socket.on)
         // this.socket = io(`${url}:${port.toString()}`)

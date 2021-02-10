@@ -1,61 +1,52 @@
-// import express from 'express'
-// const express = require('express')
-// import http from 'http'
-// import path from 'path'
-// import io from 'socket.io-client'
-// import uniqueId from 'lodash.uniqueid'
+import express from 'express'
+import path from 'path'
+import http from 'http'
+import socketIo from 'socket.io'
+import uniqueId from 'lodash.uniqueid'
+import { Ability, BounceData, ClientInfo, ShareLocationType } from './sockets/types'
 
-var express = require('express')
 const app = express()
-const path = require('path')
-const http = require('http')
 const server = http.createServer(app)
-// import io from 'socket.io'
-// const io = require('socket.io')(server)
-const uniqueId = require('lodash.uniqueid')
-
-const socketIo = require('socket.io')
-
 const io = socketIo(server)
 
-// const io = io
+const publicPath = path.resolve(__dirname + '/../../client/dist/')
 
-// const myIo = io(server)
-
-const htmlPath = path.resolve(__dirname + '/../../client/dist/index.html')
-
-// app.use(express.static(path.resolve(__dirname + '/../../client')))
-app.use(express.static(path.resolve(__dirname + '/../../client/dist')))
+app.use(express.static(publicPath))
 app.get('/', function (req: any, res: any) {
-    res.sendFile(htmlPath)
+    res.sendFile(publicPath + 'index.html')
 })
 
 let clients: any = []
 
 io.on('connection', (socket: any) => {
     console.log('connect')
-    // registering connections
     const ID = uniqueId()
     clients.push(ID)
-    socket.emit('connected', { ID: ID, index: clients.length }) // io.emit on bug?
-    socket.on('shareClient', (data: any) => socket.broadcast.emit('incomingClient', data))
-    socket.on('secondShareClient', (data: any) => socket.broadcast.emit('secondIncomingClient', data))
+    const clientInfo: ClientInfo = {
+        ID: ID,
+        index: clients.length,
+    }
+    socket.emit('connected', clientInfo)
+    socket.on('shareClient', (clientInfo: ClientInfo) => socket.broadcast.emit('incomingClient', clientInfo))
+    socket.on('secondShareClient', (clientInfo: ClientInfo) =>
+        socket.broadcast.emit('secondIncomingClient', clientInfo),
+    )
 
     socket.on('disconnect', function () {
         io.emit('playerLeft', ID)
         clients = clients.filter((cl: any) => cl !== ID)
     })
 
-    socket.on('shareLocation', (data: any) => {
-        socket.broadcast.emit('incomingLocation', data)
+    socket.on('shareLocation', (incomingLocation: ShareLocationType) => {
+        socket.broadcast.emit('incomingLocation', incomingLocation)
     })
 
-    socket.on('shareAbility', (data: any) => {
-        socket.broadcast.emit('incomingAbility', data)
+    socket.on('shareAbility', (ability: Ability) => {
+        socket.broadcast.emit('incomingAbility', ability)
     })
 
-    socket.on('shareBounce', (data: any) => {
-        socket.broadcast.emit('incomingBounce', data)
+    socket.on('shareBounce', (bounce: BounceData) => {
+        socket.broadcast.emit('incomingBounce', bounce)
     })
 })
 

@@ -1,5 +1,5 @@
 import { ClientInfo } from '../managers/MessageDistributor'
-import { images } from '../index'
+import { images } from './../index'
 import { Character } from './Character'
 
 export class Enemy extends Character {
