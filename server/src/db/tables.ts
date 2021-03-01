@@ -1,6 +1,3 @@
-// import { pool } from './connection'
-// const pool = require('./pool')
-// import { Pool } from 'pg'
 const pg = require('pg')
 
 const pool = new pg.Pool({
@@ -14,26 +11,19 @@ const pool = new pg.Pool({
     idleTimeoutMillis: 0,
 })
 
-// const pool = require('./connection')
-
 const createGamesTable = async () => {
     const tableName = 'games'
-    const query = `
-        id SERIAL PRIMARY KEY,
-        game_id uuid DEFAULT uuid_generate_v4 (),
-    `
-
     try {
-        // await pool.query(`DROP TABLE IF EXISTS ${'asdf'} CASCADE`)
-        await pool.query(`CREATE TABLE roles(
-            role_id serial PRIMARY KEY,
-            role_name VARCHAR (255) UNIQUE NOT NULL
+        await pool.query(`DROP TABLE IF EXISTS ${tableName} CASCADE`)
+        await pool.query(`CREATE TABLE ${tableName}(
+            ID INT GENERATED ALWAYS AS IDENTITY,
+            game_id varchar
          );`)
-        //  console.log()
     } catch (error) {
         console.log(`${error}`)
     }
+    pool.end()
+    // pool.close
 }
-// console.log('asdf')
 createGamesTable()
-// return
+console.log('done')
