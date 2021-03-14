@@ -1,14 +1,13 @@
-export class Button extends HTMLElement {
+export class HomeScreen extends HTMLElement {
     private shadow
 
     constructor() {
-        // Always call super first in constructor
         super()
 
         this.shadow = this.attachShadow({ mode: 'open' })
         this.render()
 
-        // Element functionality written in here
+        this.addEventListener('click', () => console.log('click here'))
     }
 
     connectedCallback() {
@@ -17,7 +16,10 @@ export class Button extends HTMLElement {
 
     render() {
         this.shadow.innerHTML = `
-            <button type="button">Click Me!</button>
+            <div>
+                <h1>Title</h1>
+                <basic-button></basic-button>
+            </div>
         `
     }
 }
