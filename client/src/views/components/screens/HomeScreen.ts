@@ -6,8 +6,6 @@ export class HomeScreen extends HTMLElement {
 
         this.shadow = this.attachShadow({ mode: 'open' })
         this.render()
-
-        this.addEventListener('click', () => console.log('click here'))
     }
 
     connectedCallback() {
@@ -18,7 +16,7 @@ export class HomeScreen extends HTMLElement {
         this.shadow.innerHTML = `
             <div>
                 <h1>Title</h1>
-                <basic-button></basic-button>
+                <navigate-button route="game"></navigate-button>
             </div>
         `
     }
