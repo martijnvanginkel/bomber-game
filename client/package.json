@@ -2,7 +2,6 @@
   "name": "boiler-project",
   "version": "1.0.0",
   "description": "",
-  "type": "module",
   "main": "index.js",
   "scripts": {
     "dev-server": "ttab npx nodemon ./server.js localhost:80",

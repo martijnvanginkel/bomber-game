@@ -1,12 +1,12 @@
 import { Route, routes } from './routes'
 
 class RouteManager {
-    private available: boolean = false
     private container: HTMLElement
-    private currentRoute: Route | undefined
+    private currentRoute: Route
 
     constructor(private routes: Route[]) {
         this.findContainerElement()
+        addEventListener('navigate', (info: any) => this.goToRoute(info.detail.route))
     }
 
     private findContainerElement() {
@@ -15,25 +15,42 @@ class RouteManager {
             return
         }
         this.container = container
-        this.available = true
     }
 
     private findRoute(routeName: string) {
         return this.routes.find((route: Route) => route.name === routeName)
     }
 
+    private removeCurrentScreen() {
+        if (!this.currentRoute) {
+            return
+        }
+        const el = document.querySelector(this.currentRoute.screen)
+        if (!el) {
+            return
+        }
+        this.container.removeChild(el)
+    }
+
+    private addScreen(route: Route) {
+        const el = document.createElement(route.screen)
+        if (!el) {
+            return
+        }
+        this.container.appendChild(el)
+        this.currentRoute = route
+    }
+
     public goToRoute(routeName: string) {
-        if (!this.available) {
+        if (!this.container) {
             throw new Error('Unable to move routes')
         }
         const route = this.findRoute(routeName)
         if (!route) {
             throw new Error('Route not found')
         }
-        this.container.appendChild(route.component)
-        // if (!this.isExistingRoute(route)) {
-        //     throw new Error('Not an existing route')
-        // }
+        this.removeCurrentScreen()
+        this.addScreen(route)
     }
 }
 

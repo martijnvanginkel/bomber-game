@@ -1,15 +1,15 @@
 export interface Route {
     name: string
-    component: HTMLElement
+    screen: string
 }
 
 export const routes: Route[] = [
     {
         name: 'home',
-        component: document.createElement('home-screen'),
+        screen: 'home-screen',
     },
     {
         name: 'game',
-        component: document.createElement('game-screen'),
+        screen: 'game-screen',
     },
 ]
