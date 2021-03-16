@@ -13,7 +13,6 @@ interface ImageFormat {
 }
 
 export class Images {
-
     private path: string = './img/'
     private images: Array<ImageFormat>
 
@@ -24,12 +23,12 @@ export class Images {
     private loadImages() {
         const images: Array<ImageFormat> = []
 
-        this.data.forEach(image => {
+        this.data.forEach((image) => {
             const newImage: HTMLImageElement = new Image()
             newImage.src = this.path + image.fileName + '.' + image.fileType
             images.push({
                 name: image.fileName,
-                image: newImage
+                image: newImage,
             } as ImageFormat)
         })
         console.log(images)
@@ -37,9 +36,9 @@ export class Images {
     }
 
     public getImage(name: string) {
-        const image = this.images.find(image => image.name === name)?.image
+        const image = this.images.find((image) => image.name === name)?.image
         if (image === undefined) {
-            throw new Error(error.noImageFound);
+            throw new Error(error.noImageFound)
         }
         return image
     }
@@ -50,6 +49,6 @@ export class Images {
             fileType: 'png',
             width: 50,
             height: 50,
-        }
+        },
     ]
 }

@@ -5,7 +5,6 @@ export class HomeScreen extends HTMLElement {
         super()
 
         this.shadow = this.attachShadow({ mode: 'open' })
-        this.render()
     }
 
     connectedCallback() {
