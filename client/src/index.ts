@@ -11,33 +11,16 @@ export const images = new Images()
 export const map = new Map()
 export const messageDistributor = new MessageDistributor()
 
-// const event = new CustomEvent('gameState', {
-//     bubbles: true, // bubble event to containing elements
-//     composed: true, // let the event pass through the shadowDOM boundary
-//     detail: {
-//         route: 'asdf',
-//     },
-// })
-
 const routeManager = createRouteManager()
 routeManager.goToRoute('game')
 
-// addEventListener('gameState', () => console.log('navigate'))
-
-const event = new CustomEvent('gameState', {
-    bubbles: true, // bubble event to containing elements
-    composed: true, // let the event pass through the shadowDOM boundary
-    detail: {
-        route: 'asdf',
-    },
-})
-dispatchEvent(event)
-
-// addEventListener('gameState', () => console.log('asdf2'))
-
-// console.log('here')
-// new Promise(() =>
-//     setTimeout(() => {
-//         console.log('here')
-//     }, 3000),
-// )
+setTimeout(() => {
+    const event = new CustomEvent('gameState', {
+        bubbles: true, // bubble event to containing elements
+        composed: true, // let the event pass through the shadowDOM boundary
+        detail: {
+            route: 'asdf',
+        },
+    })
+    dispatchEvent(event)
+}, 2000)
