@@ -18,8 +18,8 @@ app.get('/', function (req: any, res: any) {
 
 io.on('connection', (socket: any) => {
     const game: Game = joinGame()
-
-    // socket.join(game.ID)
+    socket.join(game.ID)
+    io.to(game.ID).emit('connected', game.ID)
 
     // io.to(game.ID).emit('connected', game.ID)
 
@@ -29,11 +29,6 @@ io.on('connection', (socket: any) => {
         console.log('on disconnect')
         disconnectFromGame(game)
     })
-
-    //socket.to('some room').emit('connectedroom')
-    // io.emit('asdf')
-
-    // const
 
     // const ID = uniqueId()
     // clients.push(ID)

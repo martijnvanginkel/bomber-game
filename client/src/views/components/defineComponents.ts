@@ -1,6 +1,7 @@
 import { BasicButton } from './core/BasicButton'
 import { GameScreen } from './screens/GameScreen'
 import { HomeScreen } from './screens/HomeScreen'
+import { WaitingScreen } from './screens/WaitingScreen'
 
 export const defineComponents = () => {
     // core
@@ -8,5 +9,6 @@ export const defineComponents = () => {
 
     // screens
     customElements.define('home-screen', HomeScreen)
+    customElements.define('waiting-screen', WaitingScreen)
     customElements.define('game-screen', GameScreen)
 }

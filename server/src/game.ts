@@ -1,4 +1,6 @@
 import crypto from 'crypto'
+// import EventEmitter from 'events'
+// const EventEmitter = require('events');
 
 export interface Game {
     ID: string
