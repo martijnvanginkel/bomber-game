@@ -1,46 +1,37 @@
 import express from 'express'
 import path from 'path'
 import http from 'http'
-import socketIo from 'socket.io'
-// import uniqueId from 'lodash.uniqueid'
 import dotenv from 'dotenv'
-import crypto from 'crypto'
-
-// import { Ability, BounceData, ClientInfo, ShareLocationType } from './sockets/types'
+import { disconnectFromGame, Game, joinGame } from './game'
 
 const app = express()
-const server = http.createServer(app)
-const io = socketIo(server)
-dotenv.config()
-
 const publicPath = path.resolve(__dirname + '/../../client/dist/')
+const server = http.createServer(app)
+const io = require('socket.io')(server)
+
+dotenv.config()
 
 app.use(express.static(publicPath))
 app.get('/', function (req: any, res: any) {
     res.sendFile(publicPath + 'index.html')
 })
 
-interface Game {
-    ID: string
-    clients: string[]
-}
-
-const games: Game[] = []
-
-function makeUniqueID() {
-    return crypto.randomBytes(16).toString('hex')
-}
-
-function createGame() {
-    const game: Game = {
-        ID: makeUniqueID(),
-        clients: [],
-    }
-    games.push(game)
-}
-
 io.on('connection', (socket: any) => {
-    console.log('connect')
+    const game: Game = joinGame()
+
+    // socket.join(game.ID)
+
+    // io.to(game.ID).emit('connected', game.ID)
+
+    // console.log(games)
+
+    socket.on('disconnecting', () => {
+        console.log('on disconnect')
+        disconnectFromGame(game)
+    })
+
+    //socket.to('some room').emit('connectedroom')
+    // io.emit('asdf')
 
     // const
 
@@ -50,7 +41,8 @@ io.on('connection', (socket: any) => {
     //     ID: ID,
     //     index: clients.length,
     // }
-    // socket.emit('connected', clientInfo)
+    // io.emit('connected')
+    // socket.emit('connected', 'adf')
     // socket.on('shareClient', (clientInfo: ClientInfo) => socket.broadcast.emit('incomingClient', clientInfo))
     // socket.on('secondShareClient', (clientInfo: ClientInfo) =>
     //     socket.broadcast.emit('secondIncomingClient', clientInfo),
@@ -70,4 +62,4 @@ io.on('connection', (socket: any) => {
     // })
 })
 
-server.listen(9000, () => console.log('backend running on port 9000'))
+server.listen(80, () => console.log('backend running on port 80'))

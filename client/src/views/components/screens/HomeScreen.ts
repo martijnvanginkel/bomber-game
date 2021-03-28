@@ -5,6 +5,7 @@ export class HomeScreen extends HTMLElement {
         super()
 
         this.shadow = this.attachShadow({ mode: 'open' })
+        this.listenForClicks()
     }
 
     connectedCallback() {
@@ -15,8 +16,20 @@ export class HomeScreen extends HTMLElement {
         this.shadow.innerHTML = `
             <div>
                 <h1>Title</h1>
-                <navigate-button route="game"></navigate-button>
+                <basic-button title="Search for game" name="search-game"></basic-button>
             </div>
         `
+    }
+
+    listenForClicks() {
+        addEventListener('buttonClick', (info: CustomEventInit) => {
+            if (info.detail.name === 'search-game') {
+                const event = new CustomEvent('searchingForGame', {
+                    bubbles: true,
+                    composed: true,
+                })
+                this.dispatchEvent(event)
+            }
+        })
     }
 }
