@@ -17,9 +17,22 @@ app.get('/', function (req: any, res: any) {
 })
 
 io.on('connection', (socket: any) => {
-    const game: Game = joinGame()
-    socket.join(game.ID)
-    io.to(game.ID).emit('connected', game.ID)
+    const game: Game = joinGame(() => {
+        console.log('join here')
+        io.to('test').emit('start')
+    })
+    socket.join('test')
+
+    // game.on('asdf', () => console.log('asdf2    '))
+
+    game.on('start', () => {
+        console.log('start')
+        io.to(game.getID).emit('start')
+    })
+
+    // ths.addEventListener('start', () => console.log('start'))
+
+    io.to(game.getID).emit('connected', game.getID)
 
     // io.to(game.ID).emit('connected', game.ID)
 

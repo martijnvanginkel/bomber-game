@@ -14,11 +14,15 @@ const routeManager = createRouteManager()
 routeManager.goToRoute('home')
 
 addEventListener('searchingForGame', () => {
-    routeManager.goToRoute('waiting')
+    // routeManager.goToRoute('waiting')
     const socket = io().connect()
 
     socket.on('connected', (gameID: string) => {
         console.log(gameID)
+        routeManager.goToRoute('waiting')
+    })
+
+    socket.on('start', () => {
         routeManager.goToRoute('game')
     })
 })
