@@ -2,7 +2,7 @@ import express from 'express'
 import path from 'path'
 import http from 'http'
 import dotenv from 'dotenv'
-import { disconnectFromGame, Game, joinGame } from './game'
+import { disconnectFromGame, findGame, Game } from './game'
 
 const app = express()
 const publicPath = path.resolve(__dirname + '/../../client/dist/')
@@ -17,57 +17,19 @@ app.get('/', function (req: any, res: any) {
 })
 
 io.on('connection', (socket: any) => {
-    const game: Game = joinGame(() => {
-        console.log('join here')
-        io.to('test').emit('start')
+    const game: Game = findGame()
+
+    socket.join(game.ID)
+    io.to(game.ID).emit('connected')
+
+    game.join(() => {
+        io.to(game.ID).emit('startGame')
     })
-    socket.join('test')
-
-    // game.on('asdf', () => console.log('asdf2    '))
-
-    game.on('start', () => {
-        console.log('start')
-        io.to(game.getID).emit('start')
-    })
-
-    // ths.addEventListener('start', () => console.log('start'))
-
-    io.to(game.getID).emit('connected', game.getID)
-
-    // io.to(game.ID).emit('connected', game.ID)
-
-    // console.log(games)
 
     socket.on('disconnecting', () => {
         console.log('on disconnect')
         disconnectFromGame(game)
     })
-
-    // const ID = uniqueId()
-    // clients.push(ID)
-    // const clientInfo: ClientInfo = {
-    //     ID: ID,
-    //     index: clients.length,
-    // }
-    // io.emit('connected')
-    // socket.emit('connected', 'adf')
-    // socket.on('shareClient', (clientInfo: ClientInfo) => socket.broadcast.emit('incomingClient', clientInfo))
-    // socket.on('secondShareClient', (clientInfo: ClientInfo) =>
-    //     socket.broadcast.emit('secondIncomingClient', clientInfo),
-    // )
-    // socket.on('disconnect', function () {
-    //     io.emit('playerLeft', ID)
-    //     clients = clients.filter((cl: any) => cl !== ID)
-    // })
-    // socket.on('shareLocation', (incomingLocation: ShareLocationType) => {
-    //     socket.broadcast.emit('incomingLocation', incomingLocation)
-    // })
-    // socket.on('shareAbility', (ability: Ability) => {
-    //     socket.broadcast.emit('incomingAbility', ability)
-    // })
-    // socket.on('shareBounce', (bounce: BounceData) => {
-    //     socket.broadcast.emit('incomingBounce', bounce)
-    // })
 })
 
 server.listen(80, () => console.log('backend running on port 80'))

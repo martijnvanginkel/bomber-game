@@ -1,64 +1,56 @@
 import crypto from 'crypto'
-import events, { EventEmitter } from 'events'
+import { EventEmitter } from 'events'
 
 let games: Game[] = []
 
 export class Game extends EventEmitter {
-    private ID: string
+    private identifier: string
     private clients: number
-    // private myEvent: CustomEvent
 
     constructor() {
         super()
-        this.ID = crypto.randomBytes(16).toString('hex')
-        this.clients = 1
+        this.identifier = crypto.randomBytes(16).toString('hex')
+        this.clients = 0
     }
 
-    public get getID() {
-        return this.ID
+    public get ID() {
+        return this.identifier
     }
 
-    public get hasOneClient() {
-        return this.clients === 1
+    public get isFullGame() {
+        return this.clients === 2
     }
 
-    public addOneClient() {
-        console.log('add one client')
-
-        this.on('asdf', () => console.log('asdf'))
-        this.emit('asdf')
-
-        // this.on('asdf', () => console.log('asdf'))
-        // dispatchEvent(event)
-        // this.clients += 1
+    public join(cb: () => void) {
+        this.clients += 1
+        if (this.isFullGame) {
+            cb()
+        }
     }
 
-    public removeOneClient() {
+    public leave() {
         this.clients -= 1
     }
 }
 
-export const joinGame = (cb: () => void) => {
-    let game = games.find((game) => game.hasOneClient)
+export const findGame = () => {
+    const game = games.find((game) => !game.isFullGame)
     if (!game) {
-        game = new Game()
-        game.on('asdf', cb)
-        game.addOneClient()
-        games.push(game)
-    } else {
-        game.addOneClient()
+        const newGame = new Game()
+        games.push(newGame)
+        return newGame
     }
     return game
 }
 
 export const disconnectFromGame = (game: Game) => {
-    const existingGame = games.find((gm) => gm.getID === game.getID)
+    const existingGame = games.find((gm) => gm.ID === game.ID)
     if (!existingGame) {
         return
     }
-    if (!existingGame.hasOneClient) {
-        existingGame.removeOneClient()
+    if (!existingGame.isFullGame) {
+        existingGame.leave()
     } else {
-        games = games.filter((gm) => gm.getID !== game.getID)
+        games = games.filter((gm) => gm.ID !== game.ID)
     }
 }
