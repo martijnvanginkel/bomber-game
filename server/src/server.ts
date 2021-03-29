@@ -26,6 +26,10 @@ io.on('connection', (socket: any) => {
         io.to(game.ID).emit('startGame')
     })
 
+    socket.on('finished', () => {
+        disconnectFromGame(game)
+    })
+
     socket.on('disconnecting', () => {
         console.log('on disconnect')
         disconnectFromGame(game)

@@ -23,5 +23,11 @@ addEventListener('searchingForGame', () => {
     socket.on('startGame', () => {
         console.log('start game')
         routeManager.goToRoute('game')
+
+        setTimeout(() => {
+            socket.emit('finished')
+            socket.disconnect()
+            routeManager.goToRoute('home')
+        }, 3000)
     })
 })
