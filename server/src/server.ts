@@ -33,6 +33,7 @@ io.on('connection', (socket: any) => {
     socket.on('disconnecting', () => {
         console.log('on disconnect')
         disconnectFromGame(game)
+        io.to(game.ID).emit('lost')
     })
 })
 
