@@ -4,7 +4,7 @@
 import { defineComponents } from './views/components/defineComponents'
 import { createRouteManager } from './views/RouteManager'
 import { io } from 'socket.io-client'
-import { createNewGame } from 'game/Game'
+import { createNewGame } from './game/Game'
 
 defineComponents()
 // export const images = new Images()

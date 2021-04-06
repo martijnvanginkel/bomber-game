@@ -7,6 +7,7 @@ import { mergeLocations, waitForTime } from '../utils/general'
 import { Tile } from '../map/Tile'
 import { CharacterAnimator } from './CharacterAnimator'
 import { directionToCoordinates } from './actions/movements'
+import { Map } from './../map/Map'
 
 export abstract class Character {
     private location: LocationType
@@ -15,20 +16,21 @@ export abstract class Character {
     private animator: CharacterAnimator
     private moving: boolean
 
-    constructor(protected clientInfo: ClientInfo, protected image: HTMLImageElement, protected color: string) {
-        this.animator = new CharacterAnimator(color)
+    constructor(protected image: HTMLImageElement, protected color: string, protected map: Map) {
+        this.animator = new CharacterAnimator(color, map)
         this.character = CharacterType.BASIC
-        this.location = { x: clientInfo.index, y: clientInfo.index }
+        // this.location = { x: clientInfo.index, y: clientInfo.index }
+        this.location = { x: 0, y: 0 }
         this.setMoving(false)
         this.spawn()
     }
 
-    protected get getClientInfo() {
-        return this.clientInfo
-    }
+    // protected get getClientInfo() {
+    //     return this.clientInfo
+    // }
 
     public get getID() {
-        return this.clientInfo.ID
+        return 'asf' //this.clientInfo.ID
     }
 
     protected get getLocation() {
@@ -52,7 +54,7 @@ export abstract class Character {
     }
 
     private spawn() {
-        const tile = map.getTileByLocation(this.location)
+        const tile = this.map.getTileByLocation(this.location)
         tile?.setOccupied(this.getID)
 
         this.animator.instantiate(this.getLocation)
@@ -60,8 +62,8 @@ export abstract class Character {
     }
 
     public async move(oldLocation: LocationType, newLocation: LocationType, ID: string, direction?: Direction) {
-        const oldTile: Tile = map.getTileByLocation(oldLocation)!
-        const newTile: Tile = map.getTileByLocation(newLocation)!
+        const oldTile: Tile = this.map.getTileByLocation(oldLocation)!
+        const newTile: Tile = this.map.getTileByLocation(newLocation)!
 
         oldTile.setUnoccupied()
         newTile.setOccupied(ID)
@@ -78,7 +80,7 @@ export abstract class Character {
 
     public async fireAbility(ability: Ability) {
         for await (const blob of ability) {
-            const tile = map.getTileByLocation(blob.location)
+            const tile = this.map.getTileByLocation(blob.location)
             if (!tile) {
                 continue
             }
@@ -92,7 +94,7 @@ export abstract class Character {
 
     public receiveBounce(incomingDirection: Direction) {
         const newLocation: LocationType = mergeLocations(this.getLocation, directionToCoordinates[incomingDirection])
-        const tileStatus: TileStatus = map.getTileStatus(newLocation)
+        const tileStatus: TileStatus = this.map.getTileStatus(newLocation)
         if (tileStatus === TileStatus.NONEXISTENT) {
             return
         }

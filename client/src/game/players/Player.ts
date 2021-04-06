@@ -15,7 +15,7 @@ export class Player extends Character {
     private events: EventEmitter
 
     constructor(protected images: Images, protected map: Map) {
-        super(images.getImage('player'), 'green')
+        super(images.getImage('player'), 'green', map)
         this.events = new EventEmitter()
         this.watchInput()
     }
