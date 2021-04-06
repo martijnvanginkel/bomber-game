@@ -1,7 +1,7 @@
 import { ClientInfo } from '../managers/MessageDistributor'
 import { LocationType, Direction, TileStatus } from '../utils/types'
 import { CharacterType } from './actions/characters'
-import { map } from '../../index'
+// import { map } from '../../index'
 import { Ability } from './actions/abilities'
 import { mergeLocations, waitForTime } from '../utils/general'
 import { Tile } from '../map/Tile'

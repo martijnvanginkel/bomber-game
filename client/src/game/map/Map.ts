@@ -13,7 +13,7 @@ export class Map {
     public tileMap: Tile[][] = []
 
     constructor() {
-        return
+        // return
         const mapCanvas = document.getElementById('mapcanvas') as HTMLCanvasElement
         const playerCanvas = document.getElementById('playercanvas') as HTMLCanvasElement
         this.mapContext = mapCanvas.getContext('2d') as CanvasRenderingContext2D

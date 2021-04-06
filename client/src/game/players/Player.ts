@@ -1,5 +1,5 @@
-import { ClientInfo } from '../managers/MessageDistributor'
-import { images, map } from '../../index'
+// import { ClientInfo } from '../managers/MessageDistributor'
+// import { images, map } from '../../index'
 import { Character } from './Character'
 import { Direction, ArrowKey, AbilityKey, TileStatus, LocationType } from '../utils/types'
 import { EventEmitter } from 'events'
@@ -8,12 +8,14 @@ import { Move } from './actions/movements'
 import { formatAbilityToLocation } from './actions/utils/abilityUtils'
 import { findCharacterAbility, findCharacterMove } from './actions/utils/characterUtils'
 import { mergeLocations } from '../utils/general'
+import { Images } from 'game/images/Images'
+import { Map } from 'game/map/Map'
 
 export class Player extends Character {
     private events: EventEmitter
 
-    constructor(protected clientInfo: ClientInfo) {
-        super(clientInfo, images.getImage('player'), 'green')
+    constructor(protected images: Images, protected map: Map) {
+        super(images.getImage('player'), 'green')
         this.events = new EventEmitter()
         this.watchInput()
     }
@@ -57,7 +59,7 @@ export class Player extends Character {
         }
         const move: Move = findCharacterMove(key, this.getCharacterType)
         const newLocation = mergeLocations(this.getLocation, move)
-        const tileStatus: TileStatus = map.getTileStatus(newLocation)
+        const tileStatus: TileStatus = this.map.getTileStatus(newLocation)
 
         switch (tileStatus) {
             case TileStatus.NONEXISTENT:
@@ -85,7 +87,7 @@ export class Player extends Character {
     }
 
     private triggerBounce(newLocation: LocationType, incomingDirection: Direction) {
-        const tile = map.getTileByLocation(newLocation)
+        const tile = this.map.getTileByLocation(newLocation)
         if (!tile) {
             return
         }

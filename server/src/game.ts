@@ -21,10 +21,10 @@ export class Game extends EventEmitter {
         return this.clients === 2
     }
 
-    public join(cb: () => void) {
+    public join(full: () => void) {
         this.clients += 1
         if (this.isFullGame) {
-            cb()
+            full()
         }
     }
 

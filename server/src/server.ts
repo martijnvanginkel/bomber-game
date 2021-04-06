@@ -3,6 +3,7 @@ import path from 'path'
 import http from 'http'
 import dotenv from 'dotenv'
 import { disconnectFromGame, findGame, Game } from './game'
+import { getRandomNumberID } from './utils/randomNumberID'
 
 const app = express()
 const publicPath = path.resolve(__dirname + '/../../client/dist/')
@@ -18,6 +19,7 @@ app.get('/', function (req: any, res: any) {
 
 io.on('connection', (socket: any) => {
     const game: Game = findGame()
+    const ID: number = getRandomNumberID()
 
     socket.join(game.ID)
     io.to(game.ID).emit('connected')
