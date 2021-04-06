@@ -1,8 +1,10 @@
-import io from 'socket.io-client'
-// import { io } from './../../node_modules/socket.io/client-di'
+// import { io } from 'socket.io-client'
+// import { io } from 'socket.io-client'
+// import io from './../../../node_modules/socket.io-client'
+// import { io } from './../../node_modules/socket.io'
 // import io from 'socket.io'
-// import io from 'socket.io'
-// import io from 'socket.io'
+import io from 'socket.io'
+// import { io } from 'socket.io'
 import { Player } from '../players/Player'
 import { Enemy } from '../players/Enemy'
 import { BounceData, Direction, ShareLocationType } from '../utils/types'
@@ -21,24 +23,23 @@ export class MessageDistributor {
     private actions: ActionDistributor
 
     constructor() {
-        const port: number = 9000
+        const port: number = 80
         const url: string = 'http://localhost'
 
         // const test = io()
         // const socket = io.Socket.
-        console.log('message')
-        const socket = io()
+        // console.log('message')
+
+        // const socket = io('http://localhost')
+        // const socket = io()
+        // console.log(socket)
         // console.log(socket.on)
-        // this.socket = io(`${url}:${port.toString()}`)
-        this.actions = new ActionDistributor()
-        console.log('here')
+        // this.actions = new ActionDistributor()
+        // console.log('here')
         // console.log(this.socket.io.on)
         // this.socket.
-        // this.socket.on('connected', (client: ClientInfo) => {
+        // socket.on('connected', (client: string) => {
         //     console.log('connected')
-        //     this.establishConnection(client)
-        //     this.outgoingPlayerEvents()
-        //     this.incomingEnemyEvents()
         // })
     }
 

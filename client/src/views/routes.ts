@@ -9,6 +9,10 @@ export const routes: Route[] = [
         screen: 'home-screen',
     },
     {
+        name: 'waiting',
+        screen: 'waiting-screen',
+    },
+    {
         name: 'game',
         screen: 'game-screen',
     },
