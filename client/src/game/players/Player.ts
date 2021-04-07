@@ -11,8 +11,8 @@ import { Map } from 'game/map/Map'
 export class Player extends Character {
     private events: EventEmitter
 
-    constructor(protected map: Map) {
-        super('green', map)
+    constructor(ID: number, index: number, protected map: Map) {
+        super(ID, index, 'green', map)
         this.events = new EventEmitter()
         this.watchInput()
     }

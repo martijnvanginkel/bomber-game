@@ -1,4 +1,4 @@
-import { ClientInfo } from '../managers/MessageDistributor'
+// import { ClientInfo } from '../managers/MessageDistributor'
 import { LocationType, Direction, TileStatus } from '../utils/types'
 import { CharacterType } from './actions/characters'
 // import { map } from '../../index'
@@ -16,11 +16,11 @@ export abstract class Character {
     private animator: CharacterAnimator
     private moving: boolean
 
-    constructor(protected color: string, protected map: Map) {
+    constructor(protected ID: number, protected index: number, protected color: string, protected map: Map) {
         this.animator = new CharacterAnimator(color, map)
         this.character = CharacterType.BASIC
         // this.location = { x: clientInfo.index, y: clientInfo.index }
-        this.location = { x: 0, y: 0 }
+        this.location = { x: index, y: index }
         this.setMoving(false)
         this.spawn()
     }
@@ -30,7 +30,7 @@ export abstract class Character {
     // }
 
     public get getID() {
-        return 'asf' //this.clientInfo.ID
+        return this.ID
     }
 
     protected get getLocation() {
@@ -61,7 +61,7 @@ export abstract class Character {
         this.direction = Direction.NORTH
     }
 
-    public async move(oldLocation: LocationType, newLocation: LocationType, ID: string, direction?: Direction) {
+    public async move(oldLocation: LocationType, newLocation: LocationType, ID: number, direction?: Direction) {
         const oldTile: Tile = this.map.getTileByLocation(oldLocation)!
         const newTile: Tile = this.map.getTileByLocation(newLocation)!
 
