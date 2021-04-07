@@ -4,7 +4,8 @@
 import { defineComponents } from './views/components/defineComponents'
 import { createRouteManager } from './views/RouteManager'
 import { io } from 'socket.io-client'
-import { createNewGame } from './game/Game'
+import { createNewGame, GameInitInfo } from './game/Game'
+// import { createNewGame, GameInfo } from './game/Game'
 
 defineComponents()
 // export const images = new Images()
@@ -21,9 +22,10 @@ addEventListener('searchingForGame', () => {
         routeManager.goToRoute('waiting')
     })
 
-    socket.on('startGame', () => {
+    socket.on('startGame', (gameInfo: GameInitInfo) => {
         routeManager.goToRoute('game')
-        createNewGame()
+        // console.log(gameInit)
+        createNewGame(gameInfo)
 
         socket.on('lost', () => {
             routeManager.goToRoute('home')

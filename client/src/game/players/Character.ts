@@ -16,7 +16,7 @@ export abstract class Character {
     private animator: CharacterAnimator
     private moving: boolean
 
-    constructor(protected image: HTMLImageElement, protected color: string, protected map: Map) {
+    constructor(protected color: string, protected map: Map) {
         this.animator = new CharacterAnimator(color, map)
         this.character = CharacterType.BASIC
         // this.location = { x: clientInfo.index, y: clientInfo.index }

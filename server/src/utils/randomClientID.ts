@@ -1,11 +1,11 @@
-export const getRandomNumberID = (): number => {
+export const getRandomClientID = (): number => {
     const characters = '0123456789'
-    const randomString: string = ''
+    let randomString: string = ''
+
     while (randomString.length < 10) {
         const index = Math.floor(Math.random() * 10)
         const char = characters[index]
-        randomString.concat(char)
+        randomString += char
     }
-    console.log(randomString)
     return Number(randomString)
 }
