@@ -1,11 +1,12 @@
 import { Map } from './map/Map'
 import { Images } from './images/Images'
-import { Player } from './players/Player'
+// import { Player } from './players/Player'
 // import { Character } from './players/Character'
 import { Socket } from 'socket.io-client'
 import { Character } from './players/Character'
 import { InputController } from './managers/InputController'
 import { ArrowKey } from './utils/types'
+import { findAction } from './managers/ActionConsultant'
 
 export interface GameInitInfo {
     gameID: string
@@ -15,7 +16,6 @@ export interface GameInitInfo {
 
 class Game {
     private characters: Character[] = new Array()
-    private player: Character
 
     public constructor(
         private socket: Socket,
@@ -24,23 +24,34 @@ class Game {
         private inputController: InputController,
     ) {
         this.createCharacters()
-        this.shareActions()
+        this.sendActions()
     }
 
     private createCharacters() {
         this.gameInfo.clients.forEach((ID, index) => {
             const character = new Character(ID, index, 'green', this.map)
             this.characters.push(character)
-            if (character.getID === ID) {
-                this.player = character
-            }
         })
     }
 
-    private shareActions() {
+    private sendActions() {
         this.inputController.on('arrow-click', (key: ArrowKey) => {
-            this.player.move(key)
+            console.log('send action')
+            const action = findAction(key, this.player, this.map)
+            action?.run(this.socket)
         })
+    }
+
+    // private receiveActions() {
+    //     this.socket.on('')
+    // }
+
+    private get player() {
+        return this.characters.find((character) => character.getID === this.gameInfo.clientID)!
+    }
+
+    private get enemies() {
+        return this.characters.filter((character) => character.getID !== this.gameInfo.clientID)!
     }
 }
 

@@ -34,7 +34,7 @@ export class Character {
         return this.ID
     }
 
-    protected get getLocation() {
+    public get getLocation() {
         return this.location
     }
 
@@ -42,11 +42,11 @@ export class Character {
         return this.direction
     }
 
-    protected get getCharacterType() {
+    public get getCharacterType() {
         return this.character
     }
 
-    protected get isMoving() {
+    public get isMoving() {
         return this.moving
     }
 
@@ -62,60 +62,49 @@ export class Character {
         this.direction = Direction.NORTH
     }
 
-    public async move(key: ArrowKey) {
-        if (!this.isMoving) {
-            return
-        }
+    // public async move(key: ArrowKey, cb: () => void) {
+    //     if (!this.isMoving) {
+    //         return
+    //     }
 
-        const move: Move = findCharacterMove(key, this.getCharacterType)
-        const newLocation = mergeLocations(this.getLocation, move)
-        const tileStatus: TileStatus = this.map.getTileStatus(newLocation)
+    //     const move: Move = findCharacterMove(key, this.getCharacterType)
+    //     const newLocation = mergeLocations(this.getLocation, move)
+    //     const tileStatus: TileStatus = this.map.getTileStatus(newLocation)
 
-        switch (tileStatus) {
-            case TileStatus.NONEXISTENT:
-                break
-            case TileStatus.OCCUPIED:
-                // this.triggerBounce(newLocation, direction)
-                break
-            case TileStatus.AVAILABLE:
-                // this.triggerMove(newLocation, direction)
-                break
-            default:
-                throw new Error('Unknown tile status?')
-                break
-        }
+    //     switch (tileStatus) {
+    //         case TileStatus.NONEXISTENT:
+    //             break
+    //         case TileStatus.OCCUPIED:
+    //             // cb(TileStatus.OCCUPIED)
+    //             // this.triggerBounce(newLocation, direction)
+    //             break
+    //         case TileStatus.AVAILABLE:
+    //             cb()
+    //             // this.triggerMove(newLocation, direction)
+    //             break
+    //         default:
+    //             throw new Error('Unknown tile status?')
+    //             break
+    //     }
+    // }
 
-        // const oldTile: Tile = this.map.getTileByLocation(oldLocation)!
-        // const newTile: Tile = this.map.getTileByLocation(newLocation)!
+    public async move(newLocation: LocationType) {
+        const oldLocation = this.getLocation
 
-        // oldTile.setUnoccupied()
-        // newTile.setOccupied(ID)
-
-        // this.setMoving(true)
-        // await this.animator.move(oldLocation, newLocation)
-        // this.setMoving(false)
-
-        // this.location = newLocation
-        // if (direction) {
-        //     this.direction = direction
-        // }
-    }
-
-    public async move2(oldLocation: LocationType, newLocation: LocationType, ID: number, direction?: Direction) {
         const oldTile: Tile = this.map.getTileByLocation(oldLocation)!
         const newTile: Tile = this.map.getTileByLocation(newLocation)!
 
         oldTile.setUnoccupied()
-        newTile.setOccupied(ID)
+        newTile.setOccupied(this.getID)
 
         this.setMoving(true)
         await this.animator.move(oldLocation, newLocation)
         this.setMoving(false)
 
         this.location = newLocation
-        if (direction) {
-            this.direction = direction
-        }
+        // if (direction) {
+        //     this.direction = direction
+        // }
     }
 
     // public async fireAbility(ability: Ability) {
@@ -132,12 +121,12 @@ export class Character {
     //     }
     // }
 
-    public receiveBounce(incomingDirection: Direction) {
-        const newLocation: LocationType = mergeLocations(this.getLocation, directionToCoordinates[incomingDirection])
-        const tileStatus: TileStatus = this.map.getTileStatus(newLocation)
-        if (tileStatus === TileStatus.NONEXISTENT) {
-            return
-        }
-        this.move(this.getLocation, newLocation, this.getID)
-    }
+    // public receiveBounce(incomingDirection: Direction) {
+    //     const newLocation: LocationType = mergeLocations(this.getLocation, directionToCoordinates[incomingDirection])
+    //     const tileStatus: TileStatus = this.map.getTileStatus(newLocation)
+    //     if (tileStatus === TileStatus.NONEXISTENT) {
+    //         return
+    //     }
+    //     this.move(this.getLocation, newLocation, this.getID)
+    // }
 }

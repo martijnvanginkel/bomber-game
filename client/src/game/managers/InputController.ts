@@ -1,6 +1,6 @@
 import EventEmitter from 'events'
 
-enum ArrowKey {
+export enum ArrowKey {
     UP = 'UP',
     DOWN = 'DOWN',
     LEFT = 'LEFT',
@@ -10,29 +10,30 @@ enum ArrowKey {
 export class InputController extends EventEmitter {
     constructor() {
         super()
+        console.log('asdfasdf')
         this.listenToInput()
     }
 
     private listenToInput() {
-        document.addEventListener('keydown', (e: KeyboardEvent) => {
+        document.addEventListener('keydown', (e) => {
             switch (e.code) {
                 case 'ArrowLeft':
-                    this.click(ArrowKey.LEFT)
+                    this.arrowClick(ArrowKey.LEFT)
                     break
                 case 'ArrowUp':
-                    this.click(ArrowKey.UP)
+                    this.arrowClick(ArrowKey.UP)
                     break
                 case 'ArrowRight':
-                    this.click(ArrowKey.RIGHT)
+                    this.arrowClick(ArrowKey.RIGHT)
                     break
                 case 'ArrowDown':
-                    this.click(ArrowKey.DOWN)
+                    this.arrowClick(ArrowKey.DOWN)
                     break
             }
         })
     }
 
-    private click(key: ArrowKey) {
-        this.emit('key-click', key)
+    private arrowClick(key: ArrowKey) {
+        this.emit('arrow-click', key)
     }
 }
