@@ -5,7 +5,7 @@ import { Images } from './images/Images'
 import { Socket } from 'socket.io-client'
 import { Character } from './players/Character'
 import { InputController } from './managers/InputController'
-import { ArrowKey } from './utils/types'
+import { ArrowKey, LocationType } from './utils/types'
 import { findAction } from './managers/ActionConsultant'
 
 export interface GameInitInfo {
@@ -23,8 +23,12 @@ class Game {
         private map: Map,
         private inputController: InputController,
     ) {
+        // initialize
         this.createCharacters()
+
+        // listening and sending actions
         this.sendActions()
+        this.receiveActions()
     }
 
     private createCharacters() {
@@ -42,12 +46,20 @@ class Game {
         })
     }
 
-    // private receiveActions() {
-    //     this.socket.on('')
-    // }
+    private receiveActions() {
+        this.socket.on('move', (ID: number, newLocation: LocationType) => {
+            console.log('receive')
+            const character = this.findCharacter(ID)
+            character?.move(newLocation)
+        })
+    }
 
     private get player() {
         return this.characters.find((character) => character.getID === this.gameInfo.clientID)!
+    }
+
+    private findCharacter(ID: number) {
+        return this.characters.find((character) => character.getID === ID)
     }
 
     private get enemies() {
