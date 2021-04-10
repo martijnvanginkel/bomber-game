@@ -3,12 +3,11 @@ import { EventEmitter } from 'events'
 
 let games: Game[] = []
 
-export class Game extends EventEmitter {
+export class Game {
     private identifier: string
     private clients: number[]
 
     constructor() {
-        super()
         this.identifier = crypto.randomBytes(16).toString('hex')
         this.clients = []
     }

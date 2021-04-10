@@ -36,19 +36,19 @@ export class Player extends Character {
                 case 'ArrowDown':
                     this.prepareMove(ArrowKey.DOWN, Direction.SOUTH)
                     break
-                case 'KeyQ':
-                    this.prepareAbility(AbilityKey.Q)
-                    break
+                // case 'KeyQ':
+                //     this.prepareAbility(AbilityKey.Q)
+                //     break
             }
         })
     }
 
-    private prepareAbility(key: AbilityKey) {
-        const foundAbility: Ability = findCharacterAbility(key, this.getCharacterType)
-        const ability = formatAbilityToLocation(foundAbility, this.getLocation, this.getDirection)
-        this.events.emit('ability', ability)
-        this.fireAbility(ability)
-    }
+    // private prepareAbility(key: AbilityKey) {
+    //     const foundAbility: Ability = findCharacterAbility(key, this.getCharacterType)
+    //     const ability = formatAbilityToLocation(foundAbility, this.getLocation, this.getDirection)
+    //     this.events.emit('ability', ability)
+    //     this.fireAbility(ability)
+    // }
 
     private prepareMove(key: ArrowKey, direction: Direction) {
         if (this.isMoving) {

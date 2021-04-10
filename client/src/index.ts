@@ -17,8 +17,8 @@ addEventListener('searchingForGame', () => {
 
     socket.on('startGame', (gameInfo: GameInitInfo) => {
         routeManager.goToRoute('game')
-        // console.log(gameInit)
-        createNewGame(gameInfo)
+
+        createNewGame(socket, gameInfo)
 
         socket.on('lost', () => {
             routeManager.goToRoute('home')
