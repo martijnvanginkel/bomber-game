@@ -3,10 +3,9 @@ export interface LocationType {
     y: number
 }
 
-export type Ability = AttackBlob[]
-
-export interface AttackBlob {
-    location: LocationType
-    wait: number
-    duration: number
+export enum Direction {
+    NORTH = 0,
+    EAST = 90,
+    SOUTH = 180,
+    WEST = 270,
 }

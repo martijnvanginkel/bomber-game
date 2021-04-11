@@ -1,11 +1,8 @@
 import { Map } from './map/Map'
-import { Images } from './images/Images'
-// import { Player } from './players/Player'
-// import { Character } from './players/Character'
 import { Socket } from 'socket.io-client'
 import { Character } from './players/Character'
 import { InputController } from './managers/InputController'
-import { ArrowKey, LocationType } from './utils/types'
+import { ArrowKey, Direction, LocationType } from './utils/types'
 import { findAction } from './managers/ActionConsultant'
 
 export interface GameInitInfo {
@@ -40,19 +37,27 @@ class Game {
 
     private sendActions() {
         this.inputController.on('arrow-click', (key: ArrowKey) => {
-            console.log('send action')
-            const me = this.player
-            console.log(me.getID)
+            console.log('click')
             const action = findAction(key, this.player, this.map)
-            action?.run(this.socket)
+            action?.run(this.socket, this.characters)
         })
     }
 
     private receiveActions() {
         this.socket.on('move', (ID: number, newLocation: LocationType) => {
-            console.log('receive')
             const character = this.findCharacter(ID)
-            character?.move(newLocation)
+            if (!character) {
+                return
+            }
+            character.move(newLocation)
+        })
+        this.socket.on('bounce', (victimID: number, direction: Direction) => {
+            console.log('bounce in here')
+            const victim = this.findCharacter(victimID)
+            if (!victim) {
+                return
+            }
+            victim.receiveBounce(direction)
         })
     }
 
