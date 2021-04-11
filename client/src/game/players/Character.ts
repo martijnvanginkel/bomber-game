@@ -1,14 +1,8 @@
-// import { ClientInfo } from '../managers/MessageDistributor'
 import { LocationType, Direction, TileStatus, ArrowKey } from '../utils/types'
 import { CharacterType } from './actions/characters'
-// import { map } from '../../index'
-import { Ability } from './actions/abilities'
-import { mergeLocations, waitForTime } from '../utils/general'
 import { Tile } from '../map/Tile'
 import { CharacterAnimator } from './CharacterAnimator'
-import { directionToCoordinates, Move } from './actions/movements'
 import { Map } from './../map/Map'
-import { findCharacterMove } from './actions/utils/characterUtils'
 
 export class Character {
     private location: LocationType
@@ -20,15 +14,10 @@ export class Character {
     constructor(protected ID: number, protected index: number, protected color: string, protected map: Map) {
         this.animator = new CharacterAnimator(color, map)
         this.character = CharacterType.BASIC
-        // this.location = { x: clientInfo.index, y: clientInfo.index }
         this.location = { x: index, y: index }
         this.setMoving(false)
         this.spawn()
     }
-
-    // protected get getClientInfo() {
-    //     return this.clientInfo
-    // }
 
     public get getID() {
         return this.ID
@@ -61,32 +50,6 @@ export class Character {
         this.animator.instantiate(this.getLocation)
         this.direction = Direction.NORTH
     }
-
-    // public async move(key: ArrowKey, cb: () => void) {
-    //     if (!this.isMoving) {
-    //         return
-    //     }
-
-    //     const move: Move = findCharacterMove(key, this.getCharacterType)
-    //     const newLocation = mergeLocations(this.getLocation, move)
-    //     const tileStatus: TileStatus = this.map.getTileStatus(newLocation)
-
-    //     switch (tileStatus) {
-    //         case TileStatus.NONEXISTENT:
-    //             break
-    //         case TileStatus.OCCUPIED:
-    //             // cb(TileStatus.OCCUPIED)
-    //             // this.triggerBounce(newLocation, direction)
-    //             break
-    //         case TileStatus.AVAILABLE:
-    //             cb()
-    //             // this.triggerMove(newLocation, direction)
-    //             break
-    //         default:
-    //             throw new Error('Unknown tile status?')
-    //             break
-    //     }
-    // }
 
     public async move(newLocation: LocationType) {
         const oldLocation = this.getLocation

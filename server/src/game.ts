@@ -23,9 +23,6 @@ export class Game extends EventEmitter {
 
     public join(clientID: number) {
         this.clients.push(clientID)
-        // if (this.isFullGame) {
-        //     full(this.ID, this.clients)
-        // }
         if (this.isFullGame) {
             this.emit('full', this.ID, this.clients)
         }

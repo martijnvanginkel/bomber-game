@@ -6,8 +6,6 @@ class RouteManager {
 
     constructor(private routes: Route[]) {
         this.findContainerElement()
-        //addEventListener('navigate', (info: any) => this.goToRoute(info.detail.route))
-        // addEventListener('gameState', () => console.log('game state'))
     }
 
     private findContainerElement() {

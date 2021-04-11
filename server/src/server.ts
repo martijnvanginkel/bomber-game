@@ -23,46 +23,14 @@ io.on('connection', (socket: any) => {
     const clientID: number = getRandomClientID()
 
     socket.join(game.ID)
-    // io.to(game.ID).emit('connected', clientID)
     socket.emit('connected', clientID)
-    // socket.to(game.ID).emit('client', clientID)
 
     socket.on('clientConnected', (ID: number) => {
-        // console.log('received ID: ', ID)
         game.join(ID)
     })
 
     game.on('full', (gameID: string, clients: number[]) => {
-        socket.to(game.ID).emit('startGame', {
-            gameID,
-            clients,
-        })
-        // io.to(game.ID).emit('startGame', {
-        //     gameID,
-        //     clients,
-        // })
-    })
-
-    // socket.broadcast.to(game.ID).emit('move', ID, location)
-    // socket.to(game.ID).emit('connected', clientID)
-    // socket.on('client', (ID: number) => {
-    //     console.log(ID)
-    // })
-
-    // game.join(clientID, (gameID: string, clients: number[]) => {
-    //     // console.log(clientID)
-    //     io.to(game.ID).emit('startGame', {
-    //         gameID,
-    //         clients,
-    //         clientID,
-    //     })
-    // })
-
-    // console.log(clientID)
-
-    game.on('full', () => {
-        // console.log('client id ', clientID)
-        // console.log()
+        socket.to(game.ID).emit('startGame', gameID, clients)
     })
 
     socket.on('finished', () => {
