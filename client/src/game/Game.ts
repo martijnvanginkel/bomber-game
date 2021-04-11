@@ -41,6 +41,8 @@ class Game {
     private sendActions() {
         this.inputController.on('arrow-click', (key: ArrowKey) => {
             console.log('send action')
+            const me = this.player
+            console.log(me.getID)
             const action = findAction(key, this.player, this.map)
             action?.run(this.socket)
         })

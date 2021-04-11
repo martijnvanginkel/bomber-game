@@ -3,11 +3,12 @@ import { EventEmitter } from 'events'
 
 let games: Game[] = []
 
-export class Game {
+export class Game extends EventEmitter {
     private identifier: string
     private clients: number[]
 
     constructor() {
+        super()
         this.identifier = crypto.randomBytes(16).toString('hex')
         this.clients = []
     }
@@ -25,6 +26,7 @@ export class Game {
         if (this.isFullGame) {
             full(this.ID, this.clients)
         }
+        // this.emit('full')
     }
 
     public leave(clientID: number) {
