@@ -1,23 +1,24 @@
-import { map } from '../../index'
+// import { map } from '../../index'
 import { mapLocationToCanvasLocation } from '../map/utils/general'
 import { LocationType } from '../utils/types'
 import { mergeLocations } from '../utils/general'
 import _, { first } from 'lodash'
+import { Map } from './../map/Map'
 
 export class CharacterAnimator {
-    public constructor(protected color: string) {}
+    public constructor(protected color: string, private map: Map) {}
 
     private drawPosition(x: number, y: number) {
         console.log(x, y)
         // map.getPlayerContext.drawImage(this.image, x, y, 50, 50) // future image implementation
-        map.getPlayerContext.beginPath()
-        map.getPlayerContext.fillStyle = this.color
-        map.getPlayerContext.rect(x, y, 50, 50) // 50 for now cause of tile size
-        map.getPlayerContext.fill()
+        this.map.getPlayerContext.beginPath()
+        this.map.getPlayerContext.fillStyle = this.color
+        this.map.getPlayerContext.rect(x, y, 50, 50) // 50 for now cause of tile size
+        this.map.getPlayerContext.fill()
     }
 
     private clearPosition(x: number, y: number) {
-        map.getPlayerContext.clearRect(x, y, 50, 50)
+        this.map.getPlayerContext.clearRect(x, y, 50, 50)
     }
 
     public instantiate(location: LocationType) {

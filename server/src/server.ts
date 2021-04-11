@@ -3,6 +3,8 @@ import path from 'path'
 import http from 'http'
 import dotenv from 'dotenv'
 import { disconnectFromGame, findGame, Game } from './game'
+import { getRandomClientID } from './utils/randomClientID'
+import { LocationType } from './sockets/types'
 
 const app = express()
 const publicPath = path.resolve(__dirname + '/../../client/dist/')
@@ -18,22 +20,32 @@ app.get('/', function (req: any, res: any) {
 
 io.on('connection', (socket: any) => {
     const game: Game = findGame()
+    const clientID: number = getRandomClientID()
 
     socket.join(game.ID)
-    io.to(game.ID).emit('connected')
+    socket.emit('connected', clientID)
 
-    game.join(() => {
-        io.to(game.ID).emit('startGame')
+    socket.on('clientConnected', (ID: number) => {
+        game.join(ID)
+    })
+
+    game.on('full', (gameID: string, clients: number[]) => {
+        socket.to(game.ID).emit('startGame', gameID, clients)
     })
 
     socket.on('finished', () => {
-        disconnectFromGame(game)
+        disconnectFromGame(game, clientID)
     })
 
     socket.on('disconnecting', () => {
         console.log('on disconnect')
-        disconnectFromGame(game)
+        disconnectFromGame(game, clientID)
         io.to(game.ID).emit('lost')
+    })
+
+    // in-game
+    socket.on('move', (ID: number, location: LocationType) => {
+        socket.broadcast.to(game.ID).emit('move', ID, location)
     })
 })
 

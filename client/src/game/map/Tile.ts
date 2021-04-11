@@ -4,7 +4,7 @@ export class Tile {
     private width: number = 50
     private height: number = 50
     private occupied: boolean = false
-    private occupantID: string | null
+    private occupantID: number | null
 
     constructor(private x: number, private y: number, private map: Map) {
         this.occupantID = null
@@ -25,7 +25,7 @@ export class Tile {
         return this.occupantID
     }
 
-    public setOccupied(ID: string) {
+    public setOccupied(ID: number) {
         this.occupied = true
         this.occupantID = ID
     }

@@ -1,37 +1,29 @@
-import { ClientInfo } from '../managers/MessageDistributor'
-import { LocationType, Direction, TileStatus } from '../utils/types'
+import { LocationType, Direction, TileStatus, ArrowKey } from '../utils/types'
 import { CharacterType } from './actions/characters'
-import { map } from '../../index'
-import { Ability } from './actions/abilities'
-import { mergeLocations, waitForTime } from '../utils/general'
 import { Tile } from '../map/Tile'
 import { CharacterAnimator } from './CharacterAnimator'
-import { directionToCoordinates } from './actions/movements'
+import { Map } from './../map/Map'
 
-export abstract class Character {
+export class Character {
     private location: LocationType
     private direction: Direction
     private character: CharacterType
     private animator: CharacterAnimator
     private moving: boolean
 
-    constructor(protected clientInfo: ClientInfo, protected image: HTMLImageElement, protected color: string) {
-        this.animator = new CharacterAnimator(color)
+    constructor(protected ID: number, protected index: number, protected color: string, protected map: Map) {
+        this.animator = new CharacterAnimator(color, map)
         this.character = CharacterType.BASIC
-        this.location = { x: clientInfo.index, y: clientInfo.index }
+        this.location = { x: index, y: index }
         this.setMoving(false)
         this.spawn()
     }
 
-    protected get getClientInfo() {
-        return this.clientInfo
-    }
-
     public get getID() {
-        return this.clientInfo.ID
+        return this.ID
     }
 
-    protected get getLocation() {
+    public get getLocation() {
         return this.location
     }
 
@@ -39,11 +31,11 @@ export abstract class Character {
         return this.direction
     }
 
-    protected get getCharacterType() {
+    public get getCharacterType() {
         return this.character
     }
 
-    protected get isMoving() {
+    public get isMoving() {
         return this.moving
     }
 
@@ -52,50 +44,52 @@ export abstract class Character {
     }
 
     private spawn() {
-        const tile = map.getTileByLocation(this.location)
+        const tile = this.map.getTileByLocation(this.location)
         tile?.setOccupied(this.getID)
 
         this.animator.instantiate(this.getLocation)
         this.direction = Direction.NORTH
     }
 
-    public async move(oldLocation: LocationType, newLocation: LocationType, ID: string, direction?: Direction) {
-        const oldTile: Tile = map.getTileByLocation(oldLocation)!
-        const newTile: Tile = map.getTileByLocation(newLocation)!
+    public async move(newLocation: LocationType) {
+        const oldLocation = this.getLocation
+
+        const oldTile: Tile = this.map.getTileByLocation(oldLocation)!
+        const newTile: Tile = this.map.getTileByLocation(newLocation)!
 
         oldTile.setUnoccupied()
-        newTile.setOccupied(ID)
+        newTile.setOccupied(this.getID)
 
         this.setMoving(true)
         await this.animator.move(oldLocation, newLocation)
         this.setMoving(false)
 
         this.location = newLocation
-        if (direction) {
-            this.direction = direction
-        }
+        // if (direction) {
+        //     this.direction = direction
+        // }
     }
 
-    public async fireAbility(ability: Ability) {
-        for await (const blob of ability) {
-            const tile = map.getTileByLocation(blob.location)
-            if (!tile) {
-                continue
-            }
-            await waitForTime(blob.wait)
-            tile?.drawTile('yellow')
-            setTimeout(() => {
-                tile?.drawTile()
-            }, blob.duration)
-        }
-    }
+    // public async fireAbility(ability: Ability) {
+    //     for await (const blob of ability) {
+    //         const tile = this.map.getTileByLocation(blob.location)
+    //         if (!tile) {
+    //             continue
+    //         }
+    //         await waitForTime(blob.wait)
+    //         tile?.drawTile('yellow')
+    //         setTimeout(() => {
+    //             tile?.drawTile()
+    //         }, blob.duration)
+    //     }
+    // }
 
-    public receiveBounce(incomingDirection: Direction) {
-        const newLocation: LocationType = mergeLocations(this.getLocation, directionToCoordinates[incomingDirection])
-        const tileStatus: TileStatus = map.getTileStatus(newLocation)
-        if (tileStatus === TileStatus.NONEXISTENT) {
-            return
-        }
-        this.move(this.getLocation, newLocation, this.getID)
-    }
+    // public receiveBounce(incomingDirection: Direction) {
+    //     const newLocation: LocationType = mergeLocations(this.getLocation, directionToCoordinates[incomingDirection])
+    //     const tileStatus: TileStatus = this.map.getTileStatus(newLocation)
+    //     if (tileStatus === TileStatus.NONEXISTENT) {
+    //         return
+    //     }
+    //     this.move(this.getLocation, newLocation, this.getID)
+    // }
 }

@@ -1,14 +1,9 @@
-import { Images } from './game/images/Images'
-import { Map } from './game/map/Map'
-import { MessageDistributor } from './game/managers/MessageDistributor'
 import { defineComponents } from './views/components/defineComponents'
 import { createRouteManager } from './views/RouteManager'
 import { io } from 'socket.io-client'
+import { createNewGame, GameInitInfo } from './game/Game'
 
 defineComponents()
-export const images = new Images()
-export const map = new Map()
-export const messageDistributor = new MessageDistributor()
 
 const routeManager = createRouteManager()
 routeManager.goToRoute('home')
@@ -16,21 +11,23 @@ routeManager.goToRoute('home')
 addEventListener('searchingForGame', () => {
     const socket = io().connect()
 
-    socket.on('connected', () => {
+    socket.on('connected', (clientID: number) => {
         routeManager.goToRoute('waiting')
-    })
+        socket.emit('clientConnected', clientID)
 
-    socket.on('startGame', () => {
-        console.log('start game')
-        routeManager.goToRoute('game')
+        socket.on('startGame', (gameID: string, clients: number[]) => {
+            routeManager.goToRoute('game')
+
+            console.log(gameID, clients, clientID)
+            createNewGame(socket, {
+                gameID,
+                clients,
+                clientID,
+            })
+        })
 
         socket.on('lost', () => {
             routeManager.goToRoute('home')
         })
-        // setTimeout(() => {
-        //     socket.emit('finished')
-        //     socket.disconnect()
-        //     routeManager.goToRoute('home')
-        // }, 3000)
     })
 })

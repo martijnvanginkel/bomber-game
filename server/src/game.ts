@@ -5,12 +5,12 @@ let games: Game[] = []
 
 export class Game extends EventEmitter {
     private identifier: string
-    private clients: number
+    private clients: number[]
 
     constructor() {
         super()
         this.identifier = crypto.randomBytes(16).toString('hex')
-        this.clients = 0
+        this.clients = []
     }
 
     public get ID() {
@@ -18,18 +18,18 @@ export class Game extends EventEmitter {
     }
 
     public get isFullGame() {
-        return this.clients === 2
+        return this.clients.length === 2
     }
 
-    public join(cb: () => void) {
-        this.clients += 1
+    public join(clientID: number) {
+        this.clients.push(clientID)
         if (this.isFullGame) {
-            cb()
+            this.emit('full', this.ID, this.clients)
         }
     }
 
-    public leave() {
-        this.clients -= 1
+    public leave(clientID: number) {
+        this.clients = this.clients.filter((client) => client !== clientID)
     }
 }
 
@@ -43,13 +43,13 @@ export const findGame = () => {
     return game
 }
 
-export const disconnectFromGame = (game: Game) => {
+export const disconnectFromGame = (game: Game, clientID: number) => {
     const existingGame = games.find((gm) => gm.ID === game.ID)
     if (!existingGame) {
         return
     }
     if (!existingGame.isFullGame) {
-        existingGame.leave()
+        existingGame.leave(clientID)
     } else {
         games = games.filter((gm) => gm.ID !== game.ID)
     }
