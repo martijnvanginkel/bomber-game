@@ -3,6 +3,8 @@ import { CharacterType } from './actions/characters'
 import { Tile } from '../map/Tile'
 import { CharacterAnimator } from './CharacterAnimator'
 import { Map } from './../map/Map'
+import { directionToCoordinates } from './actions/movements'
+import { mergeLocations } from './../utils/general'
 
 export class Character {
     private location: LocationType
@@ -65,31 +67,14 @@ export class Character {
         this.setMoving(false)
 
         this.location = newLocation
-        // if (direction) {
-        //     this.direction = direction
-        // }
     }
 
-    // public async fireAbility(ability: Ability) {
-    //     for await (const blob of ability) {
-    //         const tile = this.map.getTileByLocation(blob.location)
-    //         if (!tile) {
-    //             continue
-    //         }
-    //         await waitForTime(blob.wait)
-    //         tile?.drawTile('yellow')
-    //         setTimeout(() => {
-    //             tile?.drawTile()
-    //         }, blob.duration)
-    //     }
-    // }
-
-    // public receiveBounce(incomingDirection: Direction) {
-    //     const newLocation: LocationType = mergeLocations(this.getLocation, directionToCoordinates[incomingDirection])
-    //     const tileStatus: TileStatus = this.map.getTileStatus(newLocation)
-    //     if (tileStatus === TileStatus.NONEXISTENT) {
-    //         return
-    //     }
-    //     this.move(this.getLocation, newLocation, this.getID)
-    // }
+    public receiveBounce(incomingDirection: Direction) {
+        const newLocation: LocationType = mergeLocations(this.getLocation, directionToCoordinates[incomingDirection])
+        const tileStatus: TileStatus = this.map.getTileStatus(newLocation)
+        if (tileStatus === TileStatus.NONEXISTENT) {
+            return
+        }
+        this.move(newLocation)
+    }
 }

@@ -1,11 +1,12 @@
-import { Move } from 'game/players/actions/movements'
+import { Move } from './../players/actions/movements'
 import { findCharacterMove } from './../players/actions/utils/characterUtils'
 import { Character } from './../players/Character'
 import { mergeLocations } from './../utils/general'
-import { LocationType, TileStatus } from './../utils/types' //'game/utils/types'
+import { Direction, LocationType, TileStatus } from './../utils/types'
 import { Socket } from 'socket.io-client'
 import { Map } from '../map/Map'
 import { ArrowKey } from './InputController'
+import { findDirectionByKey } from './../players/actions/utils/movementUtils'
 
 export const findAction = (key: ArrowKey, character: Character, map: Map) => {
     if (character.isMoving) {
@@ -14,19 +15,25 @@ export const findAction = (key: ArrowKey, character: Character, map: Map) => {
 
     const characterMove: Move = findCharacterMove(key, character.getCharacterType)
     const oldLocation = character.getLocation
-    const newLocation = mergeLocations(oldLocation, characterMove)
 
+    // maybe find more efficient way to do these calculations
+    const newLocation = mergeLocations(oldLocation, characterMove)
     const tileStatus: TileStatus = map.getTileStatus(newLocation)
+    const tile = map.getTileByLocation(newLocation)
+    const direction = findDirectionByKey(key)
 
     switch (tileStatus) {
         case TileStatus.NONEXISTENT:
             break
-        // case TileStatus.OCCUPIED:
-        //     // this.triggerBounce(newLocation,)
-        //     break
+        case TileStatus.OCCUPIED:
+            const victimID = tile?.getOccupant
+            if (!victimID) {
+                return
+            }
+            return bounce(victimID, direction)
+            break
         case TileStatus.AVAILABLE:
             return move(character, newLocation)
-            // this.triggerMove(newLocation, direction)
             break
         default:
             throw new Error('Unknown tile status?')
@@ -34,22 +41,24 @@ export const findAction = (key: ArrowKey, character: Character, map: Map) => {
     }
 }
 
+const bounce = (victimID: number, direction: Direction) => {
+    return {
+        run: (socket: Socket, characters: Character[]) => {
+            const victim = characters.find((character) => character.getID === victimID)
+            if (!victim) {
+                return
+            }
+            victim.receiveBounce(direction)
+            socket.emit('bounce', victimID, direction)
+        },
+    }
+}
+
 const move = (character: Character, newLocation: LocationType) => {
     return {
-        run: (socket: Socket) => {
+        run: (socket: Socket, _characters: Character[]) => {
             character.move(newLocation)
             socket.emit('move', character.getID, newLocation)
         },
     }
 }
-
-// export interface ShareLocationType {
-//     oldLocation: LocationType
-//     newLocation: LocationType
-//     ID: string
-//     direction: Direction
-// }
-
-// const move = (newLocation: LocationType) => {
-//     return 'asdf'
-// }

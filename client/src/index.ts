@@ -18,7 +18,6 @@ addEventListener('searchingForGame', () => {
         socket.on('startGame', (gameID: string, clients: number[]) => {
             routeManager.goToRoute('game')
 
-            console.log(gameID, clients, clientID)
             createNewGame(socket, {
                 gameID,
                 clients,
