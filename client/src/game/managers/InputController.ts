@@ -10,7 +10,6 @@ export enum ArrowKey {
 export class InputController extends EventEmitter {
     constructor() {
         super()
-        console.log('asdfasdf')
         this.listenToInput()
     }
 

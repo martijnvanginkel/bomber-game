@@ -21,12 +21,14 @@ export class Game extends EventEmitter {
         return this.clients.length === 2
     }
 
-    public join(clientID: number, full: (gameID: string, clients: number[]) => void) {
+    public join(clientID: number) {
         this.clients.push(clientID)
+        // if (this.isFullGame) {
+        //     full(this.ID, this.clients)
+        // }
         if (this.isFullGame) {
-            full(this.ID, this.clients)
+            this.emit('full', this.ID, this.clients)
         }
-        // this.emit('full')
     }
 
     public leave(clientID: number) {

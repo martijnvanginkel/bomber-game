@@ -11,27 +11,20 @@ routeManager.goToRoute('home')
 addEventListener('searchingForGame', () => {
     const socket = io().connect()
 
-    // let ID: number = 0
-
-    // socket.on('client', (ID: number) => {
-    //     console.log('asdfasdf')
-    //     routeManager.goToRoute('waiting')
-    // })
-
     socket.on('connected', (ID: number) => {
-        console.log('connected')
-        console.log(ID)
-        socket.emit('client', ID)
-    })
+        routeManager.goToRoute('waiting')
+        socket.emit('clientConnected', ID)
 
-    socket.on('startGame', (gameInfo: GameInitInfo) => {
-        console.log(gameInfo)
-        routeManager.goToRoute('game')
+        socket.on('startGame', (gameInfo: GameInitInfo) => {
+            routeManager.goToRoute('game')
 
-        createNewGame(socket, gameInfo)
+            console.log(ID, gameInfo)
 
-        socket.on('lost', () => {
-            routeManager.goToRoute('home')
+            createNewGame(socket, gameInfo)
+
+            socket.on('lost', () => {
+                routeManager.goToRoute('home')
+            })
         })
     })
 })

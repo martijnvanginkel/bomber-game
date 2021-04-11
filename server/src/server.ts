@@ -27,8 +27,20 @@ io.on('connection', (socket: any) => {
     socket.emit('connected', clientID)
     // socket.to(game.ID).emit('client', clientID)
 
-    socket.on('client', (ID: number) => {
-        console.log('received ID: ', ID)
+    socket.on('clientConnected', (ID: number) => {
+        // console.log('received ID: ', ID)
+        game.join(ID)
+    })
+
+    game.on('full', (gameID: string, clients: number[]) => {
+        socket.to(game.ID).emit('startGame', {
+            gameID,
+            clients,
+        })
+        // io.to(game.ID).emit('startGame', {
+        //     gameID,
+        //     clients,
+        // })
     })
 
     // socket.broadcast.to(game.ID).emit('move', ID, location)
@@ -37,14 +49,14 @@ io.on('connection', (socket: any) => {
     //     console.log(ID)
     // })
 
-    game.join(clientID, (gameID: string, clients: number[]) => {
-        // console.log(clientID)
-        io.to(game.ID).emit('startGame', {
-            gameID,
-            clients,
-            clientID,
-        })
-    })
+    // game.join(clientID, (gameID: string, clients: number[]) => {
+    //     // console.log(clientID)
+    //     io.to(game.ID).emit('startGame', {
+    //         gameID,
+    //         clients,
+    //         clientID,
+    //     })
+    // })
 
     // console.log(clientID)
 
