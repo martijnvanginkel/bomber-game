@@ -14,7 +14,13 @@ export class InputController extends EventEmitter {
     }
 
     private listenToInput() {
+        let keyDown = false
+
         document.addEventListener('keydown', (e) => {
+            if (keyDown) {
+                return
+            }
+            keyDown = true
             switch (e.code) {
                 case 'ArrowLeft':
                     this.arrowClick(ArrowKey.LEFT)
@@ -29,6 +35,10 @@ export class InputController extends EventEmitter {
                     this.arrowClick(ArrowKey.DOWN)
                     break
             }
+        })
+
+        document.addEventListener('keyup', function () {
+            keyDown = false
         })
     }
 
