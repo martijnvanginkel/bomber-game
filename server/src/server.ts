@@ -49,8 +49,12 @@ io.on('connection', (socket: any) => {
     })
 
     socket.on('bounce', (victimID: number, direction: Direction) => {
-        console.log('bounce')
         socket.broadcast.to(game.ID).emit('bounce', victimID, direction)
+    })
+
+    socket.on('gameEnded', () => {
+        console.log('gameEnded')
+        io.to(game.ID).emit('gameEnded')
     })
 })
 

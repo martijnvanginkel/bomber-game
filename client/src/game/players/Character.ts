@@ -13,7 +13,13 @@ export class Character {
     private animator: CharacterAnimator
     private moving: boolean
 
-    constructor(protected ID: number, protected index: number, protected color: string, protected map: Map) {
+    constructor(
+        protected ID: number,
+        protected index: number,
+        protected color: string,
+        protected map: Map,
+        private diedCallback: () => void,
+    ) {
         this.animator = new CharacterAnimator(color, map)
         this.character = CharacterType.BASIC
         this.location = { x: index, y: index }
@@ -73,6 +79,7 @@ export class Character {
         const newLocation: LocationType = mergeLocations(this.getLocation, directionToCoordinates[incomingDirection])
         const tileStatus: TileStatus = this.map.getTileStatus(newLocation)
         if (tileStatus === TileStatus.NONEXISTENT) {
+            this.diedCallback()
             return
         }
         this.move(newLocation)

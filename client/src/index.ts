@@ -1,7 +1,9 @@
 import { defineComponents } from './views/components/defineComponents'
 import { createRouteManager } from './views/RouteManager'
 import { io } from 'socket.io-client'
-import { createNewGame, GameInitInfo } from './game/Game'
+import { createNewGame } from './game/Game'
+import events from 'events'
+import EventEmitter from 'events'
 
 defineComponents()
 
@@ -18,11 +20,15 @@ addEventListener('searchingForGame', () => {
         socket.on('startGame', (gameID: string, clients: number[]) => {
             routeManager.goToRoute('game')
 
-            createNewGame(socket, {
-                gameID,
-                clients,
-                clientID,
-            })
+            createNewGame(
+                socket,
+                {
+                    gameID,
+                    clients,
+                    clientID,
+                },
+                () => routeManager.goToRoute('gameEnded'),
+            )
         })
 
         socket.on('lost', () => {

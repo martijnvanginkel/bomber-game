@@ -19,6 +19,7 @@ class Game {
         private gameInfo: GameInitInfo,
         private map: Map,
         private inputController: InputController,
+        private gameEndedCallback: () => void,
     ) {
         // initialize
         this.createCharacters()
@@ -30,7 +31,9 @@ class Game {
 
     private createCharacters() {
         this.gameInfo.clients.forEach((ID, index) => {
-            const character = new Character(ID, index, 'green', this.map)
+            const character = new Character(ID, index, 'green', this.map, () => {
+                this.gameEndedCallback()
+            })
             this.characters.push(character)
         })
     }
@@ -51,8 +54,8 @@ class Game {
             }
             character.move(newLocation)
         })
+
         this.socket.on('bounce', (victimID: number, direction: Direction) => {
-            console.log('bounce in here')
             const victim = this.findCharacter(victimID)
             if (!victim) {
                 return
@@ -68,12 +71,8 @@ class Game {
     private findCharacter(ID: number) {
         return this.characters.find((character) => character.getID === ID)
     }
-
-    private get enemies() {
-        return this.characters.filter((character) => character.getID !== this.gameInfo.clientID)!
-    }
 }
 
-export const createNewGame = (socket: Socket, gameInit: GameInitInfo) => {
-    return new Game(socket, gameInit, new Map(), new InputController())
+export const createNewGame = (socket: Socket, gameInit: GameInitInfo, gameEndedCallback: () => void) => {
+    return new Game(socket, gameInit, new Map(), new InputController(), gameEndedCallback)
 }
