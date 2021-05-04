@@ -16,4 +16,8 @@ export const routes: Route[] = [
         name: 'game',
         screen: 'game-screen',
     },
+    {
+        name: 'gameEnded',
+        screen: 'game-ended-screen',
+    },
 ]
