@@ -3,33 +3,28 @@ export class HomeScreen extends HTMLElement {
 
     constructor() {
         super()
-
         this.shadow = this.attachShadow({ mode: 'open' })
-        this.listenForClicks()
     }
 
     connectedCallback() {
         this.render()
+        this.listenForClicks()
     }
 
     render() {
         this.shadow.innerHTML = `
             <div>
                 <h1>Title</h1>
-                <basic-button title="Search for game" name="search-game"></basic-button>
+                <basic-button id="searchButton" title="Search for game"></basic-button>
             </div>
         `
     }
 
     listenForClicks() {
-        addEventListener('buttonClick', (info: CustomEventInit) => {
-            if (info.detail.name === 'search-game') {
-                const event = new CustomEvent('searchingForGame', {
-                    bubbles: true,
-                    composed: true,
-                })
-                this.dispatchEvent(event)
-            }
+        const btn = this.shadow.getElementById('searchButton')
+        btn?.addEventListener('click', () => {
+            const event = new CustomEvent('searchingForGame', { bubbles: true, composed: true })
+            this.dispatchEvent(event)
         })
     }
 }

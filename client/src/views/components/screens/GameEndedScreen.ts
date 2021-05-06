@@ -3,13 +3,12 @@ export class GameEndedScreen extends HTMLElement {
 
     constructor() {
         super()
-
         this.shadow = this.attachShadow({ mode: 'open' })
-        this.listenForClicks()
     }
 
     connectedCallback() {
         this.render()
+        this.listenForClicks()
     }
 
     render() {
@@ -17,22 +16,25 @@ export class GameEndedScreen extends HTMLElement {
             <div>
                 <h1>Game ended</h1>
                 <div>
-                    <basic-button title="Home"></basic-button>
-                    <basic-button title="Retry"></basic-button>
+                    <basic-button id="homeButton" title="Home"></basic-button>
+                    <basic-button id="retryButton" title="Retry"></basic-button>
                 </div>
             </div>
         `
     }
 
     listenForClicks() {
-        addEventListener('buttonClick', (info: CustomEventInit) => {
-            if (info.detail.name === 'search-game') {
-                const event = new CustomEvent('searchingForGame', {
-                    bubbles: true,
-                    composed: true,
-                })
-                this.dispatchEvent(event)
-            }
+        const homeButton = this.shadow.getElementById('homeButton')
+        const retryButton = this.shadow.getElementById('retryButton')
+
+        homeButton?.addEventListener('click', () => {
+            const event = new CustomEvent('goHome', { bubbles: true, composed: true })
+            this.dispatchEvent(event)
+        })
+
+        retryButton?.addEventListener('click', () => {
+            const event = new CustomEvent('searchingForGame', { bubbles: true, composed: true })
+            this.dispatchEvent(event)
         })
     }
 }

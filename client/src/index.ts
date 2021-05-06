@@ -2,13 +2,13 @@ import { defineComponents } from './views/components/defineComponents'
 import { createRouteManager } from './views/RouteManager'
 import { io } from 'socket.io-client'
 import { createNewGame } from './game/Game'
-import events from 'events'
-import EventEmitter from 'events'
 
 defineComponents()
 
 const routeManager = createRouteManager()
 routeManager.goToRoute('home')
+
+addEventListener('goHome', () => routeManager.goToRoute('home'))
 
 addEventListener('searchingForGame', () => {
     const socket = io().connect()
