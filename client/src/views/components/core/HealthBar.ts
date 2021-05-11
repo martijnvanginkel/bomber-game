@@ -25,9 +25,9 @@ export class HealthBar extends HTMLElement {
             <style>
                 #container {
                     position: relative;
-                    height: 50px;
-                    width: 200px;
-                    border: 2px solid black;
+                    height: 25px;
+                    width: 100px;
+                    border: 1px solid black;
                     border-radius: 2px;
                 }
                 #bar {
