@@ -1,4 +1,5 @@
 import { BasicButton } from './core/BasicButton'
+import { GameEndedScreen } from './screens/GameEndedScreen'
 import { GameScreen } from './screens/GameScreen'
 import { HomeScreen } from './screens/HomeScreen'
 import { WaitingScreen } from './screens/WaitingScreen'
@@ -11,4 +12,5 @@ export const defineComponents = () => {
     customElements.define('home-screen', HomeScreen)
     customElements.define('waiting-screen', WaitingScreen)
     customElements.define('game-screen', GameScreen)
+    customElements.define('game-ended-screen', GameEndedScreen)
 }

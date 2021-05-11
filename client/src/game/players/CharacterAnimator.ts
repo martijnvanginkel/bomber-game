@@ -1,15 +1,13 @@
-// import { map } from '../../index'
 import { mapLocationToCanvasLocation } from '../map/utils/general'
 import { LocationType } from '../utils/types'
 import { mergeLocations } from '../utils/general'
-import _, { first } from 'lodash'
+import _ from 'lodash'
 import { Map } from './../map/Map'
 
 export class CharacterAnimator {
     public constructor(protected color: string, private map: Map) {}
 
     private drawPosition(x: number, y: number) {
-        console.log(x, y)
         // map.getPlayerContext.drawImage(this.image, x, y, 50, 50) // future image implementation
         this.map.getPlayerContext.beginPath()
         this.map.getPlayerContext.fillStyle = this.color
