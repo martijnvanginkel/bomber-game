@@ -27,8 +27,7 @@ export class GameScreen extends HTMLElement {
 
             <div id="container">
                 <div id="top-bar">
-                    <health-bar steps="4" value="2"></health-bar>
-                    <health-bar steps="4" value="3"></health-bar>
+                    <!-- <health-bar steps="4" value="2"></health-bar> -->
                 </div>
                 <div id="canvas-container" style="position: relative;">
                 

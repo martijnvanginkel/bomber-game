@@ -11,21 +11,21 @@ export class CharacterAnimator {
         // map.getPlayerContext.drawImage(this.image, x, y, 50, 50) // future image implementation
         this.map.getPlayerContext.beginPath()
         this.map.getPlayerContext.fillStyle = this.color
-        this.map.getPlayerContext.rect(x, y, 50, 50) // 50 for now cause of tile size
+        this.map.getPlayerContext.rect(x, y, this.map.tileSize, this.map.tileSize) // 50 for now cause of tile size
         this.map.getPlayerContext.fill()
     }
 
     private clearPosition(x: number, y: number) {
-        this.map.getPlayerContext.clearRect(x, y, 50, 50)
+        this.map.getPlayerContext.clearRect(x, y, this.map.tileSize, this.map.tileSize)
     }
 
     public instantiate(location: LocationType) {
-        this.drawPosition(location.x * 50, location.y * 50) // 50 for now
+        this.drawPosition(location.x * this.map.tileSize, location.y * this.map.tileSize) // 50 for now
     }
 
     public move(curLoc: LocationType, endLoc: LocationType) {
-        let start = mapLocationToCanvasLocation(curLoc)
-        const end = mapLocationToCanvasLocation(endLoc)
+        let start = mapLocationToCanvasLocation(curLoc, this.map.tileSize)
+        const end = mapLocationToCanvasLocation(endLoc, this.map.tileSize)
         const increment = this.getLocationIncrement(start, end)
         let firstFrame: boolean = true
 

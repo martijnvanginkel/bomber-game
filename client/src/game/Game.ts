@@ -21,7 +21,6 @@ class Game {
         private inputController: InputController,
         private gameEndedCallback: () => void,
     ) {
-        return
         // initialize
         this.createCharacters()
 
