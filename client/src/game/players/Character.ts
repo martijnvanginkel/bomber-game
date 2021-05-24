@@ -59,7 +59,15 @@ export class Character {
         this.direction = Direction.NORTH
     }
 
+    // TO DO: there is a problem with an enemy still moving and then getting triggered after
     public async move(newLocation: LocationType) {
+        console.log(this.isMoving)
+
+        if (this.isMoving) {
+            // clear position to the next point
+            this.animator.resetMovement()
+        }
+
         const oldLocation = this.getLocation
 
         const oldTile: Tile = this.map.getTileByLocation(oldLocation)!

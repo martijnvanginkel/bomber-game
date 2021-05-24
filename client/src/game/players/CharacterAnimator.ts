@@ -5,6 +5,8 @@ import _ from 'lodash'
 import { Map } from './../map/Map'
 
 export class CharacterAnimator {
+    private resettingMovement: boolean = false
+
     public constructor(protected color: string, private map: Map) {}
 
     private drawPosition(x: number, y: number) {
@@ -23,6 +25,10 @@ export class CharacterAnimator {
         this.drawPosition(location.x * this.map.tileSize, location.y * this.map.tileSize) // 50 for now
     }
 
+    public resetMovement() {
+        this.resettingMovement = true
+    }
+
     public move(curLoc: LocationType, endLoc: LocationType) {
         let start = mapLocationToCanvasLocation(curLoc, this.map.tileSize)
         const end = mapLocationToCanvasLocation(endLoc, this.map.tileSize)
@@ -35,6 +41,12 @@ export class CharacterAnimator {
                     this.clearPosition(start.x - increment.x, start.y - increment.y)
                 }
                 firstFrame = false
+                if (this.resettingMovement) {
+                    console.log('2')
+                    this.resettingMovement = false
+                    resolve()
+                    return
+                }
                 this.drawPosition(start.x, start.y)
                 if (!_.isEqual(start, end)) {
                     start = mergeLocations(start, increment)
