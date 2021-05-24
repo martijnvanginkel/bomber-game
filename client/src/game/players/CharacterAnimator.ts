@@ -13,7 +13,7 @@ export class CharacterAnimator {
         // map.getPlayerContext.drawImage(this.image, x, y, 50, 50) // future image implementation
         this.map.getPlayerContext.beginPath()
         this.map.getPlayerContext.fillStyle = this.color
-        this.map.getPlayerContext.rect(x, y, this.map.tileSize, this.map.tileSize) // 50 for now cause of tile size
+        this.map.getPlayerContext.rect(x, y, this.map.tileSize, this.map.tileSize)
         this.map.getPlayerContext.fill()
     }
 
@@ -22,7 +22,7 @@ export class CharacterAnimator {
     }
 
     public instantiate(location: LocationType) {
-        this.drawPosition(location.x * this.map.tileSize, location.y * this.map.tileSize) // 50 for now
+        this.drawPosition(location.x * this.map.tileSize, location.y * this.map.tileSize)
     }
 
     public resetMovement() {
@@ -42,7 +42,6 @@ export class CharacterAnimator {
                 }
                 firstFrame = false
                 if (this.resettingMovement) {
-                    console.log('2')
                     this.resettingMovement = false
                     resolve()
                     return
@@ -60,7 +59,7 @@ export class CharacterAnimator {
     }
 
     private getLocationIncrement(start: LocationType, end: LocationType) {
-        const increment = 10
+        const increment = this.map.tileSize / 5
 
         const xMultiplier: number = start.x <= end.x ? 1 : -1
         const yMultiplier: number = start.y <= end.y ? 1 : -1

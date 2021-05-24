@@ -5,7 +5,7 @@ export class Map {
     private mapContext: CanvasRenderingContext2D
     private playerContext: CanvasRenderingContext2D
 
-    private tilesInMapWidth: number = 10
+    private tilesInMapWidth: number = 20
     private mapSizeInPixels: number = 500
 
     // find solution for this
@@ -41,11 +41,11 @@ export class Map {
         return roundedDown
     }
 
+    // TO DO: clean up this function and simplify
     private drawCanvases() {
         const shadowRoot = document.querySelector('game-screen')?.shadowRoot
         const canvasContainer = shadowRoot?.getElementById('canvas-container')
         if (!canvasContainer) {
-            console.log('here')
             return
         }
         const mapCanvas = document.createElement('canvas')
@@ -104,10 +104,13 @@ export class Map {
     }
 
     private exceedsMapBorders(x: number, y: number): boolean {
-        if (x < 0 || y < 0) {
+        const min = 0
+        const max = this.tilesInMapWidth - 1
+
+        if (x < min || y < min) {
             return true
         }
-        if (x > 9 || y > 9) {
+        if (x > max || y > max) {
             return true
         }
         return false

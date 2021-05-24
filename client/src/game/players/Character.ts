@@ -59,7 +59,6 @@ export class Character {
         this.direction = Direction.NORTH
     }
 
-    // TO DO: there is a problem with an enemy still moving and then getting triggered after
     public async move(newLocation: LocationType) {
         console.log(this.isMoving)
 
