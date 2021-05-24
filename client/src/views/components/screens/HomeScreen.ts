@@ -18,8 +18,6 @@ export class HomeScreen extends HTMLElement {
             <div>
                 <h1>Title</h1>
                 <basic-button id="searchButton" title="Search for game"></basic-button>
-                <health-bar steps="4" value="${this.steps}"></health-bar>
-                <basic-button id="test" title="test"></basic-button>
             </div>
         `
     }
