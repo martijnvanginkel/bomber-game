@@ -45,34 +45,27 @@ export class Map {
     private drawCanvases() {
         const shadowRoot = document.querySelector('game-screen')?.shadowRoot
         const canvasContainer = shadowRoot?.getElementById('canvas-container')
-        if (!canvasContainer) {
-            return
-        }
-        const mapCanvas = document.createElement('canvas')
-        mapCanvas.id = 'mapcanvas'
-        mapCanvas.width = this.mapSizeInPixels
-        mapCanvas.height = this.mapSizeInPixels
-        mapCanvas.style.cssText = 'position: absolute; left: 0; top: 0; z-index: 0; border: 1px solid red;'
-        canvasContainer.appendChild(mapCanvas)
+        const mapCanvas = this.createCanvas('mapcanvas')
+        const playerCanvas = this.createCanvas('playercanvas')
         const mapContext = mapCanvas.getContext('2d')
-        if (!mapContext) {
-            console.log('here2')
-            return
-        }
-        this.mapContext = mapContext
-        const playerCanvas = document.createElement('canvas')
-        playerCanvas.id = 'playercanvas'
-        playerCanvas.width = this.mapSizeInPixels
-        playerCanvas.height = this.mapSizeInPixels
-        playerCanvas.style.cssText = 'position: absolute; left: 0; top: 0; z-index: 0; border: 1px solid red;'
-        canvasContainer.appendChild(playerCanvas)
         const playerContext = playerCanvas.getContext('2d')
-        if (!playerContext) {
-            console.log('here3')
+        if (!canvasContainer || !mapContext || !playerContext) {
             return
         }
+        canvasContainer.appendChild(mapCanvas)
+        canvasContainer.appendChild(playerCanvas)
+        this.mapContext = mapContext
         this.playerContext = playerContext
         this.drawMap()
+    }
+
+    private createCanvas(idName: string) {
+        const canvas = document.createElement('canvas')
+        canvas.id = idName
+        canvas.width = this.mapSizeInPixels
+        canvas.height = this.mapSizeInPixels
+        canvas.style.cssText = 'position: absolute; left: 0; top: 0; z-index: 0; border: 1px solid red;'
+        return canvas
     }
 
     private drawMap() {
