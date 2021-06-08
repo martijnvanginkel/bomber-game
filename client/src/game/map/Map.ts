@@ -5,7 +5,7 @@ export class Map {
     private mapContext: CanvasRenderingContext2D
     private playerContext: CanvasRenderingContext2D
 
-    private tilesInMapWidth: number = 20
+    private tilesInMapWidth: number = 10
     private mapSizeInPixels: number = 500
 
     // find solution for this
@@ -69,6 +69,7 @@ export class Map {
     }
 
     private drawMap() {
+        console.log(this.mapSizeInPixels)
         for (let i = 0; i < this.tilesInMapWidth; i++) {
             const line: Array<Tile> = []
             for (let j = 0; j < this.tilesInMapWidth; j++) {
