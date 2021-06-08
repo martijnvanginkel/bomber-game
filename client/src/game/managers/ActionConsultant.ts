@@ -31,13 +31,10 @@ export const findAction = (key: ArrowKey, character: Character, map: Map) => {
                 return
             }
             return bounce(victimID, direction)
-            break
         case TileStatus.AVAILABLE:
             return move(character, newLocation)
-            break
         default:
             throw new Error('Unknown tile status?')
-            break
     }
 }
 

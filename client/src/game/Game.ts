@@ -31,11 +31,15 @@ class Game {
 
     private createCharacters() {
         this.gameInfo.clients.forEach((ID, index) => {
-            const character = new Character(ID, index, 'green', this.map, () => {
-                this.gameEndedCallback()
+            const character = new Character(ID, index, 'green', this.map, (health: number) => {
+                health >= 0 ? this.respawnPlayers() : this.gameEndedCallback()
             })
             this.characters.push(character)
         })
+    }
+
+    private respawnPlayers() {
+        this.characters.forEach((character) => character.respawn())
     }
 
     private sendActions() {

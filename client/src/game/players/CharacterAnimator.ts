@@ -21,7 +21,14 @@ export class CharacterAnimator {
         this.map.getPlayerContext.clearRect(x, y, this.map.tileSize, this.map.tileSize)
     }
 
+    public clearCharacterLocation(location: LocationType) {
+        this.clearPosition(location.x * this.map.tileSize, location.y * this.map.tileSize)
+    }
+
     public instantiate(location: LocationType) {
+        console.log('draw position')
+        this.drawPosition(location.x * this.map.tileSize, location.y * this.map.tileSize)
+        this.drawPosition(location.x * this.map.tileSize, location.y * this.map.tileSize)
         this.drawPosition(location.x * this.map.tileSize, location.y * this.map.tileSize)
     }
 
