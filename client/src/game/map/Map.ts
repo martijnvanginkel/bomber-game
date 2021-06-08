@@ -5,23 +5,16 @@ export class Map {
     private mapContext: CanvasRenderingContext2D
     private playerContext: CanvasRenderingContext2D
 
-    private width: number = 10
-    private height: number = 10
+    private tilesInMapWidth: number = 10
+    private mapSizeInPixels: number = 500
 
     // find solution for this
     public tileSize: number = 50
     public tileMap: Tile[][] = []
 
     constructor() {
-        const mapCanvas = document
-            .querySelector('game-screen')
-            ?.shadowRoot?.getElementById('mapcanvas') as HTMLCanvasElement
-        const playerCanvas = document
-            .querySelector('game-screen')
-            ?.shadowRoot?.getElementById('playercanvas') as HTMLCanvasElement
-        this.mapContext = mapCanvas.getContext('2d') as CanvasRenderingContext2D
-        this.playerContext = playerCanvas.getContext('2d') as CanvasRenderingContext2D
-        this.drawMap()
+        this.setTileAndMapSize()
+        this.drawCanvases()
     }
 
     public get getMapContext() {
@@ -32,10 +25,54 @@ export class Map {
         return this.playerContext
     }
 
+    private setTileAndMapSize() {
+        const mapSize = this.getBrowserWindowSize()
+        this.tileSize = mapSize / this.tilesInMapWidth
+        this.mapSizeInPixels = mapSize
+    }
+
+    private getBrowserWindowSize() {
+        const width = window.innerWidth
+        const height = window.innerHeight
+
+        const smallest = Math.min(width, height)
+        const margin = smallest / 10
+        const roundedDown = Math.round((smallest - margin) / 100) * 100 // is always a rounded 100 number
+        return roundedDown
+    }
+
+    // TO DO: clean up this function and simplify
+    private drawCanvases() {
+        const shadowRoot = document.querySelector('game-screen')?.shadowRoot
+        const canvasContainer = shadowRoot?.getElementById('canvas-container')
+        const mapCanvas = this.createCanvas('mapcanvas')
+        const playerCanvas = this.createCanvas('playercanvas')
+        const mapContext = mapCanvas.getContext('2d')
+        const playerContext = playerCanvas.getContext('2d')
+        if (!canvasContainer || !mapContext || !playerContext) {
+            return
+        }
+        canvasContainer.appendChild(mapCanvas)
+        canvasContainer.appendChild(playerCanvas)
+        this.mapContext = mapContext
+        this.playerContext = playerContext
+        this.drawMap()
+    }
+
+    private createCanvas(idName: string) {
+        const canvas = document.createElement('canvas')
+        canvas.id = idName
+        canvas.width = this.mapSizeInPixels
+        canvas.height = this.mapSizeInPixels
+        canvas.style.cssText = 'position: absolute; left: 0; top: 0; z-index: 0; border: 1px solid red;'
+        return canvas
+    }
+
     private drawMap() {
-        for (let i = 0; i < this.height; i++) {
+        console.log(this.mapSizeInPixels)
+        for (let i = 0; i < this.tilesInMapWidth; i++) {
             const line: Array<Tile> = []
-            for (let j = 0; j < this.width; j++) {
+            for (let j = 0; j < this.tilesInMapWidth; j++) {
                 const tile = new Tile(i, j, this)
                 line.push(tile)
             }
@@ -61,10 +98,13 @@ export class Map {
     }
 
     private exceedsMapBorders(x: number, y: number): boolean {
-        if (x < 0 || y < 0) {
+        const min = 0
+        const max = this.tilesInMapWidth - 1
+
+        if (x < min || y < min) {
             return true
         }
-        if (x > 9 || y > 9) {
+        if (x > max || y > max) {
             return true
         }
         return false
