@@ -51,7 +51,7 @@ export class Character {
         this.moving = moving
     }
 
-    private spawn() {
+    public spawn() {
         this.location = calculateSpawnPosition(this.map.getMapWidth, this.index)
         this.setMoving(false)
 
@@ -62,23 +62,11 @@ export class Character {
         this.direction = Direction.NORTH
     }
 
-    public respawn() {
-        console.log('respawn')
+    public clearPosition() {
         const currentTile = this.map.getTileByLocation(this.getLocation)
         currentTile?.setUnoccupied()
 
         this.animator.clearCharacterLocation(this.getLocation)
-
-        const newLocation = calculateSpawnPosition(this.map.getMapWidth, this.index)
-
-        const tile = this.map.getTileByLocation(newLocation)
-        tile?.setOccupied(this.getID)
-
-        console.log(newLocation)
-
-        this.animator.instantiate(newLocation)
-        this.location = newLocation
-        this.direction = Direction.NORTH
     }
 
     public async move(newLocation: LocationType) {

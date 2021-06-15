@@ -39,7 +39,8 @@ class Game {
     }
 
     private respawnPlayers() {
-        this.characters.forEach((character) => character.respawn())
+        this.characters.forEach(async (character) => character.clearPosition())
+        this.characters.forEach((character) => character.spawn())
     }
 
     private sendActions() {
