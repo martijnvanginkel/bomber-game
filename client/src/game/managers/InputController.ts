@@ -14,32 +14,38 @@ export class InputController extends EventEmitter {
         this.listenToAbilityInput()
     }
 
-    private listenToArrowInput() {
+    deleteMe = (e: any) => {
         let keyDown = false
 
-        document.addEventListener('keydown', (e) => {
-            if (keyDown) {
-                return
-            }
-            keyDown = true
-            switch (e.code) {
-                case 'ArrowLeft':
-                    this.arrowClick(ArrowKey.LEFT)
-                    break
-                case 'ArrowUp':
-                    this.arrowClick(ArrowKey.UP)
-                    break
-                case 'ArrowRight':
-                    this.arrowClick(ArrowKey.RIGHT)
-                    break
-                case 'ArrowDown':
-                    this.arrowClick(ArrowKey.DOWN)
-                    break
-            }
-        })
+        if (keyDown) {
+            return
+        }
+        keyDown = true
+        switch (e.code) {
+            case 'ArrowLeft':
+                this.arrowClick(ArrowKey.LEFT)
+                break
+            case 'ArrowUp':
+                this.arrowClick(ArrowKey.UP)
+                break
+            case 'ArrowRight':
+                this.arrowClick(ArrowKey.RIGHT)
+                break
+            case 'ArrowDown':
+                this.arrowClick(ArrowKey.DOWN)
+                break
+        }
+    }
+
+    public deleteListener() {
+        document.removeEventListener('keydown', this.deleteMe)
+    }
+
+    private listenToArrowInput() {
+        document.addEventListener('keydown', this.deleteMe)
 
         document.addEventListener('keyup', function () {
-            keyDown = false
+            // keyDown = false
         })
     }
 
