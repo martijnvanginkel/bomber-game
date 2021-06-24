@@ -27,7 +27,6 @@ addEventListener('searchingForGame', () => {
                     clientID,
                 },
                 () => {
-                    console.log('this ', this)
                     routeManager.goToRoute('gameEnded')
                 },
             )

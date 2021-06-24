@@ -60,8 +60,6 @@ export class Character {
     }
 
     public async move(newLocation: LocationType) {
-        console.log(this.isMoving)
-
         if (this.isMoving) {
             // clear position to the next point
             this.animator.resetMovement()

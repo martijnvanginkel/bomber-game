@@ -8,19 +8,22 @@ export enum ArrowKey {
 }
 
 export class InputController extends EventEmitter {
+    private keyDown: boolean = false
+
     constructor() {
         super()
-        this.listenToArrowInput()
-        this.listenToAbilityInput()
+        this.addInputListener()
     }
 
-    deleteMe = (e: any) => {
-        let keyDown = false
+    private arrowClick(key: ArrowKey) {
+        this.emit('arrow-click', key)
+    }
 
-        if (keyDown) {
+    listenToInput = (e: any) => {
+        if (this.keyDown) {
             return
         }
-        keyDown = true
+        this.keyDown = true
         switch (e.code) {
             case 'ArrowLeft':
                 this.arrowClick(ArrowKey.LEFT)
@@ -34,49 +37,23 @@ export class InputController extends EventEmitter {
             case 'ArrowDown':
                 this.arrowClick(ArrowKey.DOWN)
                 break
+            case 'KeyA':
+                this.abilityClick(e.code)
+                break
         }
     }
 
-    public deleteListener() {
-        document.removeEventListener('keydown', this.deleteMe)
+    private addInputListener() {
+        document.addEventListener('keydown', this.listenToInput)
+        document.addEventListener('keyup', () => (this.keyDown = false))
     }
 
-    private listenToArrowInput() {
-        document.addEventListener('keydown', this.deleteMe)
-
-        document.addEventListener('keyup', function () {
-            // keyDown = false
-        })
-    }
-
-    private listenToAbilityInput() {
-        let keyDown = false
-
-        document.addEventListener('keydown', (e) => {
-            if (keyDown) {
-                return
-            }
-            console.log(e.code)
-            keyDown = true
-            switch (e.code) {
-                case 'KeyA': // A
-                    this.abilityClick(e.code)
-                    break
-            }
-        })
-
-        document.addEventListener('keyup', function () {
-            keyDown = false
-        })
-    }
-
-    private arrowClick(key: ArrowKey) {
-        this.emit('arrow-click', key)
+    public deleteListeners() {
+        document.removeEventListener('keydown', this.listenToInput)
     }
 
     private abilityClick(key: any) {
         // define type here
-        console.log('key ', key)
         this.emit('ability-click')
     }
 }
