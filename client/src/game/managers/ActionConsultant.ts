@@ -24,20 +24,17 @@ export const findAction = (key: ArrowKey, character: Character, map: Map) => {
 
     switch (tileStatus) {
         case TileStatus.NONEXISTENT:
-            break
+            return
         case TileStatus.OCCUPIED:
             const victimID = tile?.getOccupant
             if (!victimID) {
                 return
             }
             return bounce(victimID, direction)
-            break
         case TileStatus.AVAILABLE:
             return move(character, newLocation)
-            break
         default:
             throw new Error('Unknown tile status?')
-            break
     }
 }
 

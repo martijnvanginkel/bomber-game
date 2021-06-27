@@ -8,69 +8,52 @@ export enum ArrowKey {
 }
 
 export class InputController extends EventEmitter {
+    private keyDown: boolean = false
+
     constructor() {
         super()
-        this.listenToArrowInput()
-        this.listenToAbilityInput()
-    }
-
-    private listenToArrowInput() {
-        let keyDown = false
-
-        document.addEventListener('keydown', (e) => {
-            if (keyDown) {
-                return
-            }
-            keyDown = true
-            switch (e.code) {
-                case 'ArrowLeft':
-                    this.arrowClick(ArrowKey.LEFT)
-                    break
-                case 'ArrowUp':
-                    this.arrowClick(ArrowKey.UP)
-                    break
-                case 'ArrowRight':
-                    this.arrowClick(ArrowKey.RIGHT)
-                    break
-                case 'ArrowDown':
-                    this.arrowClick(ArrowKey.DOWN)
-                    break
-            }
-        })
-
-        document.addEventListener('keyup', function () {
-            keyDown = false
-        })
-    }
-
-    private listenToAbilityInput() {
-        let keyDown = false
-
-        document.addEventListener('keydown', (e) => {
-            if (keyDown) {
-                return
-            }
-            console.log(e.code)
-            keyDown = true
-            switch (e.code) {
-                case 'KeyA': // A
-                    this.abilityClick(e.code)
-                    break
-            }
-        })
-
-        document.addEventListener('keyup', function () {
-            keyDown = false
-        })
+        this.addInputListener()
     }
 
     private arrowClick(key: ArrowKey) {
         this.emit('arrow-click', key)
     }
 
+    listenToInput = (e: any) => {
+        if (this.keyDown) {
+            return
+        }
+        this.keyDown = true
+        switch (e.code) {
+            case 'ArrowLeft':
+                this.arrowClick(ArrowKey.LEFT)
+                break
+            case 'ArrowUp':
+                this.arrowClick(ArrowKey.UP)
+                break
+            case 'ArrowRight':
+                this.arrowClick(ArrowKey.RIGHT)
+                break
+            case 'ArrowDown':
+                this.arrowClick(ArrowKey.DOWN)
+                break
+            case 'KeyA':
+                this.abilityClick(e.code)
+                break
+        }
+    }
+
+    private addInputListener() {
+        document.addEventListener('keydown', this.listenToInput)
+        document.addEventListener('keyup', () => (this.keyDown = false))
+    }
+
+    public deleteListeners() {
+        document.removeEventListener('keydown', this.listenToInput)
+    }
+
     private abilityClick(key: any) {
         // define type here
-        console.log('key ', key)
         this.emit('ability-click')
     }
 }
