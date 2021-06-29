@@ -6,8 +6,9 @@ import { Map } from './../map/Map'
 import { directionToCoordinates } from './actions/movements'
 import { mergeLocations } from './../utils/general'
 import { calculateSpawnPosition } from './../map/utils/calculateSpawnPosition'
+import EventEmitter from 'events'
 
-export class Character {
+export class Character extends EventEmitter {
     private location: LocationType
     private direction: Direction
     private character: CharacterType
@@ -19,9 +20,9 @@ export class Character {
         protected ID: number,
         protected index: number, // order of clients that entered the game
         protected color: string,
-        protected map: Map,
-        private lostHealthCallback: (health: number) => void,
+        protected map: Map, // private lostHealthCallback: (health: number) => void,
     ) {
+        super()
         this.animator = new CharacterAnimator(color, map)
         this.character = CharacterType.BASIC
         this.spawn()
@@ -102,6 +103,6 @@ export class Character {
 
     private loseHealth() {
         this.health -= 1
-        this.lostHealthCallback(this.health)
+        this.emit('lost-health', this.getID, this.health)
     }
 }
