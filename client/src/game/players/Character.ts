@@ -103,6 +103,16 @@ export class Character extends EventEmitter {
 
     private loseHealth() {
         this.health -= 1
-        this.emit('lost-health', this.getID, this.health)
+
+        const event = new CustomEvent('lost-health', {
+            detail: {
+                ID: this.getID,
+                health: this.health,
+            },
+            bubbles: true,
+            composed: true,
+        })
+        dispatchEvent(event)
+        this.emit('lost-health', event)
     }
 }

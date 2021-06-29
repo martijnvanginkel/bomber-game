@@ -50,6 +50,7 @@ export class InputController extends EventEmitter {
 
     public deleteListeners() {
         document.removeEventListener('keydown', this.listenToInput)
+        document.addEventListener('keyup', () => (this.keyDown = false))
     }
 
     private abilityClick(key: any) {

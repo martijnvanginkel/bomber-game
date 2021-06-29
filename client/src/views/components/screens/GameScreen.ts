@@ -7,6 +7,8 @@ export class GameScreen extends HTMLElement {
     }
 
     connectedCallback() {
+        addEventListener('lost-health', (e) => console.log('asdf7 ', e))
+        console.log(this.getAttribute('clients'))
         this.render()
     }
 
