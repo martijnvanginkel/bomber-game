@@ -73,7 +73,6 @@ export class Map {
     }
 
     private drawMap() {
-        console.log(this.mapSizeInPixels)
         for (let i = 0; i < this.tilesInMapWidth; i++) {
             const line: Array<Tile> = []
             for (let j = 0; j < this.tilesInMapWidth; j++) {

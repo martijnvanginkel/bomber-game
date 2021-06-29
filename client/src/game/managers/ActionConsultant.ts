@@ -24,7 +24,7 @@ export const findAction = (key: ArrowKey, character: Character, map: Map) => {
 
     switch (tileStatus) {
         case TileStatus.NONEXISTENT:
-            break
+            return
         case TileStatus.OCCUPIED:
             const victimID = tile?.getOccupant
             if (!victimID) {

@@ -29,6 +29,10 @@ class Game {
         this.receiveActions()
     }
 
+    public deleteListeners() {
+        this.inputController.deleteListeners()
+    }
+
     private createCharacters() {
         this.gameInfo.clients.forEach((ID, index) => {
             const character = new Character(ID, index, 'green', this.map)
