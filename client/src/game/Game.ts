@@ -38,35 +38,15 @@ class Game {
         this.gameInfo.clients.forEach((ID, index) => {
             const character = new Character(ID, index, 'green', this.map)
             this.characters.push(character)
-            character.addListener('lost-health', (_ID: number, health: number) => {
-                if (health <= 0) {
+            character.addListener('lost-health', (e: CustomEvent) => {
+                if (e.detail.health >= 0) {
+                    console.log('respawn')
                     this.respawnPlayers()
                 } else {
                     this.deleteListeners()
                     this.gameEndedCallback()
                 }
             })
-            // character.addListener('lost-health', (ID: number, health: number) => {
-            //     console.log('headf')
-            //     const event = new CustomEvent('lost-health', {
-            //         detail: {
-            //             ID: ID,
-            //             health: health,
-            //         },
-            //         bubbles: true,
-            //         composed: true,
-            //     })
-            //     dispatchEvent(event)
-            // })
-            // character.addListener
-            // character.addListener('lost-health', (ID: number, health: number) => {
-            // if (health >= 0) {
-            //     this.respawnPlayers()
-            // } else {
-            //     this.deleteListeners()
-            //     this.gameEndedCallback()
-            // }
-            // })
         })
     }
 

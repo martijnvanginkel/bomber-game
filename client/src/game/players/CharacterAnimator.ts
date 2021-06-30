@@ -26,7 +26,6 @@ export class CharacterAnimator {
     }
 
     public instantiate(location: LocationType) {
-        console.log('draw position')
         this.drawPosition(location.x * this.map.tileSize, location.y * this.map.tileSize)
     }
 

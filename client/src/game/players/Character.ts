@@ -14,7 +14,7 @@ export class Character extends EventEmitter {
     private character: CharacterType
     private animator: CharacterAnimator
     private moving: boolean
-    private health: number = 1
+    private health: number = 2
 
     constructor(
         protected ID: number,
