@@ -1,4 +1,5 @@
 import EventEmitter from 'events'
+import { AbilityKey } from '../utils/types'
 
 export enum ArrowKey {
     UP = 'UP',
@@ -9,6 +10,7 @@ export enum ArrowKey {
 
 export class InputController extends EventEmitter {
     private keyDown: boolean = false
+    private activatedAbility: AbilityKey | null = null
 
     constructor() {
         super()
@@ -16,7 +18,17 @@ export class InputController extends EventEmitter {
     }
 
     private arrowClick(key: ArrowKey) {
+        if (this.activatedAbility === AbilityKey.Q) {
+            this.emit('ability-trigger', key, this.activatedAbility)
+            this.activatedAbility = null
+            return
+        }
+
         this.emit('arrow-click', key)
+    }
+
+    private activateAbility(key: AbilityKey) {
+        this.activatedAbility = key
     }
 
     listenToInput = (e: any) => {
@@ -37,8 +49,8 @@ export class InputController extends EventEmitter {
             case 'ArrowDown':
                 this.arrowClick(ArrowKey.DOWN)
                 break
-            case 'KeyA':
-                this.abilityClick(e.code)
+            case 'KeyQ':
+                this.activateAbility(AbilityKey.Q)
                 break
         }
     }
@@ -50,10 +62,5 @@ export class InputController extends EventEmitter {
 
     public deleteListeners() {
         document.removeEventListener('keydown', this.listenToInput)
-    }
-
-    private abilityClick(key: any) {
-        // define type here
-        this.emit('ability-click')
     }
 }

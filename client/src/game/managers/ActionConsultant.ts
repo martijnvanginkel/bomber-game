@@ -2,7 +2,7 @@ import { Move } from './../players/actions/movements'
 import { findCharacterMove } from './../players/actions/utils/characterUtils'
 import { Character } from './../players/Character'
 import { mergeLocations } from './../utils/general'
-import { Direction, LocationType, TileStatus } from './../utils/types'
+import { AbilityKey, Direction, LocationType, TileStatus } from './../utils/types'
 import { Socket } from 'socket.io-client'
 import { Map } from '../map/Map'
 import { ArrowKey } from './InputController'
@@ -13,7 +13,7 @@ export const findAction = (key: ArrowKey, character: Character, map: Map) => {
         return
     }
 
-    const characterMove: Move = findCharacterMove(key, character.getCharacterType)
+    const characterMove = findCharacterMove(key, character.getCharacterType)
     const oldLocation = character.getLocation
 
     // maybe find more efficient way to do these calculations
@@ -36,6 +36,14 @@ export const findAction = (key: ArrowKey, character: Character, map: Map) => {
         default:
             throw new Error('Unknown tile status?')
     }
+}
+
+export const findSpecialAction = (abilityKey: AbilityKey, arrowKey: ArrowKey, character: Character, map: Map) => {
+    if (character.isMoving) {
+        return
+    }
+
+    const characterMove = findCharacterMove(arrowKey, character.getCharacterType)
 }
 
 const bounce = (victimID: number, direction: Direction) => {

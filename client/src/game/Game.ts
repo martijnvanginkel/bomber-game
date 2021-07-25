@@ -2,8 +2,8 @@ import { Map } from './map/Map'
 import { Socket } from 'socket.io-client'
 import { Character } from './players/Character'
 import { InputController } from './managers/InputController'
-import { ArrowKey, Direction, LocationType } from './utils/types'
-import { findAction } from './managers/ActionConsultant'
+import { AbilityKey, ArrowKey, Direction, LocationType } from './utils/types'
+import { findAction, findSpecialAction } from './managers/ActionConsultant'
 
 export interface GameInitInfo {
     gameID: string
@@ -46,6 +46,10 @@ class Game {
         this.inputController.on('arrow-click', (key: ArrowKey) => {
             const action = findAction(key, this.player, this.map)
             action?.run(this.socket, this.characters)
+        })
+        this.inputController.on('ability-trigger', (abilityKey: AbilityKey, arrowKey: ArrowKey) => {
+            // console.log(abilityKey, arrowKey)
+            const action = findSpecialAction(abilityKey, arrowKey, this.player, this.map)
         })
     }
 
