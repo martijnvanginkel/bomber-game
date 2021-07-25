@@ -28,3 +28,11 @@ export const directionToCoordinates = {
     [Direction.WEST]: basicLeft,
     [Direction.EAST]: basicRight,
 }
+
+export const multiplyCoordinates = (direction: Direction, multiplier: number) => {
+    const coordinates = directionToCoordinates[direction]
+    return {
+        x: coordinates.x * multiplier,
+        y: coordinates.y * multiplier,
+    }
+}

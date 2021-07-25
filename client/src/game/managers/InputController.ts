@@ -1,10 +1,16 @@
 import EventEmitter from 'events'
+import { multiplyCoordinates } from '../../game/players/actions/movements'
+import { Direction } from '../../game/utils/types'
 
 export enum ArrowKey {
     UP = 'UP',
     DOWN = 'DOWN',
     LEFT = 'LEFT',
     RIGHT = 'RIGHT',
+}
+
+export enum AbilityKey {
+    A = 'A',
 }
 
 export class InputController extends EventEmitter {
@@ -17,6 +23,12 @@ export class InputController extends EventEmitter {
 
     private arrowClick(key: ArrowKey) {
         this.emit('arrow-click', key)
+    }
+
+    private abilityClick(key: AbilityKey) {
+        console.log(multiplyCoordinates(Direction.NORTH, 2))
+        // define type here
+        this.emit('ability-click', key)
     }
 
     listenToInput = (e: any) => {
@@ -38,7 +50,7 @@ export class InputController extends EventEmitter {
                 this.arrowClick(ArrowKey.DOWN)
                 break
             case 'KeyA':
-                this.abilityClick(e.code)
+                this.abilityClick(AbilityKey.A)
                 break
         }
     }
@@ -50,11 +62,6 @@ export class InputController extends EventEmitter {
 
     public deleteListeners() {
         document.removeEventListener('keydown', this.listenToInput)
-        document.addEventListener('keyup', () => (this.keyDown = false))
-    }
-
-    private abilityClick(key: any) {
-        // define type here
-        this.emit('ability-click')
+        document.removeEventListener('keyup', () => (this.keyDown = false))
     }
 }

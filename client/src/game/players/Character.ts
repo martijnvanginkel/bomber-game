@@ -1,4 +1,4 @@
-import { LocationType, Direction, TileStatus, ArrowKey } from '../utils/types'
+import { LocationType, Direction, TileStatus } from '../utils/types'
 import { CharacterType } from './actions/characters'
 import { Tile } from '../map/Tile'
 import { CharacterAnimator } from './CharacterAnimator'
