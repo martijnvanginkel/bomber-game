@@ -4,7 +4,7 @@ export class AbilityBar extends HTMLElement {
     constructor() {
         super()
         this.shadow = this.attachShadow({ mode: 'open' })
-        addEventListener('ability-trigger', this.abilityTriggered)
+        // addEventListener('ability-trigger', this.abilityTriggered)
     }
 
     connectedCallback() {
@@ -20,7 +20,7 @@ export class AbilityBar extends HTMLElement {
             </style>
 
             <div id="container">
-                <ability-icon key="Q" state="${}"></ability-icon>
+                <ability-icon key="Q"></ability-icon>
             </div>
         `
     }

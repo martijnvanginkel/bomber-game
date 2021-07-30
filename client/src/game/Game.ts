@@ -1,10 +1,11 @@
 import { Map } from './map/Map'
 import { Socket } from 'socket.io-client'
 import { Character } from './players/Character'
-import { InputController } from './managers/InputController'
+import { AbilityKey, InputController } from './managers/InputController'
 import { Direction, LocationType } from './utils/types'
 import { findAbility, findMove } from './managers/ActionConsultant'
 import { ArrowKey } from './managers/InputController'
+import { AbilityManager } from './managers/AbilityManager'
 
 export interface GameInitInfo {
     gameID: string
@@ -20,6 +21,7 @@ class Game {
         private gameInfo: GameInitInfo,
         private map: Map,
         private inputController: InputController,
+        private abilityManager: AbilityManager,
         private gameEndedCallback: () => void,
     ) {
         // initialize
@@ -44,17 +46,16 @@ class Game {
     }
 
     private sendActions() {
-        this.inputController.listenToArrowClick((key: ArrowKey) =>  {
-            // console.log(key)
+        this.inputController.on('arrow-click', (key: ArrowKey) => {
             const move = findMove(key, this.player, this.map)
             move?.run(this.socket, this.characters)
         })
-        this.inputController.on('arrow-click', (key: ArrowKey) => {
-        })
-        this.inputController.on('ability-trigger', event => {
-            const { arrowKey, abilityKey } = event.detail
-            const action = findAbility(abilityKey, arrowKey, this.player, this.map)
-            action?.run(this.socket, this.characters)
+        this.inputController.on('ability-click', (key: AbilityKey) => {
+            console.log('ability-click')
+            this.abilityManager.handleAbilityClick(key)
+            // const { arrowKey, abilityKey } = event.detail
+            // const action = findAbility(abilityKey, arrowKey, this.player, this.map)
+            // action?.run(this.socket, this.characters)
         })
     }
 
@@ -86,5 +87,5 @@ class Game {
 }
 
 export const createNewGame = (socket: Socket, gameInit: GameInitInfo, gameEndedCallback: () => void) => {
-    return new Game(socket, gameInit, new Map(), new InputController(), gameEndedCallback)
+    return new Game(socket, gameInit, new Map(), new InputController(), new AbilityManager(), gameEndedCallback)
 }
