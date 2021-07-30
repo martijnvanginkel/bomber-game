@@ -23,6 +23,10 @@ export class GameScreen extends HTMLElement {
                     width: 100%;
                     justify-content: space-between;
                 }
+                #ability-bar {
+                    position: absolute;
+                    right: 0;
+                }
             </style>
 
             <div id="container">
@@ -31,6 +35,9 @@ export class GameScreen extends HTMLElement {
                 </div>
                 <div id="canvas-container" style="position: relative;">
                 
+                </div>
+                <div id="ability-bar">
+                    <ability-icon></ability-icon>
                 </div>
             </div>
         `

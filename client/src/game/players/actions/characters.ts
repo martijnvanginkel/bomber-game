@@ -1,6 +1,7 @@
 import { Ability, basicAttack } from './abilities'
 import { basicDown, basicLeft, basicRight, basicUp } from './movements'
-import { ArrowKey, LocationType, AbilityKey } from '../../utils/types'
+import { LocationType } from '../../utils/types'
+import { AbilityKey, ArrowKey } from '../../managers/InputController'
 
 export enum CharacterType {
     BASIC = 'BASIC',

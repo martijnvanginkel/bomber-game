@@ -1,14 +1,18 @@
-import { Move } from './../players/actions/movements'
+import { multiplyCoordinates } from './../players/actions/movements'
 import { findCharacterMove } from './../players/actions/utils/characterUtils'
 import { Character } from './../players/Character'
 import { mergeLocations } from './../utils/general'
-import { AbilityKey, Direction, LocationType, TileStatus } from './../utils/types'
+import { Direction, LocationType, TileStatus } from './../utils/types'
 import { Socket } from 'socket.io-client'
 import { Map } from '../map/Map'
-import { ArrowKey } from './InputController'
+import { ArrowKey, AbilityKey } from './InputController'
 import { findDirectionByKey } from './../players/actions/utils/movementUtils'
 
-export const findAction = (key: ArrowKey, character: Character, map: Map) => {
+interface Action {
+    run: (...args: any) => void
+}
+
+export const findMove = (key: ArrowKey, character: Character, map: Map) => {
     if (character.isMoving) {
         return
     }
@@ -38,15 +42,49 @@ export const findAction = (key: ArrowKey, character: Character, map: Map) => {
     }
 }
 
-export const findSpecialAction = (abilityKey: AbilityKey, arrowKey: ArrowKey, character: Character, map: Map) => {
+export const findAbility = (abilityKey: AbilityKey, arrowKey: ArrowKey, character: Character, map: Map) => {
     if (character.isMoving) {
         return
     }
 
-    const characterMove = findCharacterMove(arrowKey, character.getCharacterType)
+    console.log('find ability')
+
+    const firstMove = findCharacterMove(arrowKey, character.getCharacterType)
+    const firstLocation = mergeLocations(character.getLocation, firstMove)
+    const firstTileStatus: TileStatus = map.getTileStatus(firstLocation)
+
+    if (firstTileStatus === TileStatus.NONEXISTENT) {
+        return
+    }
+    if (firstTileStatus === TileStatus.OCCUPIED) {
+        const victimID = map.getTileByLocation(firstLocation)?.getOccupant
+        if (!victimID) {
+            return
+        }
+        const direction = findDirectionByKey(arrowKey)
+        return bounce(victimID, direction)
+    }
+    const secondMove = multiplyCoordinates(firstMove, 2)
+    const secondLocation = mergeLocations(character.getLocation, secondMove)
+    const secondTileStatus: TileStatus = map.getTileStatus(secondLocation)
+
+    if (secondTileStatus === TileStatus.NONEXISTENT) {
+        return
+    }
+    if (secondTileStatus === TileStatus.OCCUPIED) {
+        const victimID = map.getTileByLocation(secondLocation)?.getOccupant
+        if (!victimID) {
+            return
+        }
+        const direction = findDirectionByKey(arrowKey)
+        return distanceBounce(character, firstLocation, victimID, direction)
+    }
+
+    return move(character, secondLocation)
+    
 }
 
-const bounce = (victimID: number, direction: Direction) => {
+const bounce = (victimID: number, direction: Direction): Action => {
     return {
         run: (socket: Socket, characters: Character[]) => {
             const victim = characters.find((character) => character.getID === victimID)
@@ -59,11 +97,26 @@ const bounce = (victimID: number, direction: Direction) => {
     }
 }
 
-const move = (character: Character, newLocation: LocationType) => {
+const move = (character: Character, newLocation: LocationType): Action => {
     return {
         run: (socket: Socket, _characters: Character[]) => {
             character.move(newLocation)
             socket.emit('move', character.getID, newLocation)
         },
+    }
+}
+
+const distanceBounce = (character: Character, newLocation: LocationType, victimID: number, direction: Direction): Action => {
+    return {
+        run: async (socket: Socket, characters: Character[]) => {
+            socket.emit('move', character.getID, newLocation)
+            await character.move(newLocation)
+            const victim = characters.find((character) => character.getID === victimID)
+            if (!victim) {
+                return
+            }
+            victim.receiveBounce(direction)
+            socket.emit('bounce', victimID, direction)
+        }
     }
 }

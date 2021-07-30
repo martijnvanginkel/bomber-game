@@ -18,6 +18,7 @@ export class HomeScreen extends HTMLElement {
             <div>
                 <h1>Title</h1>
                 <basic-button id="searchButton" title="Search for game"></basic-button>
+                <ability-icon></ability-icon>
             </div>
         `
     }

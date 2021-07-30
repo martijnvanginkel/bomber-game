@@ -2,8 +2,9 @@ import { Map } from './map/Map'
 import { Socket } from 'socket.io-client'
 import { Character } from './players/Character'
 import { InputController } from './managers/InputController'
-import { AbilityKey, ArrowKey, Direction, LocationType } from './utils/types'
-import { findAction, findSpecialAction } from './managers/ActionConsultant'
+import { Direction, LocationType } from './utils/types'
+import { findAbility, findMove } from './managers/ActionConsultant'
+import { ArrowKey } from './managers/InputController'
 
 export interface GameInitInfo {
     gameID: string
@@ -43,13 +44,17 @@ class Game {
     }
 
     private sendActions() {
-        this.inputController.on('arrow-click', (key: ArrowKey) => {
-            const action = findAction(key, this.player, this.map)
-            action?.run(this.socket, this.characters)
+        this.inputController.listenToArrowClick((key: ArrowKey) =>  {
+            // console.log(key)
+            const move = findMove(key, this.player, this.map)
+            move?.run(this.socket, this.characters)
         })
-        this.inputController.on('ability-trigger', (abilityKey: AbilityKey, arrowKey: ArrowKey) => {
-            // console.log(abilityKey, arrowKey)
-            const action = findSpecialAction(abilityKey, arrowKey, this.player, this.map)
+        this.inputController.on('arrow-click', (key: ArrowKey) => {
+        })
+        this.inputController.on('ability-trigger', event => {
+            const { arrowKey, abilityKey } = event.detail
+            const action = findAbility(abilityKey, arrowKey, this.player, this.map)
+            action?.run(this.socket, this.characters)
         })
     }
 
