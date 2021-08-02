@@ -1,31 +1,28 @@
-import { AbilityKey, ArrowKey } from "./InputController"
+import { AbilityKey, ArrowKey } from './InputController'
 
 enum AbilityStatus {
     ready,
     activated,
-    inCooldown
+    inCooldown,
 }
 
-
 interface Ability {
-    key: AbilityKey
+    // key: AbilityKey
     status: AbilityStatus
     cooldown: number
 }
 
 const cooldownTimes = {
-    [AbilityKey.Q]: 10
+    [AbilityKey.Q]: 10,
 }
 
 export class AbilityManager {
-
-    private abilities: Ability[] = []
+    private abilities: { [key: string]: Ability }
 
     public constructor() {
         this.abilities = this.initializeAbilities()
     }
 
-            
     public handleAbilityClick(key: AbilityKey) {
         const actions = {
             [AbilityStatus.ready]: this.activateAbility,
@@ -33,39 +30,59 @@ export class AbilityManager {
             [AbilityStatus.inCooldown]: () => undefined,
         }
 
-        const ability = this.abilities.find(ability => ability.key === key)
-        if (!ability) {
-            throw new Error('Couldnt find ability corresponding with AbilityKey')
-        }
-
+        const ability = this.abilities[key]
         const action = actions[ability.status]
-        action()
+
+        action(key)
     }
 
     public handleArrowClick(key: ArrowKey) {
-        const 
+        // const
     }
 
     private triggerAbility() {
         console.log('trigger ability')
     }
-    
-    private activateAbility() {
+
+    private activateAbility = (key: AbilityKey) => {
         console.log('activate ability')
-    }
-    
-    private deActivateAbility() {
-        console.log('deactivate ability')
+        console.log(this.abilities)
+        const ability = this.abilities[key]
+        ability.cooldown = 3 //AbilityStatus.activated
+        console.log(this.abilities)
+        // ability.status = AbilityStatus.activated
+        // console.log(this.abilities)
+        // this.fireActivateEvent(true, key)
     }
 
+    private deActivateAbility = (key: AbilityKey) => {
+        console.log('deactivate ability')
+        this.fireActivateEvent(false, key)
+    }
+
+    private fireActivateEvent(activated: boolean, ability: AbilityKey) {
+        const event = new CustomEvent('activate-ability', {
+            detail: {
+                activated: activated,
+                ability: ability,
+            },
+            bubbles: true,
+            composed: true,
+        })
+        dispatchEvent(event)
+    }
 
     private initializeAbilities() {
-        return Object.keys(AbilityKey).map(key => {
-            return {
-                key: key as AbilityKey,
-                status: AbilityStatus.ready,
-                cooldown: cooldownTimes[key as AbilityKey]
-            } as Ability
+        const abilities = {}
+
+        Object.keys(AbilityKey).forEach((key) => {
+            Object.assign(abilities, {
+                [key]: {
+                    status: AbilityStatus.ready,
+                    cooldown: cooldownTimes[key as AbilityKey],
+                } as Ability,
+            })
         })
+        return abilities
     }
 }

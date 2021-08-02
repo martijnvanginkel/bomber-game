@@ -1,9 +1,9 @@
-import { AbilityKey } from "game/managers/InputController"
+import { AbilityKey } from 'game/managers/InputController'
 
 enum AbilityState {
     default,
     activated,
-    cooldown
+    cooldown,
 }
 
 export class AbilityIcon extends HTMLElement {
@@ -14,13 +14,12 @@ export class AbilityIcon extends HTMLElement {
     private abilityState: AbilityState = AbilityState.default
 
     private cooldownTime: number = 10
-    
 
     constructor() {
         super()
         this.shadow = this.attachShadow({ mode: 'open' })
         this.key = this.getAttribute('key')
-        // addEventListener('ability-trigger', this.abilityTriggered)
+        addEventListener('activate-ability', () => console.log('asdf234'))
     }
 
     connectedCallback() {
@@ -67,6 +66,4 @@ export class AbilityIcon extends HTMLElement {
             </div>
             `
     }
-
-
 }
