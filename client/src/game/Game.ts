@@ -3,9 +3,10 @@ import { Socket } from 'socket.io-client'
 import { Character } from './players/Character'
 import { AbilityKey, InputController } from './managers/InputController'
 import { Direction, LocationType } from './utils/types'
-import { findAbility, findMove } from './managers/ActionConsultant'
+// import { findMove } from './managers/ActionConsultant'
 import { ArrowKey } from './managers/InputController'
 import { AbilityManager } from './managers/AbilityManager'
+import { ActionData, ActionEmitter } from './managers/ActionEmitter'
 
 export interface GameInitInfo {
     gameID: string
@@ -14,20 +15,13 @@ export interface GameInitInfo {
 }
 
 class Game {
-    private characters: Character[] = new Array()
-
     public constructor(
         private socket: Socket,
-        private gameInfo: GameInitInfo,
-        private map: Map,
+        private characters: Character[],
         private inputController: InputController,
         private abilityManager: AbilityManager,
-        private gameEndedCallback: () => void,
+        private actionEmitter: ActionEmitter,
     ) {
-        // initialize
-        this.createCharacters()
-
-        // listening and sending actions
         this.sendActions()
         this.receiveActions()
     }
@@ -36,19 +30,14 @@ class Game {
         this.inputController.deleteListeners()
     }
 
-    private createCharacters() {
-        this.gameInfo.clients.forEach((ID, index) => {
-            const character = new Character(ID, index, 'green', this.map, () => {
-                this.gameEndedCallback()
-            })
-            this.characters.push(character)
-        })
-    }
-
     private sendActions() {
         this.inputController.on('arrow-click', (key: ArrowKey) => {
-            const move = findMove(key, this.player, this.map)
-            move?.run(this.socket, this.characters)
+            console.log('click')
+            const data: ActionData = this.abilityManager.handleArrowClick(key)
+            this.actionEmitter.send(data)
+
+            // const move = findMove(key, this.player, this.map)
+            // move?.run(this.socket, this.characters)
         })
         this.inputController.on('ability-click', (key: AbilityKey) => {
             console.log('ability-click')
@@ -77,15 +66,25 @@ class Game {
         })
     }
 
-    private get player() {
-        return this.characters.find((character) => character.getID === this.gameInfo.clientID)!
-    }
-
     private findCharacter(ID: number) {
         return this.characters.find((character) => character.getID === ID)
     }
 }
 
 export const createNewGame = (socket: Socket, gameInit: GameInitInfo, gameEndedCallback: () => void) => {
-    return new Game(socket, gameInit, new Map(), new InputController(), new AbilityManager(), gameEndedCallback)
+    const map = new Map()
+
+    const characters = gameInit.clients.map((ID, index) => {
+        return new Character(ID, index, 'green', map, gameEndedCallback)
+    })
+
+    const player = characters.find((character) => character.getID === gameInit.clientID)!
+
+    return new Game(
+        socket,
+        characters,
+        new InputController(),
+        new AbilityManager(),
+        new ActionEmitter(socket, map, characters, player),
+    )
 }

@@ -1,3 +1,4 @@
+import { ArrowKey } from '../../managers/InputController'
 import { Direction, LocationType } from '../../utils/types'
 
 export type Move = LocationType
@@ -29,9 +30,16 @@ export const directionToCoordinates = {
     [Direction.EAST]: basicRight,
 }
 
+export const arrowKeyToCoordinates = {
+    [ArrowKey.UP]: basicUp,
+    [ArrowKey.DOWN]: basicDown,
+    [ArrowKey.LEFT]: basicLeft,
+    [ArrowKey.RIGHT]: basicRight,
+}
+
 export const multiplyCoordinates = (coords: LocationType, multiplier: number) => {
     return {
         x: coords.x * multiplier,
-        y: coords.y * multiplier
+        y: coords.y * multiplier,
     }
 }

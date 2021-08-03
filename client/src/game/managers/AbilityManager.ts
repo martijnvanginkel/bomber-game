@@ -1,3 +1,4 @@
+import { ActionData, ActionType } from './ActionEmitter'
 import { AbilityKey, ArrowKey } from './InputController'
 
 enum AbilityStatus {
@@ -7,7 +8,6 @@ enum AbilityStatus {
 }
 
 interface Ability {
-    // key: AbilityKey
     status: AbilityStatus
     cooldown: number
 }
@@ -24,6 +24,10 @@ export class AbilityManager {
     }
 
     public handleAbilityClick(key: AbilityKey) {
+        if (this.isAnAbilityActivated) {
+        }
+
+        return
         const actions = {
             [AbilityStatus.ready]: this.activateAbility,
             [AbilityStatus.activated]: this.deActivateAbility,
@@ -36,8 +40,25 @@ export class AbilityManager {
         action(key)
     }
 
-    public handleArrowClick(key: ArrowKey) {
-        // const
+    public handleArrowClick(key: ArrowKey): ActionData {
+        return {
+            type: ActionType.move,
+            arrowKey: key,
+        }
+        // return findMove
+        // if (!this.isAnAbilityActivated) {
+        //     return {
+        //         type: 'move',
+        //         arrowKey: key,
+        //     } as ActionData
+        // }
+        // return {
+        //     type: 'move',
+        //     arrowKey: key,
+        // } as ActionData
+        // const actions = {
+        //     [AbilityKey.Q]: fireDistanceBounce(),
+        // }
     }
 
     private triggerAbility() {
@@ -45,19 +66,25 @@ export class AbilityManager {
     }
 
     private activateAbility = (key: AbilityKey) => {
-        console.log('activate ability')
-        console.log(this.abilities)
         const ability = this.abilities[key]
-        ability.cooldown = 3 //AbilityStatus.activated
-        console.log(this.abilities)
-        // ability.status = AbilityStatus.activated
-        // console.log(this.abilities)
-        // this.fireActivateEvent(true, key)
+        ability.status = AbilityStatus.activated
+        this.fireActivateEvent(true, key)
     }
 
     private deActivateAbility = (key: AbilityKey) => {
-        console.log('deactivate ability')
+        const ability = this.abilities[key]
+        ability.status = AbilityStatus.ready
         this.fireActivateEvent(false, key)
+    }
+
+    private get isAnAbilityActivated() {
+        for (const key in this.abilities) {
+            const ability = this.abilities[key]
+            if (ability.status === AbilityStatus.activated) {
+                return true
+            }
+        }
+        return false
     }
 
     private fireActivateEvent(activated: boolean, ability: AbilityKey) {

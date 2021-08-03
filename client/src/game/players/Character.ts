@@ -1,5 +1,4 @@
 import { LocationType, Direction, TileStatus } from '../utils/types'
-import { CharacterType } from './actions/characters'
 import { Tile } from '../map/Tile'
 import { CharacterAnimator } from './CharacterAnimator'
 import { Map } from './../map/Map'
@@ -9,7 +8,6 @@ import { mergeLocations } from './../utils/general'
 export class Character {
     private location: LocationType
     private direction: Direction
-    private character: CharacterType
     private animator: CharacterAnimator
     private moving: boolean
 
@@ -21,7 +19,6 @@ export class Character {
         private diedCallback: () => void,
     ) {
         this.animator = new CharacterAnimator(color, map)
-        this.character = CharacterType.BASIC
         this.location = { x: index, y: index }
         this.setMoving(false)
         this.spawn()
@@ -37,10 +34,6 @@ export class Character {
 
     protected get getDirection() {
         return this.direction
-    }
-
-    public get getCharacterType() {
-        return this.character
     }
 
     public get isMoving() {
