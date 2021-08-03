@@ -3,7 +3,6 @@ import { Socket } from 'socket.io-client'
 import { Character } from './players/Character'
 import { AbilityKey, InputController } from './managers/InputController'
 import { Direction, LocationType } from './utils/types'
-// import { findMove } from './managers/ActionConsultant'
 import { ArrowKey } from './managers/InputController'
 import { AbilityManager } from './managers/AbilityManager'
 import { ActionData, ActionEmitter } from './managers/ActionEmitter'
@@ -32,12 +31,8 @@ class Game {
 
     private sendActions() {
         this.inputController.on('arrow-click', (key: ArrowKey) => {
-            console.log('click')
             const data: ActionData = this.abilityManager.handleArrowClick(key)
             this.actionEmitter.send(data)
-
-            // const move = findMove(key, this.player, this.map)
-            // move?.run(this.socket, this.characters)
         })
         this.inputController.on('ability-click', (key: AbilityKey) => {
             console.log('ability-click')

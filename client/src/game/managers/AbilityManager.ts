@@ -24,18 +24,16 @@ export class AbilityManager {
     }
 
     public handleAbilityClick(key: AbilityKey) {
-        if (this.isAnAbilityActivated) {
-        }
-
-        return
         const actions = {
-            [AbilityStatus.ready]: this.activateAbility,
-            [AbilityStatus.activated]: this.deActivateAbility,
-            [AbilityStatus.inCooldown]: () => undefined,
+            [AbilityKey.Q]: {
+                [AbilityStatus.ready]: this.activateAbility,
+                [AbilityStatus.activated]: this.deActivateAbility,
+                [AbilityStatus.inCooldown]: () => {},
+            },
         }
 
         const ability = this.abilities[key]
-        const action = actions[ability.status]
+        const action = actions[key][ability.status]
 
         action(key)
     }
@@ -66,12 +64,14 @@ export class AbilityManager {
     }
 
     private activateAbility = (key: AbilityKey) => {
+        console.log('activate')
         const ability = this.abilities[key]
         ability.status = AbilityStatus.activated
         this.fireActivateEvent(true, key)
     }
 
     private deActivateAbility = (key: AbilityKey) => {
+        console.log('de-activate')
         const ability = this.abilities[key]
         ability.status = AbilityStatus.ready
         this.fireActivateEvent(false, key)

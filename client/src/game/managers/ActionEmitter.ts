@@ -12,11 +12,18 @@ export enum ActionType {
     ability,
 }
 
-export interface ActionData {
-    type: ActionType
-    arrowKey?: ArrowKey
-    abilityKey?: AbilityKey
+interface MoveAction {
+    type: ActionType.move
+    arrowKey: ArrowKey
 }
+
+interface AbilityAction {
+    type: ActionType.ability
+    abilityKey: AbilityKey
+    arrowKey?: ArrowKey
+}
+
+export type ActionData = MoveAction | AbilityAction
 
 export class ActionEmitter {
     public constructor(
@@ -34,59 +41,41 @@ export class ActionEmitter {
         }
     }
 
-    private fireMove(key: ArrowKey | undefined) {
+    private fireMove(key: ArrowKey) {
         if (this.player.isMoving) {
             return
         }
-        if (!key) {
-            return
-        }
-        const characterMove = arrowKeyToCoordinates[key] //findCharacterMove(key, character.getCharacterType)
-        const oldLocation = this.player.getLocation
 
-        // // maybe find more efficient way to do these calculations
-        const newLocation = mergeLocations(oldLocation, characterMove)
+        const locationIncrement = arrowKeyToCoordinates[key]
+        const newLocation = mergeLocations(this.player.getLocation, locationIncrement)
         const tileStatus: TileStatus = this.map.getTileStatus(newLocation)
-        const tile = this.map.getTileByLocation(newLocation)
-        const direction = findDirectionByKey(key)
 
-        if (tileStatus === TileStatus.NONEXISTENT) {
-            return
-        }
         if (tileStatus === TileStatus.AVAILABLE) {
-            this.move(this.player, newLocation)
+            this.emitMove(newLocation)
             return
         }
         if (tileStatus === TileStatus.OCCUPIED) {
+            const tile = this.map.getTileByLocation(newLocation)
             const victimID = tile?.getOccupant
             if (!victimID) {
                 return
             }
-            this.bounce(victimID, direction)
-            return
+            const direction = findDirectionByKey(key)
+            this.emitBounce(victimID, direction)
         }
-        throw new Error('Unknown tile status')
     }
 
-    private bounce = (victimID: number, direction: Direction) => {
-        // return {
-        //     run: (socket: Socket, characters: Character[]) => {
+    private emitBounce(victimID: number, direction: Direction) {
         const victim = this.characters.find((character) => character.getID === victimID)
         if (!victim) {
             return
         }
         victim.receiveBounce(direction)
         this.socket.emit('bounce', victimID, direction)
-        //     },
-        // }
     }
 
-    private move = (character: Character, newLocation: LocationType) => {
-        // return {
-        //     run: (socket: Socket, _characters: Character[]) => {
-        character.move(newLocation)
-        this.socket.emit('move', character.getID, newLocation)
-        //     },
-        // }
+    private emitMove(newLocation: LocationType) {
+        this.player.move(newLocation)
+        this.socket.emit('move', this.player.getID, newLocation)
     }
 }
