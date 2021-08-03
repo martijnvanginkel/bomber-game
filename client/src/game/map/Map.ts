@@ -25,6 +25,10 @@ export class Map {
         return this.playerContext
     }
 
+    public get getMapWidth() {
+        return this.tilesInMapWidth
+    }
+
     private setTileAndMapSize() {
         const mapSize = this.getBrowserWindowSize()
         this.tileSize = mapSize / this.tilesInMapWidth

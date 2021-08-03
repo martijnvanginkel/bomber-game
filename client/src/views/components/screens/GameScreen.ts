@@ -1,6 +1,8 @@
 export class GameScreen extends HTMLElement {
     private shadow
 
+    private clients: number[]
+
     constructor() {
         super()
         this.shadow = this.attachShadow({ mode: 'open' })
@@ -15,7 +17,6 @@ export class GameScreen extends HTMLElement {
             <style>
                 #container {
                     position: relative;
-                    width: 500px;
                 }
                 #top-bar {
                     display: flex;
@@ -27,7 +28,8 @@ export class GameScreen extends HTMLElement {
 
             <div id="container">
                 <div id="top-bar">
-                    <!-- <health-bar steps="4" value="2"></health-bar> -->
+                    <div><health-bar ID="${this.clients[0]}" /></div>
+                    <div><health-bar ID="${this.clients[1]}" /></div>
                 </div>
                 <div id="canvas-container" style="position: relative;">
                 

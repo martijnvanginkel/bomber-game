@@ -29,17 +29,30 @@ class Game {
         this.receiveActions()
     }
 
-    public deleteListeners() {
+    private deleteListeners() {
         this.inputController.deleteListeners()
+        this.characters.forEach((character) => character.removeAllListeners())
     }
 
     private createCharacters() {
         this.gameInfo.clients.forEach((ID, index) => {
-            const character = new Character(ID, index, 'green', this.map, () => {
-                this.gameEndedCallback()
-            })
+            const character = new Character(ID, index, 'green', this.map)
             this.characters.push(character)
+            character.addListener('lost-health', (e: CustomEvent) => {
+                if (e.detail.health >= 0) {
+                    console.log('respawn')
+                    this.respawnPlayers()
+                } else {
+                    this.deleteListeners()
+                    this.gameEndedCallback()
+                }
+            })
         })
+    }
+
+    private respawnPlayers() {
+        this.characters.forEach(async (character) => character.clearPosition())
+        this.characters.forEach((character) => character.spawn())
     }
 
     private sendActions() {

@@ -31,8 +31,11 @@ class RouteManager {
         this.container.removeChild(el)
     }
 
-    private addScreen(route: Route) {
+    private addScreen(route: Route, attribute?: { [key: string]: any }) {
         const el = document.createElement(route.screen)
+        if (attribute) {
+            el.setAttribute('screen-attribute', JSON.stringify(attribute))
+        }
         if (!el) {
             return
         }
@@ -40,7 +43,7 @@ class RouteManager {
         this.currentRoute = route
     }
 
-    public goToRoute(routeName: string) {
+    public goToRoute(routeName: string, attribute?: { [key: string]: any }) {
         if (!this.container) {
             throw new Error('Unable to move routes')
         }
@@ -49,7 +52,7 @@ class RouteManager {
             throw new Error('Route not found')
         }
         this.removeCurrentScreen()
-        this.addScreen(route)
+        this.addScreen(route, attribute)
     }
 }
 
