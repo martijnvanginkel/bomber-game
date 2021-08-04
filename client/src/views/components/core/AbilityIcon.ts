@@ -45,7 +45,8 @@ export class AbilityIcon extends HTMLElement {
             return
         }
         const activated = JSON.parse(value)
-        this.abilityState = AbilityState.
+        this.activated = activated
+        this.render()
     }
 
     startCooldown = () => {
@@ -84,7 +85,7 @@ export class AbilityIcon extends HTMLElement {
             </style>
 
             <div class="container">
-                // ${this.abilityState === AbilityState.cooldown ? `<span>${this.cooldownTime}</span>` : `<span>Q</span>`}
+                ${this.activated ? '<span>active</span>' : '<span>inactive</span>'}
             </div>
             `
     }

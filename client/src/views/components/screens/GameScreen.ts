@@ -16,6 +16,7 @@ export class GameScreen extends HTMLElement {
                 #container {
                     position: relative;
                     width: 500px;
+                    height: 700px;
                 }
                 #top-bar {
                     display: flex;
@@ -36,7 +37,7 @@ export class GameScreen extends HTMLElement {
                 <div id="canvas-container" style="position: relative;">
                 
                 </div>
-                <ability-bar>
+                <ability-bar id="ability-bar">
                     <ability-icon></ability-icon>
                 </ability-bar>
             </div>
