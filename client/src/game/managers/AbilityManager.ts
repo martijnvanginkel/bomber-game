@@ -8,6 +8,7 @@ enum AbilityStatus {
 }
 
 interface Ability {
+    key: AbilityKey.Q
     status: AbilityStatus
     cooldown: number
 }
@@ -38,29 +39,27 @@ export class AbilityManager {
         action(key)
     }
 
-    public handleArrowClick(key: ArrowKey): ActionData {
-        return {
-            type: ActionType.move,
-            arrowKey: key,
+    public handleArrowClick(arrowKey: ArrowKey): ActionData {
+        const ability = this.getActivatedAbility
+
+        if (!ability) {
+            return {
+                type: ActionType.move,
+                arrowKey: arrowKey,
+            }
         }
-        // return findMove
-        // if (!this.isAnAbilityActivated) {
-        //     return {
-        //         type: 'move',
-        //         arrowKey: key,
-        //     } as ActionData
-        // }
-        // return {
-        //     type: 'move',
-        //     arrowKey: key,
-        // } as ActionData
-        // const actions = {
-        //     [AbilityKey.Q]: fireDistanceBounce(),
-        // }
+
+        this.triggerAbility(ability.key, arrowKey)
+
+        return {
+            type: ActionType.ability,
+            abilityKey: ability.key,
+            arrowKey: arrowKey,
+        }
     }
 
-    private triggerAbility() {
-        console.log('trigger ability')
+    private triggerAbility(abilityKey: AbilityKey, arrowKey: ArrowKey) {
+        this.fireTriggerEvent(abilityKey, arrowKey)
     }
 
     private activateAbility = (key: AbilityKey) => {
@@ -77,14 +76,14 @@ export class AbilityManager {
         this.fireActivateEvent(false, key)
     }
 
-    private get isAnAbilityActivated() {
+    private get getActivatedAbility() {
         for (const key in this.abilities) {
             const ability = this.abilities[key]
             if (ability.status === AbilityStatus.activated) {
-                return true
+                return ability
             }
         }
-        return false
+        return null
     }
 
     private fireActivateEvent(activated: boolean, abilityKey: AbilityKey) {
@@ -99,12 +98,25 @@ export class AbilityManager {
         dispatchEvent(event)
     }
 
+    private fireTriggerEvent(abilityKey: AbilityKey, arrowKey: ArrowKey) {
+        const event = new CustomEvent('trigger-ability', {
+            detail: {
+                abilityKey: abilityKey,
+                arrowKey: arrowKey,
+            },
+            bubbles: true,
+            composed: true,
+        })
+        dispatchEvent(event)
+    }
+
     private initializeAbilities() {
         const abilities = {}
 
         Object.keys(AbilityKey).forEach((key) => {
             Object.assign(abilities, {
                 [key]: {
+                    key: key,
                     status: AbilityStatus.ready,
                     cooldown: cooldownTimes[key as AbilityKey],
                 } as Ability,

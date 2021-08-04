@@ -38,7 +38,6 @@ export class GameScreen extends HTMLElement {
                 
                 </div>
                 <ability-bar id="ability-bar">
-                    <ability-icon></ability-icon>
                 </ability-bar>
             </div>
         `
