@@ -87,11 +87,11 @@ export class AbilityManager {
         return false
     }
 
-    private fireActivateEvent(activated: boolean, ability: AbilityKey) {
+    private fireActivateEvent(activated: boolean, abilityKey: AbilityKey) {
         const event = new CustomEvent('activate-ability', {
             detail: {
                 activated: activated,
-                ability: ability,
+                abilityKey: abilityKey,
             },
             bubbles: true,
             composed: true,

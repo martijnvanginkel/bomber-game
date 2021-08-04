@@ -10,11 +10,22 @@ export class HealthBar extends HTMLElement {
         return ['steps']
     }
 
-    attributeChangedCallback(prop: any) {
-        if (prop === 'steps') {
-            this.render()
-        }
+    attributeChangedCallback(propName: string, oldValue: string, newValue: string) {
+        console.log
+        console.log(propName, oldValue, newValue)
+        // if (prop === 'steps') {
+        //     this.render()
+        // }
     }
+
+    // attributeChangedCallback(propName: string) {
+    //     console.log('prop ')
+    //     console.log(this.getAttribute(propName))
+    //     console.log(propName)
+    //     // if (prop === 'activated') {
+    //     //     this.render()
+    //     // }
+    // }
 
     connectedCallback() {
         this.render()

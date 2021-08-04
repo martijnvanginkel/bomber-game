@@ -1,10 +1,16 @@
+import { AbilityKey } from '../../../game/managers/InputController'
+
 export class AbilityBar extends HTMLElement {
     private shadow
+
+    private abilities: { [key: string]: { activated: boolean } } = {
+        [AbilityKey.Q]: { activated: false },
+    }
 
     constructor() {
         super()
         this.shadow = this.attachShadow({ mode: 'open' })
-        // addEventListener('ability-trigger', this.abilityTriggered)
+        addEventListener('activate-ability', this.activateAbility)
     }
 
     connectedCallback() {
@@ -12,6 +18,7 @@ export class AbilityBar extends HTMLElement {
     }
 
     render() {
+        console.log('render ', this.abilities[AbilityKey.Q])
         this.shadow.innerHTML = `
             <style>
                 #container {
@@ -20,8 +27,16 @@ export class AbilityBar extends HTMLElement {
             </style>
 
             <div id="container">
-                <ability-icon key="Q"></ability-icon>
+                <ability-icon key="${AbilityKey.Q}" activated="${this.abilities[AbilityKey.Q].activated}">
+                </ability-icon>
             </div>
         `
+    }
+
+    activateAbility = (event: any) => {
+        const { abilityKey, activated } = event.detail
+        this.abilities[abilityKey].activated = activated
+
+        this.render()
     }
 }

@@ -36,9 +36,9 @@ export class GameScreen extends HTMLElement {
                 <div id="canvas-container" style="position: relative;">
                 
                 </div>
-                <div id="ability-bar">
+                <ability-bar>
                     <ability-icon></ability-icon>
-                </div>
+                </ability-bar>
             </div>
         `
     }

@@ -1,3 +1,4 @@
+import { AbilityBar } from './core/AbilityBar'
 import { AbilityIcon } from './core/AbilityIcon'
 import { BasicButton } from './core/BasicButton'
 import { HealthBar } from './core/HealthBar'
@@ -12,6 +13,7 @@ export const defineComponents = () => {
 
     // in-game
     customElements.define('health-bar', HealthBar)
+    customElements.define('ability-bar', AbilityBar)
     customElements.define('ability-icon', AbilityIcon)
 
     // screens
