@@ -37,8 +37,8 @@ class Game {
         })
         this.inputController.on('ability-click', (key: AbilityKey) => {
             console.log('ability-click')
-            const data: ActionData = this.abilityManager.handleAbilityClick(key)
-            this.actionEmitter.send(data)
+            // const data: ActionData = this.abilityManager.handleAbilityClick(key)
+            // this.actionEmitter.send(data)
             // const { arrowKey, abilityKey } = event.detail
             // const action = findAbility(abilityKey, arrowKey, this.player, this.map)
             // action?.run(this.socket, this.characters)
@@ -74,6 +74,17 @@ export const createNewGame = (socket: Socket, gameInit: GameInitInfo, gameEndedC
 
     const characters = gameInit.clients.map((ID, index) => {
         return new Character(ID, index, 'green', map)
+    })
+
+    characters.forEach((character) => {
+        character.addListener('lost-health', (e: CustomEvent) => {
+            if (e.detail.health >= 0) {
+                characters.forEach(async (character) => character.clearPosition())
+                characters.forEach((character) => character.spawn())
+            } else {
+                gameEndedCallback()
+            }
+        })
     })
 
     const player = characters.find((character) => character.getID === gameInit.clientID)!
