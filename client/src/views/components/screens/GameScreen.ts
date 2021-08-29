@@ -24,14 +24,21 @@ export class GameScreen extends HTMLElement {
                 #container {
                     display: flex;
                     flex-direction: column;
-          
+                    align-items: center;
                 }
                 #top-bar {
                     display: flex;
                     flex-direction: row;
                     width: 100%;
-                    justify-content: space-between;
+                    height: 100%;
+                    justify-content: center;
+                    margin: 10px 0;
                 }
+                #stripe {
+                    color: white;
+                    margin: 0 10px;
+                }
+
                 #ability-bar {
                    
                 }
@@ -40,12 +47,12 @@ export class GameScreen extends HTMLElement {
             <div id="container">
                 <div id="top-bar">
                     <div><health-bar ID="${this.clients[0]}" /></div>
+                    <div id="stripe">-</div>
                     <div><health-bar ID="${this.clients[1]}" /></div>
                 </div>
                 <div id="canvas-container" style="position: relative;">
                 
                 </div>
-                <p style="color:yellow">asdf1</p>
                 <ability-bar id="ability-bar"></ability-bar>
             </div>
         `

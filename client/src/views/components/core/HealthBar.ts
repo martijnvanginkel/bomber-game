@@ -31,6 +31,7 @@ export class HealthBar extends HTMLElement {
             <style>
                 #container {
                     position: relative;
+                    color: white;
                 }
             </style>
 
