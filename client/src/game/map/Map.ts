@@ -45,10 +45,15 @@ export class Map {
         return roundedDown
     }
 
-    // TO DO: clean up this function and simplify
     private drawCanvases() {
         const shadowRoot = document.querySelector('game-screen')?.shadowRoot
         const canvasContainer = shadowRoot?.getElementById('canvas-container')
+
+        // parent is created on top of the container to stack the canvasses
+        const canvasParent = document.createElement('div')
+        canvasParent.style.cssText = `position: relative; width: ${this.mapSizeInPixels}; height: ${this.mapSizeInPixels}`
+        canvasContainer?.appendChild(canvasParent)
+
         const mapCanvas = this.createCanvas('mapcanvas')
         const playerCanvas = this.createCanvas('playercanvas')
         const mapContext = mapCanvas.getContext('2d')
@@ -56,8 +61,7 @@ export class Map {
         if (!canvasContainer || !mapContext || !playerContext) {
             return
         }
-        canvasContainer.appendChild(mapCanvas)
-        canvasContainer.appendChild(playerCanvas)
+        canvasParent.appendChild(playerCanvas)
         this.mapContext = mapContext
         this.playerContext = playerContext
         this.drawMap()
@@ -69,6 +73,7 @@ export class Map {
         canvas.width = this.mapSizeInPixels
         canvas.height = this.mapSizeInPixels
         canvas.style.cssText = 'position: absolute; left: 0; top: 0; z-index: 0; border: 1px solid red;'
+
         return canvas
     }
 

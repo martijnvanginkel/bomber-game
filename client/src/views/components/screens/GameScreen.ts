@@ -22,9 +22,9 @@ export class GameScreen extends HTMLElement {
         this.shadow.innerHTML = `
             <style>
                 #container {
-                    position: relative;
-                    width: 500px;
-                    height: 700px;
+                    display: flex;
+                    flex-direction: column;
+          
                 }
                 #top-bar {
                     display: flex;
@@ -33,8 +33,7 @@ export class GameScreen extends HTMLElement {
                     justify-content: space-between;
                 }
                 #ability-bar {
-                    position: absolute;
-                    right: 0;
+                   
                 }
             </style>
 
@@ -46,8 +45,8 @@ export class GameScreen extends HTMLElement {
                 <div id="canvas-container" style="position: relative;">
                 
                 </div>
-                <ability-bar id="ability-bar">
-                </ability-bar>
+                <p style="color:yellow">asdf1</p>
+                <ability-bar id="ability-bar"></ability-bar>
             </div>
         `
     }

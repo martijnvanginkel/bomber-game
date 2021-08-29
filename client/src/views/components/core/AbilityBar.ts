@@ -27,6 +27,7 @@ export class AbilityBar extends HTMLElement {
             </style>
 
             <div id="container">
+                <p style="color:white">asdf</p>
                 <ability-icon key="${AbilityKey.Q}" activated="${this.abilities[AbilityKey.Q].activated}">
                 </ability-icon>
             </div>
