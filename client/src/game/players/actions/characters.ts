@@ -1,6 +1,7 @@
 import { Ability, basicAttack } from './abilities'
 import { basicDown, basicLeft, basicRight, basicUp } from './movements'
-import { ArrowKey, LocationType, AbilityKey } from '../../utils/types'
+import { LocationType } from '../../utils/types'
+import { ArrowKey, AbilityKey } from '../../../game/managers/InputController'
 
 export enum CharacterType {
     BASIC = 'BASIC',
@@ -14,7 +15,7 @@ interface CharacterTemplate {
         [ArrowKey.RIGHT]: LocationType
     }
     abilities: {
-        [AbilityKey.Q]: Ability
+        [AbilityKey.A]: Ability
     }
 }
 
@@ -27,7 +28,7 @@ export const characters = {
             [ArrowKey.RIGHT]: basicRight,
         },
         abilities: {
-            [AbilityKey.Q]: basicAttack,
+            [AbilityKey.A]: basicAttack,
         },
     } as CharacterTemplate,
 }

@@ -1,19 +1,20 @@
-import { Move } from './../players/actions/movements'
+import { Move, multiplyCoordinates } from './../players/actions/movements'
 import { findCharacterMove } from './../players/actions/utils/characterUtils'
 import { Character } from './../players/Character'
 import { mergeLocations } from './../utils/general'
 import { Direction, LocationType, TileStatus } from './../utils/types'
 import { Socket } from 'socket.io-client'
 import { Map } from '../map/Map'
-import { ArrowKey } from './InputController'
+import { AbilityKey, ArrowKey } from './InputController'
 import { findDirectionByKey } from './../players/actions/utils/movementUtils'
 
-export const findAction = (key: ArrowKey, character: Character, map: Map) => {
+export const findMovementAction = (key: ArrowKey, character: Character, map: Map) => {
     if (character.isMoving) {
         return
     }
 
-    const characterMove: Move = findCharacterMove(key, character.getCharacterType)
+    const characterMove: Move = findCharacterMove(key, character.getCharacterType) // remove character from this
+    console.log('char move ', characterMove)
     const oldLocation = character.getLocation
 
     // maybe find more efficient way to do these calculations
@@ -36,6 +37,33 @@ export const findAction = (key: ArrowKey, character: Character, map: Map) => {
         default:
             throw new Error('Unknown tile status?')
     }
+}
+
+export const findAbilityAction = (key: AbilityKey, character: Character) => {
+    // if (character.isMoving) {
+    //     return
+    // }
+    // const characterMove: Move = multiplyCoordinates() // remove character from this
+    // const oldLocation = character.getLocation
+    // // maybe find more efficient way to do these calculations
+    // const newLocation = mergeLocations(oldLocation, characterMove)
+    // const tileStatus: TileStatus = map.getTileStatus(newLocation)
+    // const tile = map.getTileByLocation(newLocation)
+    // const direction = findDirectionByKey(key)
+    // switch (tileStatus) {
+    //     case TileStatus.NONEXISTENT:
+    //         return
+    //     case TileStatus.OCCUPIED:
+    //         const victimID = tile?.getOccupant
+    //         if (!victimID) {
+    //             return
+    //         }
+    //         return bounce(victimID, direction)
+    //     case TileStatus.AVAILABLE:
+    //         return move(character, newLocation)
+    //     default:
+    //         throw new Error('Unknown tile status?')
+    // }
 }
 
 const bounce = (victimID: number, direction: Direction) => {

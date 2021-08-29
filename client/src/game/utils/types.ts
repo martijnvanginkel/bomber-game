@@ -21,17 +21,6 @@ export enum TileStatus {
     NONEXISTENT,
 }
 
-export enum ArrowKey {
-    UP = 'UP',
-    DOWN = 'DOWN',
-    LEFT = 'LEFT',
-    RIGHT = 'RIGHT',
-}
-
-export enum AbilityKey {
-    Q = 'Q',
-}
-
 export enum Direction {
     NORTH = 0,
     EAST = 90,

@@ -9,6 +9,12 @@ export class GameScreen extends HTMLElement {
     }
 
     connectedCallback() {
+        const attribute = this.getAttribute('screen-attribute')
+        if (!attribute) {
+            return
+        }
+        const parsed = JSON.parse(attribute)
+        this.clients = parsed.clients
         this.render()
     }
 

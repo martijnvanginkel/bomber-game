@@ -1,9 +1,9 @@
 import { Map } from './map/Map'
 import { Socket } from 'socket.io-client'
 import { Character } from './players/Character'
-import { InputController } from './managers/InputController'
-import { ArrowKey, Direction, LocationType } from './utils/types'
-import { findAction } from './managers/ActionConsultant'
+import { ArrowKey, AbilityKey, InputController } from './managers/InputController'
+import { Direction, LocationType } from './utils/types'
+import { findMovementAction } from './managers/ActionConsultant'
 
 export interface GameInitInfo {
     gameID: string
@@ -40,7 +40,6 @@ class Game {
             this.characters.push(character)
             character.addListener('lost-health', (e: CustomEvent) => {
                 if (e.detail.health >= 0) {
-                    console.log('respawn')
                     this.respawnPlayers()
                 } else {
                     this.deleteListeners()
@@ -57,9 +56,10 @@ class Game {
 
     private sendActions() {
         this.inputController.on('arrow-click', (key: ArrowKey) => {
-            const action = findAction(key, this.player, this.map)
+            const action = findMovementAction(key, this.player, this.map)
             action?.run(this.socket, this.characters)
         })
+        this.inputController.on('ability-click', (key: AbilityKey) => {})
     }
 
     private receiveActions() {
