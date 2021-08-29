@@ -25,9 +25,9 @@ class Game {
         this.receiveActions()
     }
 
-    private deleteListeners() {
-        this.inputController.deleteListeners()
-        this.characters.forEach((character) => character.removeAllListeners())
+    public respawn() {
+        this.characters.forEach(async (character) => character.clearPosition())
+        this.characters.forEach((character) => character.spawn())
     }
 
     private sendActions() {
@@ -71,29 +71,28 @@ class Game {
 
 export const createNewGame = (socket: Socket, gameInit: GameInitInfo, gameEndedCallback: () => void) => {
     const map = new Map()
+    const inputController = new InputController()
+    const abilityManager = new AbilityManager()
+    const characters = gameInit.clients.map((ID, index) => new Character(ID, index, 'green', map))
+    const player = characters.find((character) => character.getID === gameInit.clientID)!
+    const actionEmitter = new ActionEmitter(socket, map, characters, player)
+    const game = new Game(socket, characters, inputController, abilityManager, actionEmitter)
 
-    const characters = gameInit.clients.map((ID, index) => {
-        return new Character(ID, index, 'green', map)
-    })
+    const deleteListeners = () => {
+        inputController.deleteListeners()
+        characters.forEach((character) => character.removeAllListeners())
+    }
 
     characters.forEach((character) => {
         character.addListener('lost-health', (e: CustomEvent) => {
             if (e.detail.health >= 0) {
-                characters.forEach(async (character) => character.clearPosition())
-                characters.forEach((character) => character.spawn())
-            } else {
-                gameEndedCallback()
+                game.respawn()
+                return
             }
+            deleteListeners()
+            gameEndedCallback()
         })
     })
 
-    const player = characters.find((character) => character.getID === gameInit.clientID)!
-
-    return new Game(
-        socket,
-        characters,
-        new InputController(),
-        new AbilityManager(),
-        new ActionEmitter(socket, map, characters, player),
-    )
+    return game
 }
