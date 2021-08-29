@@ -25,8 +25,9 @@ class Game {
         this.receiveActions()
     }
 
-    public deleteListeners() {
+    private deleteListeners() {
         this.inputController.deleteListeners()
+        this.characters.forEach((character) => character.removeAllListeners())
     }
 
     private sendActions() {
@@ -42,6 +43,7 @@ class Game {
             // const action = findAbility(abilityKey, arrowKey, this.player, this.map)
             // action?.run(this.socket, this.characters)
         })
+        this.inputController.on('ability-click', (key: AbilityKey) => {})
     }
 
     private receiveActions() {
@@ -71,7 +73,7 @@ export const createNewGame = (socket: Socket, gameInit: GameInitInfo, gameEndedC
     const map = new Map()
 
     const characters = gameInit.clients.map((ID, index) => {
-        return new Character(ID, index, 'green', map, gameEndedCallback)
+        return new Character(ID, index, 'green', map)
     })
 
     const player = characters.find((character) => character.getID === gameInit.clientID)!

@@ -17,8 +17,12 @@ export class CharacterAnimator {
         this.map.getPlayerContext.fill()
     }
 
-    private clearPosition(x: number, y: number) {
+    private async clearPosition(x: number, y: number) {
         this.map.getPlayerContext.clearRect(x, y, this.map.tileSize, this.map.tileSize)
+    }
+
+    public clearCharacterLocation(location: LocationType) {
+        this.clearPosition(location.x * this.map.tileSize, location.y * this.map.tileSize)
     }
 
     public instantiate(location: LocationType) {

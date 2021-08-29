@@ -1,34 +1,29 @@
 export class HealthBar extends HTMLElement {
     private shadow
+    private health: number
 
     constructor() {
         super()
         this.shadow = this.attachShadow({ mode: 'open' })
+        addEventListener('lost-health', this.lostHealth)
     }
-
-    static get observedAttributes() {
-        return ['steps']
-    }
-
-    attributeChangedCallback(propName: string, oldValue: string, newValue: string) {
-        console.log
-        console.log(propName, oldValue, newValue)
-        // if (prop === 'steps') {
-        //     this.render()
-        // }
-    }
-
-    // attributeChangedCallback(propName: string) {
-    //     console.log('prop ')
-    //     console.log(this.getAttribute(propName))
-    //     console.log(propName)
-    //     // if (prop === 'activated') {
-    //     //     this.render()
-    //     // }
-    // }
 
     connectedCallback() {
+        this.health = 2
         this.render()
+    }
+
+    lostHealth = (e: any) => {
+        const ID = this.getAttribute('ID')
+        if (!ID) {
+            return
+        }
+        const eventID = e.detail.ID
+        const health = e.detail.health
+        if (Number(ID) === eventID) {
+            this.health = health
+            this.render()
+        }
     }
 
     render() {
@@ -36,28 +31,10 @@ export class HealthBar extends HTMLElement {
             <style>
                 #container {
                     position: relative;
-                    height: 25px;
-                    width: 100px;
-                    border: 1px solid black;
-                    border-radius: 2px;
-                }
-                #bar {
-                    position: absolute;
-                    background-color: red;
-                    width: ${this.getHealthPercentage()}%;
-                    height: 100%;
                 }
             </style>
 
-            <div id="container">
-                <div id="bar"></div>
-            </div>
+            <div id="container">${this.health}</div>
         `
-    }
-
-    getHealthPercentage() {
-        const current = Number(this.getAttribute('value'))
-        const total = Number(this.getAttribute('steps'))
-        return ((current / total) * 100).toFixed()
     }
 }
