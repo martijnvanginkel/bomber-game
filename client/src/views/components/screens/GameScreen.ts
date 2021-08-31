@@ -38,10 +38,6 @@ export class GameScreen extends HTMLElement {
                     color: white;
                     margin: 0 10px;
                 }
-
-                #ability-bar {
-                   
-                }
             </style>
 
             <div id="container">
@@ -53,7 +49,7 @@ export class GameScreen extends HTMLElement {
                 <div id="canvas-container" style="position: relative;">
                 
                 </div>
-                <ability-bar id="ability-bar"></ability-bar>
+                <ability-bar></ability-bar>
             </div>
         `
     }

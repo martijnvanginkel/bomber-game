@@ -22,20 +22,29 @@ export class AbilityBar extends HTMLElement {
         this.shadow.innerHTML = `
             <style>
                 #container {
-
+                    display: flex;
+                    flex-direction: row;
+                    margin-top: 20px;
                 }
             </style>
 
             <div id="container">
-                <p style="color:white">asdf</p>
                 <ability-icon key="${AbilityKey.Q}" activated="${this.abilities[AbilityKey.Q].activated}">
+                </ability-icon>
+                <ability-icon key="W" activated="${false}">
+                </ability-icon>
+                <ability-icon key="E" activated="${false}">
                 </ability-icon>
             </div>
         `
     }
 
     activateAbility = (event: any) => {
+        console.log('activate ability')
         const { abilityKey, activated } = event.detail
+
+        console.log('activate ', activated)
+
         this.abilities[abilityKey].activated = activated
 
         this.render()

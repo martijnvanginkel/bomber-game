@@ -45,6 +45,7 @@ export class AbilityIcon extends HTMLElement {
             return
         }
         const activated = JSON.parse(value)
+        // console.log('activated ', activated)
         this.activated = activated
         this.render()
     }
@@ -76,16 +77,26 @@ export class AbilityIcon extends HTMLElement {
         this.shadow.innerHTML = `
             <style>
                 .container {
-                    border: 1px solid black;
+                    border: 1px solid white;
                     width: 50px;
+                    height: 50px;
+                    border-width: 2px;
+                    border-radius: 5px;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    margin: 0 5px;
                 }
                 .background {
-                    background-color: red;
+                    background-color: yellow;
+                }
+                #icon {
+                    color: white;
                 }
             </style>
 
-            <div class="container">
-                ${this.activated ? '<span>active</span>' : '<span>inactive</span>'}
+            <div class="container ${this.activated === true ? 'background' : null}">
+                <span id="icon">${this.getAttribute('key')}</span>
             </div>
             `
     }
