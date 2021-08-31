@@ -32,11 +32,6 @@ export class AbilityIcon extends HTMLElement {
         if (propName === 'activated') {
             this.handleActivatedChange()
         }
-        // console.log(propName, value)
-        // console.log(this.getAttribute('activated'))
-        // if (prop === 'activated') {
-        //     this.render()
-        // }
     }
 
     handleActivatedChange() {
@@ -45,7 +40,6 @@ export class AbilityIcon extends HTMLElement {
             return
         }
         const activated = JSON.parse(value)
-        // console.log('activated ', activated)
         this.activated = activated
         this.render()
     }

@@ -37,7 +37,7 @@ class Game {
         })
         this.inputController.on('ability-click', (key: AbilityKey) => {
             console.log('ability-click')
-            // const data: ActionData = this.abilityManager.handleAbilityClick(key)
+            const data = this.abilityManager.handleAbilityClick(key)
             // this.actionEmitter.send(data)
             // const { arrowKey, abilityKey } = event.detail
             // const action = findAbility(abilityKey, arrowKey, this.player, this.map)
