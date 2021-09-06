@@ -31,6 +31,12 @@ class Game {
     }
 
     private sendActions() {
+        // sommigen trigger je meteen
+        // sommigen wacht je op de arrow click en dan trigger je ze
+
+        // definieer in een abstracte class een 'ability', deze voldoet aan bepaalde voorwaarde: getriggered door arrow? Of getriggered door indrukken?
+        // paar dingen die je altijd doet bij elke ability: logica voor individuele
+
         this.inputController.on('arrow-click', (key: ArrowKey) => {
             const data: ActionData = this.abilityManager.handleArrowClick(key)
             this.actionEmitter.send(data)
@@ -43,7 +49,6 @@ class Game {
             // const action = findAbility(abilityKey, arrowKey, this.player, this.map)
             // action?.run(this.socket, this.characters)
         })
-        this.inputController.on('ability-click', (key: AbilityKey) => {})
     }
 
     private receiveActions() {

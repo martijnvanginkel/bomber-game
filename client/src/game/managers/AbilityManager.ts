@@ -24,6 +24,7 @@ export class AbilityManager {
         this.abilities = this.initializeAbilities()
     }
 
+    // This should be kind of inside of the abilities itself with cooldown,  and the trigger CustomEvent shoulud be in the abstract 'parent'
     public handleAbilityClick(key: AbilityKey) {
         const actions = {
             [AbilityKey.Q]: {

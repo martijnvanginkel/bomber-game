@@ -40,11 +40,7 @@ export class AbilityBar extends HTMLElement {
     }
 
     activateAbility = (event: any) => {
-        console.log('activate ability')
         const { abilityKey, activated } = event.detail
-
-        console.log('activate ', activated)
-
         this.abilities[abilityKey].activated = activated
 
         this.render()
