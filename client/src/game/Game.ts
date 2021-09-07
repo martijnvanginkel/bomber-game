@@ -38,8 +38,8 @@ class Game {
         // paar dingen die je altijd doet bij elke ability: logica voor individuele
 
         this.inputController.on('arrow-click', (key: ArrowKey) => {
-            const data: ActionData = this.abilityManager.handleArrowClick(key)
-            this.actionEmitter.send(data)
+            this.abilityManager.handleArrowClick(key)
+            // this.actionEmitter.send(data)
         })
         this.inputController.on('ability-click', (key: AbilityKey) => {
             console.log('ability-click')
@@ -77,7 +77,7 @@ class Game {
 export const createNewGame = (socket: Socket, gameInit: GameInitInfo, gameEndedCallback: () => void) => {
     const map = new Map()
     const inputController = new InputController()
-    const abilityManager = new AbilityManager()
+    const abilityManager = new AbilityManager(map)
     const characters = gameInit.clients.map((ID, index) => new Character(ID, index, 'green', map))
     const player = characters.find((character) => character.getID === gameInit.clientID)!
     const actionEmitter = new ActionEmitter(socket, map, characters, player)

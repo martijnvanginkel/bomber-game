@@ -9,6 +9,7 @@ export enum ArrowKey {
 
 export enum AbilityKey {
     Q = 'Q',
+    W = 'W',
 }
 
 export class InputController extends EventEmitter {

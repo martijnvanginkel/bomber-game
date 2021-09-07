@@ -2,10 +2,10 @@ import { Socket } from 'socket.io-client'
 import { Map } from 'game/map/Map'
 import { Character } from 'game/players/Character'
 import { AbilityKey, ArrowKey } from './InputController'
-import { arrowKeyToCoordinates } from '../players/actions/movements'
+import { arrowKeyToCoordinates } from '../players/movement/movements'
 import { mergeLocations } from '../utils/general'
 import { Direction, LocationType, TileStatus } from '../utils/types'
-import { findDirectionByKey } from '../players/actions/utils/movementUtils'
+import { findDirectionByKey } from '../players/movement/movementUtils'
 
 export enum ActionType {
     move,
