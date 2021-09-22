@@ -9,6 +9,10 @@ export enum ActivationType {
     direction,
 }
 
+export interface InstantAbility {}
+
+export interface DirectionAbility {}
+
 export interface AbilityBase {
     type: ActivationType
     isAvailable: boolean

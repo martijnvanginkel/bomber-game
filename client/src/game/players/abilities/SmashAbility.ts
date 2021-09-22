@@ -1,9 +1,9 @@
-import { AbilityBase, AbilityStatus, ActivationType } from './AbilityBase'
+import { AbilityBase, AbilityStatus, ActivationType, InstantAbility } from './AbilityBase'
 import { AbilityKey } from '../../managers/InputController'
 import { Map } from '../../map/Map'
 
 // Make seperate Ability(Name) here that implements an interface
-export class SmashAbility implements AbilityBase {
+export class SmashAbility implements InstantAbility {
     private status: AbilityStatus = AbilityStatus.ready
     private cooldown: number = 10
 
@@ -14,4 +14,8 @@ export class SmashAbility implements AbilityBase {
     public activate() {}
 
     public deactivate() {}
+
+    public get isAvailable() {
+        return true
+    }
 }
