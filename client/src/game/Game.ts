@@ -42,7 +42,7 @@ class Game {
             // this.actionEmitter.send(data)
         })
         this.inputController.on('ability-click', (key: AbilityKey) => {
-            console.log('ability-click')
+            // console.log('ability-click')
             const data = this.abilityManager.handleAbilityClick(key)
             // this.actionEmitter.send(data)
             // const { arrowKey, abilityKey } = event.detail

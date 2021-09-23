@@ -1,60 +1,88 @@
-import { TackleAbility } from 'game/players/abilities/TackleAbility'
+import { TackleAbility } from '../players/abilities/TackleAbility'
 import { Map } from 'game/map/Map'
 import { ActionData, ActionType } from './ActionEmitter'
 import { AbilityKey, ArrowKey } from './InputController'
-import { AbilityBase, DirectionAbility, InstantAbility } from 'game/players/abilities/AbilityBase'
-import { SmashAbility } from 'game/players/abilities/SmashAbility'
+import { AbilityBase, ActivationType, DirectionAbility, InstantAbility } from '../players/abilities/AbilityBase'
+import { SmashAbility } from '../players/abilities/SmashAbility'
+import { Direction } from 'game/utils/types'
+import { directionToCoordinates } from 'game/players/movement/movements'
 
-interface AbilityPlatform {
-    instant: { [key: string]: InstantAbility }
-    direction: { [key: string]: DirectionAbility }
-}
+// interface AbilityPlatform {
+//     [key: AbilityKey]: { [key: string]: InstantAbility }
+//     // [ActivationType.direction]: { [key: string]: DirectionAbility }
+// }
 
 export class AbilityManager {
-    private abilities: AbilityPlatform
+    private abilities: {
+        [ActivationType.direction]: { [key: string]: DirectionAbility }
+        [ActivationType.instant]: { [key: string]: InstantAbility }
+    }
 
     public constructor(private map: Map) {
         // instant ability
         // direction ability
         // passive ability
-
         this.abilities = {
-            instant: {
-                [AbilityKey.W]: new SmashAbility(map),
-            },
-            direction: {
+            [ActivationType.direction]: {
                 [AbilityKey.Q]: new TackleAbility(map),
             },
+            [ActivationType.instant]: {
+                [AbilityKey.W]: new SmashAbility(map),
+            },
         }
-
-        // this.abilities = []
-
-        // const one = new Ability(AbilityKey.qmap)
-
-        // const abilities = [one]
     }
 
     // This should be kind of inside of the abilities itself with cooldown,  and the trigger CustomEvent shoulud be in the abstract 'parent'
     public handleAbilityClick(key: AbilityKey) {
-        const ability = Object.keys(this.abilities).find((ability) => ability) //this.abilities[key]
+        const ability = this.findAbilityByKey(key)
 
-        // if (!ability.isAvailable) {
-        //     return
-        // }
+        if (!ability) {
+            return
+        }
 
-        // this.deactivateAbilities()
-        // ability.activate()
+        const actions = {
+            [ActivationType.direction]: () => {
+                this.activateDirectionAbility(ability as DirectionAbility)
+            },
+            [ActivationType.instant]: () => {
+                // ;(ability as InstantAbility).trigger()
+            },
+        }
 
-        // check if its in cooldown
-        // de-activate others if exists
-        // activate or trigger new ability
+        actions[ability.type]
     }
 
-    public handleArrowClick(arrowKey: ArrowKey) {}
+    public handleArrowClick(arrowKey: ArrowKey) {
+        const ability = this.findActivatedDirectionAbility()
 
-    private findAbilityByKey(abilityKey: AbilityKey) {
-        return Object.keys(this.abilities).find((abilityType) => {
-            return Object.keys(abilityType).find((key) => abilityKey)
-        })
+        if (ability) {
+            ability.trigger()
+            return
+        }
+    }
+
+    private activateDirectionAbility(ability: DirectionAbility) {
+        Object.values(this.abilities[ActivationType.direction]).forEach((ab) => ab.deactivate())
+        ability.activate()
+    }
+
+    private findActivatedDirectionAbility() {
+        for (const ability of Object.values(this.abilities[ActivationType.direction])) {
+            if (ability.isActivated) {
+                return ability
+            }
+        }
+        return false
+    }
+
+    private findAbilityByKey(abilityKey: AbilityKey): AbilityBase | false {
+        for (const pair of Object.values(this.abilities)) {
+            for (const [key, value] of Object.entries(pair)) {
+                if (key === abilityKey) {
+                    return value
+                }
+            }
+        }
+        return false
     }
 }

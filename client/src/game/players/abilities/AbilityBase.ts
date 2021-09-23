@@ -5,17 +5,24 @@ export enum AbilityStatus {
 }
 
 export enum ActivationType {
-    instant,
-    direction,
+    instant = 'instant',
+    direction = 'direction',
 }
 
-export interface InstantAbility {}
+export interface InstantAbility extends AbilityBase {
+    trigger: () => void
+}
 
-export interface DirectionAbility {}
+export interface DirectionAbility extends AbilityBase {
+    activate: () => void
+    deactivate: () => void
+    trigger: () => void
+    isActivated: boolean
+}
 
 export interface AbilityBase {
     type: ActivationType
-    isAvailable: boolean
-    activate: () => void
-    deactivate: () => void
+    // isAvailable: boolean
+    // activate: () => void
+    // deactivate: () => void
 }

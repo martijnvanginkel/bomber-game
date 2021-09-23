@@ -7,15 +7,11 @@ export class SmashAbility implements InstantAbility {
     private status: AbilityStatus = AbilityStatus.ready
     private cooldown: number = 10
 
-    public type: ActivationType = ActivationType.instant
-
     constructor(private map: Map) {}
 
-    public activate() {}
+    public trigger() {}
 
-    public deactivate() {}
-
-    public get isAvailable() {
-        return true
+    public get type() {
+        return ActivationType.instant
     }
 }

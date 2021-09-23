@@ -7,7 +7,7 @@ export class TackleAbility implements DirectionAbility {
     private status: AbilityStatus = AbilityStatus.ready
     private cooldown: number = 10
 
-    public type: ActivationType = ActivationType.direction
+    // public type: ActivationType = ActivationType.direction
 
     constructor(private map: Map) {}
 
@@ -20,22 +20,15 @@ export class TackleAbility implements DirectionAbility {
         // const firstTileStatus: TileStatus = map.getTileStatus(firstLocation)
     }
 
-    public deactivate() {
-        if (!this.isActivated) {
-            return
-        }
-        this.status = AbilityStatus.ready
+    public deactivate() {}
+
+    public trigger() {}
+
+    public get type() {
+        return ActivationType.direction
     }
 
-    public get isAvailable() {
-        return true
-    }
-
-    private get inCooldown() {
-        return this.status === AbilityStatus.inCooldown
-    }
-
-    private get isActivated() {
-        return this.status === AbilityStatus.activated
+    public get isActivated() {
+        return false
     }
 }
