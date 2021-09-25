@@ -46,6 +46,8 @@ export class ActionEmitter {
             return
         }
 
+        // player, map, socket, characters
+
         const locationIncrement = arrowKeyToCoordinates[key]
         const newLocation = mergeLocations(this.player.getLocation, locationIncrement)
         const tileStatus: TileStatus = this.map.getTileStatus(newLocation)

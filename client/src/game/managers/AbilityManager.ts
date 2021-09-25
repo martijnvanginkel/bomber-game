@@ -4,32 +4,30 @@ import { ActionData, ActionType } from './ActionEmitter'
 import { AbilityKey, ArrowKey } from './InputController'
 import { AbilityBase, ActivationType, DirectionAbility, InstantAbility } from '../players/abilities/AbilityBase'
 import { SmashAbility } from '../players/abilities/SmashAbility'
-import { Direction } from 'game/utils/types'
-import { directionToCoordinates } from 'game/players/movement/movements'
-
-// interface AbilityPlatform {
-//     [key: AbilityKey]: { [key: string]: InstantAbility }
-//     // [ActivationType.direction]: { [key: string]: DirectionAbility }
-// }
+import { MovementNode } from '../players/movement/MovementNode'
+import { GameComInfo } from '../Game'
 
 export class AbilityManager {
     private abilities: {
         [ActivationType.direction]: { [key: string]: DirectionAbility }
         [ActivationType.instant]: { [key: string]: InstantAbility }
     }
+    private movementNode: MovementNode
 
-    public constructor(private map: Map) {
+    public constructor(info: GameComInfo) {
         // instant ability
         // direction ability
         // passive ability
         this.abilities = {
             [ActivationType.direction]: {
-                [AbilityKey.Q]: new TackleAbility(map),
+                [AbilityKey.Q]: new TackleAbility(info.map),
             },
             [ActivationType.instant]: {
-                [AbilityKey.W]: new SmashAbility(map),
+                [AbilityKey.W]: new SmashAbility(info.map),
             },
         }
+
+        this.movementNode = new MovementNode(info)
     }
 
     // This should be kind of inside of the abilities itself with cooldown,  and the trigger CustomEvent shoulud be in the abstract 'parent'
@@ -59,6 +57,8 @@ export class AbilityManager {
             ability.trigger()
             return
         }
+
+        this.movementNode.move(arrowKey)
     }
 
     private activateDirectionAbility(ability: DirectionAbility) {

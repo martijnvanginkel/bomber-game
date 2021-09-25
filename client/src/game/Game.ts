@@ -13,6 +13,13 @@ export interface GameInitInfo {
     clientID: number
 }
 
+export interface GameComInfo {
+    map: Map
+    socket: Socket
+    player: Character
+    characters: Character[]
+}
+
 class Game {
     public constructor(
         private socket: Socket,
@@ -39,7 +46,6 @@ class Game {
 
         this.inputController.on('arrow-click', (key: ArrowKey) => {
             this.abilityManager.handleArrowClick(key)
-            // this.actionEmitter.send(data)
         })
         this.inputController.on('ability-click', (key: AbilityKey) => {
             // console.log('ability-click')
@@ -77,9 +83,18 @@ class Game {
 export const createNewGame = (socket: Socket, gameInit: GameInitInfo, gameEndedCallback: () => void) => {
     const map = new Map()
     const inputController = new InputController()
-    const abilityManager = new AbilityManager(map)
     const characters = gameInit.clients.map((ID, index) => new Character(ID, index, 'green', map))
     const player = characters.find((character) => character.getID === gameInit.clientID)!
+
+    const info: GameComInfo = {
+        map: map,
+        socket: socket,
+        player: player,
+        characters: characters,
+    }
+
+    const abilityManager = new AbilityManager(info)
+
     const actionEmitter = new ActionEmitter(socket, map, characters, player)
     const game = new Game(socket, characters, inputController, abilityManager, actionEmitter)
 
