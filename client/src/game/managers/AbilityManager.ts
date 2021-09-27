@@ -1,6 +1,4 @@
 import { TackleAbility } from '../players/abilities/TackleAbility'
-import { Map } from 'game/map/Map'
-import { ActionData, ActionType } from './ActionEmitter'
 import { AbilityKey, ArrowKey } from './InputController'
 import { AbilityBase, ActivationType, DirectionAbility, InstantAbility } from '../players/abilities/AbilityBase'
 import { SmashAbility } from '../players/abilities/SmashAbility'
@@ -20,7 +18,7 @@ export class AbilityManager {
         // passive ability
         this.abilities = {
             [ActivationType.direction]: {
-                [AbilityKey.Q]: new TackleAbility(info.map),
+                [AbilityKey.Q]: new TackleAbility(AbilityKey.Q, info),
             },
             [ActivationType.instant]: {
                 [AbilityKey.W]: new SmashAbility(info.map),
@@ -47,22 +45,37 @@ export class AbilityManager {
             },
         }
 
-        actions[ability.type]
+        actions[ability.type]()
     }
 
     public handleArrowClick(arrowKey: ArrowKey) {
         const ability = this.findActivatedDirectionAbility()
 
         if (ability) {
-            ability.trigger()
+            ability.trigger(arrowKey)
             return
         }
 
         this.movementNode.move(arrowKey)
     }
 
+    public resetAbilities() {
+        for (const pair of Object.values(this.abilities)) {
+            for (const ability of Object.values(pair)) {
+                ;(ability as AbilityBase).reset()
+            }
+        }
+    }
+
     private activateDirectionAbility(ability: DirectionAbility) {
-        Object.values(this.abilities[ActivationType.direction]).forEach((ab) => ab.deactivate())
+        if (ability.isActivated) {
+            ability.deactivate()
+            return
+        }
+
+        Object.values(this.abilities[ActivationType.direction])
+            .filter((ab) => ab.isActivated)
+            .forEach((ab) => ab.deactivate())
         ability.activate()
     }
 

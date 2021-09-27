@@ -11,6 +11,8 @@ export class SmashAbility implements InstantAbility {
 
     public trigger() {}
 
+    public reset() {}
+
     public get type() {
         return ActivationType.instant
     }

@@ -1,3 +1,5 @@
+import { ArrowKey } from 'game/managers/InputController'
+
 export enum AbilityStatus {
     ready,
     activated,
@@ -16,12 +18,13 @@ export interface InstantAbility extends AbilityBase {
 export interface DirectionAbility extends AbilityBase {
     activate: () => void
     deactivate: () => void
-    trigger: () => void
+    trigger: (arrowKey: ArrowKey) => void
     isActivated: boolean
 }
 
 export interface AbilityBase {
     type: ActivationType
+    reset: () => void
     // isAvailable: boolean
     // activate: () => void
     // deactivate: () => void

@@ -5,7 +5,6 @@ import { AbilityKey, InputController } from './managers/InputController'
 import { Direction, LocationType } from './utils/types'
 import { ArrowKey } from './managers/InputController'
 import { AbilityManager } from './managers/AbilityManager'
-import { ActionData, ActionEmitter } from './managers/ActionEmitter'
 
 export interface GameInitInfo {
     gameID: string
@@ -26,7 +25,6 @@ class Game {
         private characters: Character[],
         private inputController: InputController,
         private abilityManager: AbilityManager,
-        private actionEmitter: ActionEmitter,
     ) {
         this.sendActions()
         this.receiveActions()
@@ -35,25 +33,17 @@ class Game {
     public respawn() {
         this.characters.forEach(async (character) => character.clearPosition())
         this.characters.forEach((character) => character.spawn())
+        this.abilityManager.resetAbilities()
+        const event = new CustomEvent('respawn', { bubbles: true, composed: true })
+        dispatchEvent(event)
     }
 
     private sendActions() {
-        // sommigen trigger je meteen
-        // sommigen wacht je op de arrow click en dan trigger je ze
-
-        // definieer in een abstracte class een 'ability', deze voldoet aan bepaalde voorwaarde: getriggered door arrow? Of getriggered door indrukken?
-        // paar dingen die je altijd doet bij elke ability: logica voor individuele
-
         this.inputController.on('arrow-click', (key: ArrowKey) => {
             this.abilityManager.handleArrowClick(key)
         })
         this.inputController.on('ability-click', (key: AbilityKey) => {
-            // console.log('ability-click')
-            const data = this.abilityManager.handleAbilityClick(key)
-            // this.actionEmitter.send(data)
-            // const { arrowKey, abilityKey } = event.detail
-            // const action = findAbility(abilityKey, arrowKey, this.player, this.map)
-            // action?.run(this.socket, this.characters)
+            this.abilityManager.handleAbilityClick(key)
         })
     }
 
@@ -94,9 +84,7 @@ export const createNewGame = (socket: Socket, gameInit: GameInitInfo, gameEndedC
     }
 
     const abilityManager = new AbilityManager(info)
-
-    const actionEmitter = new ActionEmitter(socket, map, characters, player)
-    const game = new Game(socket, characters, inputController, abilityManager, actionEmitter)
+    const game = new Game(socket, characters, inputController, abilityManager)
 
     const deleteListeners = () => {
         inputController.deleteListeners()
