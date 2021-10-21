@@ -13,15 +13,12 @@ export class AbilityManager {
     private movementNode: MovementNode
 
     public constructor(info: GameComInfo) {
-        // instant ability
-        // direction ability
-        // passive ability
         this.abilities = {
             [ActivationType.direction]: {
                 [AbilityKey.Q]: new TackleAbility(AbilityKey.Q, info),
             },
             [ActivationType.instant]: {
-                [AbilityKey.W]: new SmashAbility(info.map),
+                [AbilityKey.W]: new SmashAbility(AbilityKey.W, info),
             },
         }
 
@@ -41,7 +38,7 @@ export class AbilityManager {
                 this.activateDirectionAbility(ability as DirectionAbility)
             },
             [ActivationType.instant]: () => {
-                // ;(ability as InstantAbility).trigger()
+                ;(ability as InstantAbility).trigger()
             },
         }
 

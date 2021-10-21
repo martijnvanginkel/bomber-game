@@ -41,7 +41,7 @@ export class Map {
 
         const smallest = Math.min(width, height)
         const margin = smallest / 10
-        const roundedDown = Math.round((smallest - margin) / 100) * 100 // is always a rounded 100 number
+        const roundedDown = (Math.round((smallest - margin) / 100) * 100) - 100 // is always a rounded 100 number
         return roundedDown
     }
 

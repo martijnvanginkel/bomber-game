@@ -28,7 +28,6 @@ export class HomeScreen extends HTMLElement {
             <div id="container">
                 <main-title title="COOL NAME"></main-title>
                 <basic-button id="searchButton" title="SEARCH"></basic-button>
-                <ability-bar id="ability-bar"></ability-bar>
             </div>
 
         `

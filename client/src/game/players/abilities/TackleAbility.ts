@@ -1,10 +1,11 @@
 import { GameComInfo } from '../../Game'
 import { mergeLocations } from '../../utils/general'
-import { Direction, LocationType, TileStatus } from '../../utils/types'
+import { Direction, LocationType } from '../../utils/types'
 import { AbilityKey, ArrowKey } from '../../managers/InputController'
-import { arrowKeyToCoordinates } from '../movement/movements'
+import { directionToCoordinates } from '../movement/movements'
 import { findDirectionByKey } from '../movement/movementUtils'
 import { ActivationType, DirectionAbility } from './AbilityBase'
+import { Tile } from '../../map/Tile' 
 
 export class TackleAbility implements DirectionAbility {
     private cooldownTime: number = 5
@@ -94,62 +95,48 @@ export class TackleAbility implements DirectionAbility {
         dispatchEvent(event)
     }
 
-    private async handleTackleLogic(arrowKey: ArrowKey) {
-        const locationIncrement = arrowKeyToCoordinates[arrowKey]
-        const locationOne = mergeLocations(this.info.player.getLocation, locationIncrement)
-        const tileOne: TileStatus = this.info.map.getTileStatus(locationOne)
+    private async handleTackleLogic(key: ArrowKey) { 
+        const direction = findDirectionByKey(key)
+        const tiles = this.getThreeTilesInDirection(direction)
 
-        if (tileOne === TileStatus.NONEXISTENT) {
-            return
-        }
-        if (tileOne === TileStatus.OCCUPIED) {
-            const victimID = this.info.map.getTileByLocation(locationOne)?.getOccupant
-            if (!victimID) {
-                return
-            }
-            const direction = findDirectionByKey(arrowKey)
-            this.emitBounce(victimID, direction)
+        if (tiles[0].isOccupied) {
+            const victimID = tiles[0].getOccupant!
+            this.emitBounce(victimID, direction, 3)
             return
         }
 
-        const locationTwo = mergeLocations(locationOne, locationIncrement)
-        const secondTileStatus: TileStatus = this.info.map.getTileStatus(locationTwo)
+        await this.emitMove(tiles[0].getLocation)
 
-        if (secondTileStatus === TileStatus.NONEXISTENT) {
-            return
+        if (tiles[1].isOccupied) {
+            const victimID = tiles[1].getOccupant!
+            this.emitBounce(victimID, direction, 2)
         }
-        if (secondTileStatus === TileStatus.OCCUPIED) {
-            const victimID = this.info.map.getTileByLocation(locationTwo)?.getOccupant
-            if (!victimID) {
-                return
-            }
-            const direction = findDirectionByKey(arrowKey)
-
-            this.info.socket.emit('move', this.info.player.getID, locationOne)
-            await this.info.player.move(locationOne)
-            const victim = this.info.characters.find((character) => character.getID === victimID)
-            if (!victim) {
-                return
-            }
-            victim.receiveBounce(direction)
-            this.info.socket.emit('bounce', victimID, direction)
-            return
-        }
-
-        this.emitMove(locationTwo)
     }
 
-    private emitBounce(victimID: number, direction: Direction) {
+    private getThreeTilesInDirection(direction: Direction) {
+        const startLocation = this.info.player.getLocation
+        const locationIncrement = directionToCoordinates[direction]
+        const locationOne = mergeLocations(startLocation, locationIncrement)
+        const locationTwo = mergeLocations(locationOne, locationIncrement)
+        const locationThree = mergeLocations(locationTwo, locationIncrement)
+        const tileOne = this.info.map.getTileByLocation(locationOne)
+        const tileTwo = this.info.map.getTileByLocation(locationTwo)
+        const tileThree = this.info.map.getTileByLocation(locationThree)
+        const tiles = [tileOne, tileTwo, tileThree].filter((tile): tile is Tile => !!tile)
+        return tiles
+    }
+
+    private emitBounce(victimID: number, direction: Direction, multiplier?: number) {
         const victim = this.info.characters.find((character) => character.getID === victimID)
         if (!victim) {
             return
         }
-        victim.receiveBounce(direction)
-        this.info.socket.emit('bounce', victimID, direction)
+        victim.receiveBounce(direction, multiplier)
+        this.info.socket.emit('bounce', victimID, direction, multiplier)
     }
 
-    private emitMove(newLocation: LocationType) {
-        this.info.player.move(newLocation)
+    private async emitMove(newLocation: LocationType) {
         this.info.socket.emit('move', this.info.player.getID, newLocation)
+        await this.info.player.move(newLocation)
     }
 }

@@ -1,30 +1,11 @@
-import {GameComInfo} from 'game/Game';
-import { AbilityKey, ArrowKey } from 'game/managers/InputController'
+import {GameComInfo} from './../../Game
+import {AbilityKey} from "../managers/InputController";
 
-export enum AbilityStatus {
-    ready,
-    activated,
-    inCooldown,
-}
+export abstract class AbilityBase2 {
 
-export abstract class AbilityBase {
-
-    private cooldown: number = 10
-    private isInCooldown: boolean = false
-
-    constructor(private abilityKey: AbilityKey, private info: GameComInfo, private cooldownTime: number) {
-        this.cooldown = cooldownTime
+    public constructor(private key: AbilityKey, private info: GameComInfo)
+    {
     }
-
-    public async trigger() {
-        this.fireTriggerEvent()
-        this.startCooldown()
-    }
-
-    public reset() {
-        this.isInCooldown = false
-        this.cooldown = this.cooldownTime
-    } 
 
     private startCooldown() {
         this.isInCooldown = true
@@ -39,6 +20,7 @@ export abstract class AbilityBase {
         }, 1000)
     }
 
+
     private fireTriggerEvent() {
         const event = new CustomEvent('trigger-ability', {
             detail: {
@@ -50,6 +32,7 @@ export abstract class AbilityBase {
         })
         dispatchEvent(event)
     }
+
 
     private emitBounce(victimID: number, direction: Direction, multiplier?: number) {
         const victim = this.info.characters.find((character) => character.getID === victimID)
@@ -64,27 +47,5 @@ export abstract class AbilityBase {
         this.info.socket.emit('move', this.info.player.getID, newLocation)
         await this.info.player.move(newLocation)
     }
+
 }
-//export enum ActivationType {
-//    instant = 'instant',
-//    direction = 'direction',
-//}
-//
-//export interface InstantAbility extends AbilityBase {
-//    trigger: () => void
-//}
-//
-//export interface DirectionAbility extends AbilityBase {
-//    activate: () => void
-//    deactivate: () => void
-//    trigger: (arrowKey: ArrowKey) => void
-//    isActivated: boolean
-//}
-//
-//export interface AbilityBase {
-//    type: ActivationType
-//    reset: () => void
-//    // isAvailable: boolean
-//    // activate: () => void
-//    // deactivate: () => void
-//}

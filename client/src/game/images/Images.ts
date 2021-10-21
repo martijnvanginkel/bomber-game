@@ -13,7 +13,7 @@ interface ImageFormat {
 }
 
 export class Images {
-    private path: string = './img/'
+    private path: string = './../../../dist/img/'
     private images: Array<ImageFormat>
 
     constructor() {

@@ -1,3 +1,4 @@
+import { LocationType } from '../utils/types'
 import { Map } from './Map'
 
 export class Tile {
@@ -23,6 +24,10 @@ export class Tile {
 
     public get getOccupant() {
         return this.occupantID
+    }
+
+    public get getLocation(): LocationType {
+        return { x: this.x, y: this.y }
     }
 
     public setOccupied(ID: number) {

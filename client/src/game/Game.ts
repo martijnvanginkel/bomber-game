@@ -56,12 +56,12 @@ class Game {
             character.move(newLocation)
         })
 
-        this.socket.on('bounce', (victimID: number, direction: Direction) => {
+        this.socket.on('bounce', (victimID: number, direction: Direction, multiplier?: number) => {
             const victim = this.findCharacter(victimID)
             if (!victim) {
                 return
             }
-            victim.receiveBounce(direction)
+            victim.receiveBounce(direction, multiplier)
         })
     }
 

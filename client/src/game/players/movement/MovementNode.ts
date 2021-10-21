@@ -1,35 +1,45 @@
-import { GameComInfo } from '../..//Game'
+import { GameComInfo } from '../../Game'
+import { Tile } from '../../map/Tile'
 import { ArrowKey } from '../../managers/InputController'
 import { mergeLocations } from '../../utils/general'
-import { Direction, LocationType, TileStatus } from '../../utils/types'
-import { arrowKeyToCoordinates } from './movements'
+import { Direction, LocationType } from '../../utils/types'
+import { directionToCoordinates } from './movements'
 import { findDirectionByKey } from './movementUtils'
 
 export class MovementNode {
     public constructor(private info: GameComInfo) {}
 
-    public move(key: ArrowKey) {
+    public async move(key: ArrowKey) {
         if (this.info.player.isMoving) {
             return
         }
 
-        const locationIncrement = arrowKeyToCoordinates[key]
-        const newLocation = mergeLocations(this.info.player.getLocation, locationIncrement)
-        const tileStatus: TileStatus = this.info.map.getTileStatus(newLocation)
+        const direction = findDirectionByKey(key)
+        const tiles = this.getTwoTilesInDirection(direction)
 
-        if (tileStatus === TileStatus.AVAILABLE) {
-            this.emitMove(newLocation)
+        if (tiles[0].isOccupied) {
+            const victimID = tiles[0].getOccupant!
+            this.emitBounce(victimID, direction)
             return
         }
-        if (tileStatus === TileStatus.OCCUPIED) {
-            const tile = this.info.map.getTileByLocation(newLocation)
-            const victimID = tile?.getOccupant
-            if (!victimID) {
-                return
-            }
-            const direction = findDirectionByKey(key)
+
+        await this.emitMove(tiles[0].getLocation)
+
+        if (tiles[1].isOccupied) {
+            const victimID = tiles[1].getOccupant!
             this.emitBounce(victimID, direction)
         }
+    }
+
+    private getTwoTilesInDirection(direction: Direction): Tile[] {
+        const startLocation = this.info.player.getLocation
+        const locationIncrement = directionToCoordinates[direction]
+        const locationOne = mergeLocations(startLocation, locationIncrement)
+        const locationTwo = mergeLocations(locationOne, locationIncrement)
+        const tileOne = this.info.map.getTileByLocation(locationOne)
+        const tileTwo = this.info.map.getTileByLocation(locationTwo)
+        const tiles = [tileOne, tileTwo].filter((tile): tile is Tile => !!tile)
+        return tiles
     }
 
     private emitBounce(victimID: number, direction: Direction) {
@@ -41,8 +51,8 @@ export class MovementNode {
         this.info.socket.emit('bounce', victimID, direction)
     }
 
-    private emitMove(newLocation: LocationType) {
-        this.info.player.move(newLocation)
+    private async emitMove(newLocation: LocationType) {
         this.info.socket.emit('move', this.info.player.getID, newLocation)
+        await this.info.player.move(newLocation)
     }
 }
