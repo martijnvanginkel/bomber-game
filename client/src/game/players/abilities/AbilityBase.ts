@@ -1,5 +1,6 @@
-import {GameComInfo} from 'game/Game';
-import { AbilityKey, ArrowKey } from 'game/managers/InputController'
+import { GameComInfo } from '../../Game'
+import { AbilityKey } from '../../managers/InputController'
+import { LocationType, Direction } from '../../utils/types'
 
 export enum AbilityStatus {
     ready,
@@ -9,14 +10,17 @@ export enum AbilityStatus {
 
 export abstract class AbilityBase {
 
-    private cooldown: number = 10
-    private isInCooldown: boolean = false
+    protected cooldown: number = 10
+    protected isInCooldown: boolean = false
 
-    constructor(private abilityKey: AbilityKey, private info: GameComInfo, private cooldownTime: number) {
+    protected constructor(protected abilityKey: AbilityKey, protected info: GameComInfo, protected cooldownTime: number, public activationType: ActivationType) {
         this.cooldown = cooldownTime
     }
 
-    public async trigger() {
+    public trigger() {
+//        if (this.isInCooldown) {
+ //           return
+//      }
         this.fireTriggerEvent()
         this.startCooldown()
     }
@@ -26,7 +30,11 @@ export abstract class AbilityBase {
         this.cooldown = this.cooldownTime
     } 
 
-    private startCooldown() {
+    public get type() {
+        return this.activationType
+    }
+
+    protected startCooldown() {
         this.isInCooldown = true
         this.cooldown -= 1
         const interval = setInterval(() => {
@@ -39,7 +47,7 @@ export abstract class AbilityBase {
         }, 1000)
     }
 
-    private fireTriggerEvent() {
+    protected fireTriggerEvent() {
         const event = new CustomEvent('trigger-ability', {
             detail: {
                 abilityKey: this.abilityKey,
@@ -51,7 +59,7 @@ export abstract class AbilityBase {
         dispatchEvent(event)
     }
 
-    private emitBounce(victimID: number, direction: Direction, multiplier?: number) {
+    protected emitBounce(victimID: number, direction: Direction, multiplier?: number) {
         const victim = this.info.characters.find((character) => character.getID === victimID)
         if (!victim) {
             return
@@ -60,15 +68,16 @@ export abstract class AbilityBase {
         this.info.socket.emit('bounce', victimID, direction, multiplier)
     }
 
-    private async emitMove(newLocation: LocationType) {
+    protected async emitMove(newLocation: LocationType) {
         this.info.socket.emit('move', this.info.player.getID, newLocation)
         await this.info.player.move(newLocation)
     }
 }
-//export enum ActivationType {
-//    instant = 'instant',
-//    direction = 'direction',
-//}
+
+export enum ActivationType {
+    instant = 'instant',
+    direction = 'direction',
+}
 //
 //export interface InstantAbility extends AbilityBase {
 //    trigger: () => void

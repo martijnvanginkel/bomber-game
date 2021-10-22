@@ -4,10 +4,10 @@ import { Direction, LocationType } from '../../utils/types'
 import { AbilityKey, ArrowKey } from '../../managers/InputController'
 import { directionToCoordinates } from '../movement/movements'
 import { findDirectionByKey } from '../movement/movementUtils'
-import { ActivationType, DirectionAbility } from './AbilityBase'
+import { ActivationType } from './AbilityBase'
 import { Tile } from '../../map/Tile' 
 
-export class TackleAbility implements DirectionAbility {
+export class TackleAbility { // implements old DirectionAbility
     private cooldownTime: number = 5
     private cooldown: number = this.cooldownTime
     private isInCooldown: boolean = false

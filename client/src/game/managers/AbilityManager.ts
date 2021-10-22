@@ -1,25 +1,26 @@
-import { TackleAbility } from '../players/abilities/TackleAbility'
+import { TackleAbility2 } from '../players/abilities/TackleAbility2'
 import { AbilityKey, ArrowKey } from './InputController'
-import { AbilityBase, ActivationType, DirectionAbility, InstantAbility } from '../players/abilities/AbilityBase'
-import { SmashAbility } from '../players/abilities/SmashAbility'
+import { AbilityBase, ActivationType } from '../players/abilities/AbilityBase'
+import { DirectionAbility } from '../players/abilities/DirectionAbility'
+//import { SmashAbility } from '../players/abilities/SmashAbility'
 import { MovementNode } from '../players/movement/MovementNode'
 import { GameComInfo } from '../Game'
 
 export class AbilityManager {
     private abilities: {
         [ActivationType.direction]: { [key: string]: DirectionAbility }
-        [ActivationType.instant]: { [key: string]: InstantAbility }
+//        [ActivationType.instant]: { [key: string]: InstantAbility }
     }
     private movementNode: MovementNode
 
     public constructor(info: GameComInfo) {
         this.abilities = {
             [ActivationType.direction]: {
-                [AbilityKey.Q]: new TackleAbility(AbilityKey.Q, info),
+                [AbilityKey.Q]: new TackleAbility2(AbilityKey.Q, info, 5),
             },
-            [ActivationType.instant]: {
-                [AbilityKey.W]: new SmashAbility(AbilityKey.W, info),
-            },
+ //           [ActivationType.instant]: {
+                //[AbilityKey.W]: new SmashAbility(AbilityKey.W, info),
+//            },
         }
 
         this.movementNode = new MovementNode(info)
@@ -38,7 +39,7 @@ export class AbilityManager {
                 this.activateDirectionAbility(ability as DirectionAbility)
             },
             [ActivationType.instant]: () => {
-                ;(ability as InstantAbility).trigger()
+                //;(ability as InstantAbility).trigger()
             },
         }
 
@@ -49,7 +50,7 @@ export class AbilityManager {
         const ability = this.findActivatedDirectionAbility()
 
         if (ability) {
-            ability.trigger(arrowKey)
+            ability.fire(arrowKey)
             return
         }
 
