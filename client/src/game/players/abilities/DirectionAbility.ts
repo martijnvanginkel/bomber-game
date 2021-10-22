@@ -11,9 +11,9 @@ export abstract class DirectionAbility extends AbilityBase {
     }
 
     public activate() {
-//        if (this.isInCooldown) {
-//            return
-//        }
+        if (this.isInCooldown) {
+            return
+        }
         this.setActivated(true)
         this.fireActivateEvent(true)
     }
@@ -42,10 +42,6 @@ export abstract class DirectionAbility extends AbilityBase {
         this.isInCooldown = false
         this.cooldown = this.cooldownTime
         this.activated = false
-    }
-
-    public get type() {
-        return ActivationType.direction
     }
 
     public get isActivated() {

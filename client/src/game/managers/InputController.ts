@@ -41,6 +41,9 @@ export class InputController extends EventEmitter {
             case 'KeyQ':
                 this.abilityClick(AbilityKey.Q)
                 break
+            case 'KeyW':
+                this.abilityClick(AbilityKey.W)
+                break
         }
     }
 

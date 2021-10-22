@@ -43,6 +43,7 @@ class Game {
             this.abilityManager.handleArrowClick(key)
         })
         this.inputController.on('ability-click', (key: AbilityKey) => {
+            console.log('game ab click')
             this.abilityManager.handleAbilityClick(key)
         })
     }

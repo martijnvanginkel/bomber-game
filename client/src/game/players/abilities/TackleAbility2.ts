@@ -9,8 +9,8 @@ import { DirectionAbility } from './DirectionAbility'
 
 export class TackleAbility2 extends DirectionAbility {
 
-    public constructor(protected abilityKey: AbilityKey, protected info: GameComInfo, protected cooldownTime: number) {
-        super(abilityKey, info, cooldownTime)
+    public constructor(protected abilityKey: AbilityKey, protected info: GameComInfo) {
+        super(abilityKey, info, 5)
     }
 
     public fire(arrowKey: ArrowKey) {
@@ -18,7 +18,7 @@ export class TackleAbility2 extends DirectionAbility {
         this.handleLogic(arrowKey)
     }
 
-    public async trigger() {
+    public trigger() {
         //if (!super.isActivated) {
          //   return
         //}

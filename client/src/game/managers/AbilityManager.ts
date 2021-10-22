@@ -2,25 +2,26 @@ import { TackleAbility2 } from '../players/abilities/TackleAbility2'
 import { AbilityKey, ArrowKey } from './InputController'
 import { AbilityBase, ActivationType } from '../players/abilities/AbilityBase'
 import { DirectionAbility } from '../players/abilities/DirectionAbility'
-//import { SmashAbility } from '../players/abilities/SmashAbility'
+import { InstantAbility } from '../players/abilities/InstantAbility'
+import { SmashAbility } from '../players/abilities/SmashAbility'
 import { MovementNode } from '../players/movement/MovementNode'
 import { GameComInfo } from '../Game'
 
 export class AbilityManager {
     private abilities: {
         [ActivationType.direction]: { [key: string]: DirectionAbility }
-//        [ActivationType.instant]: { [key: string]: InstantAbility }
+        [ActivationType.instant]: { [key: string]: InstantAbility }
     }
     private movementNode: MovementNode
 
     public constructor(info: GameComInfo) {
         this.abilities = {
             [ActivationType.direction]: {
-                [AbilityKey.Q]: new TackleAbility2(AbilityKey.Q, info, 5),
+                [AbilityKey.Q]: new TackleAbility2(AbilityKey.Q, info),
             },
- //           [ActivationType.instant]: {
-                //[AbilityKey.W]: new SmashAbility(AbilityKey.W, info),
-//            },
+            [ActivationType.instant]: {
+                [AbilityKey.W]: new SmashAbility(AbilityKey.W, info),
+            },
         }
 
         this.movementNode = new MovementNode(info)
@@ -29,7 +30,7 @@ export class AbilityManager {
     // This should be kind of inside of the abilities itself with cooldown,  and the trigger CustomEvent shoulud be in the abstract 'parent'
     public handleAbilityClick(key: AbilityKey) {
         const ability = this.findAbilityByKey(key)
-
+console.log('ability click')
         if (!ability) {
             return
         }
@@ -39,7 +40,7 @@ export class AbilityManager {
                 this.activateDirectionAbility(ability as DirectionAbility)
             },
             [ActivationType.instant]: () => {
-                //;(ability as InstantAbility).trigger()
+                ;(ability as InstantAbility).trigger()
             },
         }
 
