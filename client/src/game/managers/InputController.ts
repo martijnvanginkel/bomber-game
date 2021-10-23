@@ -21,9 +21,9 @@ export class InputController extends EventEmitter {
     }
 
     private listenToInput = (e: any) => {
-        if (this.keyDown) {
-            return
-        }
+//        if (this.keyDown) {
+ //           return
+  //      }
         this.keyDown = true
         switch (e.code) {
             case 'ArrowLeft':

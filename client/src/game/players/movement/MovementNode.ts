@@ -7,10 +7,16 @@ import { directionToCoordinates } from './movements'
 import { findDirectionByKey } from './movementUtils'
 
 export class MovementNode {
-    public constructor(private info: GameComInfo) {}
 
     public async move(key: ArrowKey) {
         if (this.info.player.isMoving) {
+            const interval = setInterval(() => {
+                if (!this.info.player.isMoving) {
+                    this.move(key) 
+                    clearInterval(interval)
+                    return
+                }
+            }, 10)
             return
         }
 

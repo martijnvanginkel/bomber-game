@@ -27,10 +27,8 @@ export class AbilityManager {
         this.movementNode = new MovementNode(info)
     }
 
-    // This should be kind of inside of the abilities itself with cooldown,  and the trigger CustomEvent shoulud be in the abstract 'parent'
     public handleAbilityClick(key: AbilityKey) {
         const ability = this.findAbilityByKey(key)
-console.log('ability click')
         if (!ability) {
             return
         }
