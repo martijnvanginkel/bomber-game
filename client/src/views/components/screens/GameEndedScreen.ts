@@ -13,8 +13,19 @@ export class GameEndedScreen extends HTMLElement {
 
     render() {
         this.shadow.innerHTML = `
-            <div>
-                <h1>Game ended</h1>
+            <style>
+                #container {
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                    align-items: center;
+                    width: 100%;
+                    height: 100%;
+                }
+            </style>
+
+            <div id="container">
+                <main-title title="GAME ENDED"></main-title>>
                 <div>
                     <basic-button id="homeButton" title="Home"></basic-button>
                     <basic-button id="retryButton" title="Retry"></basic-button>

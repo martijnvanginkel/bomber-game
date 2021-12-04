@@ -3,14 +3,17 @@ import { LocationType } from '../utils/types'
 import { mergeLocations } from '../utils/general'
 import _ from 'lodash'
 import { Map } from './../map/Map'
+import { Images } from '../images/Images'
 
 export class CharacterAnimator {
     private resettingMovement: boolean = false
+    private animation: any = undefined
 
     public constructor(protected color: string, private map: Map) {}
 
     private drawPosition(x: number, y: number) {
-        // map.getPlayerContext.drawImage(this.image, x, y, 50, 50) // future image implementation
+        console.log('draw position')
+       //  this.map.getPlayerContext.drawImage(images.getImage('player'), x, y, this.map.tileSize, this.map.tileSize) // future image implementation
         this.map.getPlayerContext.beginPath()
         this.map.getPlayerContext.fillStyle = this.color
         this.map.getPlayerContext.rect(x, y, this.map.tileSize, this.map.tileSize)
@@ -47,6 +50,8 @@ export class CharacterAnimator {
                 firstFrame = false
                 if (this.resettingMovement) {
                     this.resettingMovement = false
+                    //window.cancelAnimationFrame(this.animation)
+                    //this.animation = undefined
                     resolve()
                     return
                 }
@@ -58,7 +63,7 @@ export class CharacterAnimator {
                 }
                 resolve()
             }
-            window.requestAnimationFrame(draw)
+            this.animation = window.requestAnimationFrame(draw)
         })
     }
 

@@ -1,5 +1,5 @@
-import { ArrowKey } from './../../../managers/InputController'
-import { Direction } from './../../../utils/types'
+import { ArrowKey } from '../../managers/InputController'
+import { Direction } from '../../utils/types'
 
 export const findDirectionByKey = (key: ArrowKey) => {
     const directionConversion = {

@@ -1,9 +1,8 @@
 import { LocationType, Direction, TileStatus } from '../utils/types'
-import { CharacterType } from './actions/characters'
 import { Tile } from '../map/Tile'
 import { CharacterAnimator } from './CharacterAnimator'
 import { Map } from './../map/Map'
-import { directionToCoordinates } from './actions/movements'
+import { directionToCoordinates, multiplyCoordinates } from './movement/movements'
 import { mergeLocations } from './../utils/general'
 import { calculateSpawnPosition } from './../map/utils/calculateSpawnPosition'
 import EventEmitter from 'events'
@@ -11,7 +10,6 @@ import EventEmitter from 'events'
 export class Character extends EventEmitter {
     private location: LocationType
     private direction: Direction
-    private character: CharacterType
     private animator: CharacterAnimator
     private moving: boolean
     private health: number = 2
@@ -24,7 +22,8 @@ export class Character extends EventEmitter {
     ) {
         super()
         this.animator = new CharacterAnimator(color, map)
-        this.character = CharacterType.BASIC
+        this.location = { x: index, y: index }
+        this.setMoving(false)
         this.spawn()
     }
 
@@ -38,10 +37,6 @@ export class Character extends EventEmitter {
 
     protected get getDirection() {
         return this.direction
-    }
-
-    public get getCharacterType() {
-        return this.character
     }
 
     public get isMoving() {
@@ -91,9 +86,11 @@ export class Character extends EventEmitter {
         this.location = newLocation
     }
 
-    public receiveBounce(incomingDirection: Direction) {
-        const newLocation: LocationType = mergeLocations(this.getLocation, directionToCoordinates[incomingDirection])
+    public receiveBounce(incomingDirection: Direction, multiplier?: number) {
+        const locationIncrement = multiplyCoordinates(directionToCoordinates[incomingDirection], multiplier ?? 1)
+        const newLocation: LocationType = mergeLocations(this.getLocation, locationIncrement)
         const tileStatus: TileStatus = this.map.getTileStatus(newLocation)
+
         if (tileStatus === TileStatus.NONEXISTENT) {
             this.loseHealth()
             return

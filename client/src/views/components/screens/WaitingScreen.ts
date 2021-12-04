@@ -12,8 +12,20 @@ export class WaitingScreen extends HTMLElement {
 
     render() {
         this.shadow.innerHTML = `
-            <div>
-                <h1>Waiting</h1>
+
+            <style>
+                #container {
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                    align-items: center;
+                    width: 100%;
+                    height: 100%;
+                }
+            </style>
+
+            <div id="container">
+                <main-title title="WAITING FOR PLAYERS..."></main-title>
             </div>
         `
     }

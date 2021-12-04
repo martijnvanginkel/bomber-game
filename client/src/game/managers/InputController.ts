@@ -1,6 +1,4 @@
 import EventEmitter from 'events'
-import { multiplyCoordinates } from '../../game/players/actions/movements'
-import { Direction } from '../../game/utils/types'
 
 export enum ArrowKey {
     UP = 'UP',
@@ -10,7 +8,8 @@ export enum ArrowKey {
 }
 
 export enum AbilityKey {
-    A = 'A',
+    Q = 'Q',
+    W = 'W',
 }
 
 export class InputController extends EventEmitter {
@@ -21,20 +20,10 @@ export class InputController extends EventEmitter {
         this.addInputListener()
     }
 
-    private arrowClick(key: ArrowKey) {
-        this.emit('arrow-click', key)
-    }
-
-    private abilityClick(key: AbilityKey) {
-        console.log(multiplyCoordinates(Direction.NORTH, 2))
-        // define type here
-        this.emit('ability-click', key)
-    }
-
-    listenToInput = (e: any) => {
-        if (this.keyDown) {
-            return
-        }
+    private listenToInput = (e: any) => {
+//        if (this.keyDown) {
+ //           return
+  //      }
         this.keyDown = true
         switch (e.code) {
             case 'ArrowLeft':
@@ -49,19 +38,34 @@ export class InputController extends EventEmitter {
             case 'ArrowDown':
                 this.arrowClick(ArrowKey.DOWN)
                 break
-            case 'KeyA':
-                this.abilityClick(AbilityKey.A)
+            case 'KeyQ':
+                this.abilityClick(AbilityKey.Q)
+                break
+            case 'KeyW':
+                this.abilityClick(AbilityKey.W)
                 break
         }
     }
 
+    private arrowClick(key: ArrowKey) {
+        this.emit('arrow-click', key)
+    }
+
+    private abilityClick(key: AbilityKey) {
+        this.emit('ability-click', key)
+    }
+
+    private keyUpEvent() {
+        this.keyDown = false
+    }
+
     private addInputListener() {
         document.addEventListener('keydown', this.listenToInput)
-        document.addEventListener('keyup', () => (this.keyDown = false))
+        document.addEventListener('keyup', () => this.keyUpEvent())
     }
 
     public deleteListeners() {
         document.removeEventListener('keydown', this.listenToInput)
-        document.removeEventListener('keyup', () => (this.keyDown = false))
+        document.removeEventListener('keyup', () => this.keyUpEvent())
     }
 }

@@ -13,10 +13,23 @@ export class HomeScreen extends HTMLElement {
 
     render() {
         this.shadow.innerHTML = `
-            <div>
-                <h1>Title</h1>
-                <basic-button id="searchButton" title="Search for game"></basic-button>
+
+            <style>
+                #container {
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                    align-items: center;
+                    width: 100%;
+                    height: 100%;
+                }
+            </style>
+
+            <div id="container">
+                <main-title title="COOL NAME"></main-title>
+                <basic-button id="searchButton" title="SEARCH"></basic-button>
             </div>
+
         `
     }
 

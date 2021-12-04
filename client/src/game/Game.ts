@@ -1,9 +1,10 @@
 import { Map } from './map/Map'
 import { Socket } from 'socket.io-client'
 import { Character } from './players/Character'
-import { ArrowKey, AbilityKey, InputController } from './managers/InputController'
+import { AbilityKey, InputController } from './managers/InputController'
 import { Direction, LocationType } from './utils/types'
-import { findMovementAction } from './managers/ActionConsultant'
+import { ArrowKey } from './managers/InputController'
+import { AbilityManager } from './managers/AbilityManager'
 
 export interface GameInitInfo {
     gameID: string
@@ -11,55 +12,39 @@ export interface GameInitInfo {
     clientID: number
 }
 
-class Game {
-    private characters: Character[] = new Array()
+export interface GameComInfo {
+    map: Map
+    socket: Socket
+    player: Character
+    characters: Character[]
+}
 
+class Game {
     public constructor(
         private socket: Socket,
-        private gameInfo: GameInitInfo,
-        private map: Map,
+        private characters: Character[],
         private inputController: InputController,
-        private gameEndedCallback: () => void,
+        private abilityManager: AbilityManager,
     ) {
-        // initialize
-        this.createCharacters()
-
-        // listening and sending actions
         this.sendActions()
         this.receiveActions()
     }
 
-    private deleteListeners() {
-        this.inputController.deleteListeners()
-        this.characters.forEach((character) => character.removeAllListeners())
-    }
-
-    private createCharacters() {
-        this.gameInfo.clients.forEach((ID, index) => {
-            const character = new Character(ID, index, 'green', this.map)
-            this.characters.push(character)
-            character.addListener('lost-health', (e: CustomEvent) => {
-                if (e.detail.health >= 0) {
-                    this.respawnPlayers()
-                } else {
-                    this.deleteListeners()
-                    this.gameEndedCallback()
-                }
-            })
-        })
-    }
-
-    private respawnPlayers() {
+    public respawn() {
         this.characters.forEach(async (character) => character.clearPosition())
         this.characters.forEach((character) => character.spawn())
+        this.abilityManager.resetAbilities()
+        const event = new CustomEvent('respawn', { bubbles: true, composed: true })
+        dispatchEvent(event)
     }
 
     private sendActions() {
         this.inputController.on('arrow-click', (key: ArrowKey) => {
-            const action = findMovementAction(key, this.player, this.map)
-            action?.run(this.socket, this.characters)
+            this.abilityManager.handleArrowClick(key)
         })
-        this.inputController.on('ability-click', (key: AbilityKey) => {})
+        this.inputController.on('ability-click', (key: AbilityKey) => {
+            this.abilityManager.handleAbilityClick(key)
+        })
     }
 
     private receiveActions() {
@@ -71,17 +56,13 @@ class Game {
             character.move(newLocation)
         })
 
-        this.socket.on('bounce', (victimID: number, direction: Direction) => {
+        this.socket.on('bounce', (victimID: number, direction: Direction, multiplier?: number) => {
             const victim = this.findCharacter(victimID)
             if (!victim) {
                 return
             }
-            victim.receiveBounce(direction)
+            victim.receiveBounce(direction, multiplier)
         })
-    }
-
-    private get player() {
-        return this.characters.find((character) => character.getID === this.gameInfo.clientID)!
     }
 
     private findCharacter(ID: number) {
@@ -90,5 +71,36 @@ class Game {
 }
 
 export const createNewGame = (socket: Socket, gameInit: GameInitInfo, gameEndedCallback: () => void) => {
-    return new Game(socket, gameInit, new Map(), new InputController(), gameEndedCallback)
+    const map = new Map()
+    const inputController = new InputController()
+    const characters = gameInit.clients.map((ID, index) => new Character(ID, index, 'green', map))
+    const player = characters.find((character) => character.getID === gameInit.clientID)!
+
+    const info: GameComInfo = {
+        map: map,
+        socket: socket,
+        player: player,
+        characters: characters,
+    }
+
+    const abilityManager = new AbilityManager(info)
+    const game = new Game(socket, characters, inputController, abilityManager)
+
+    const deleteListeners = () => {
+        inputController.deleteListeners()
+        characters.forEach((character) => character.removeAllListeners())
+    }
+
+    characters.forEach((character) => {
+        character.addListener('lost-health', (e: CustomEvent) => {
+            if (e.detail.health >= 0) {
+                game.respawn()
+                return
+            }
+            deleteListeners()
+            gameEndedCallback()
+        })
+    })
+
+    return game
 }

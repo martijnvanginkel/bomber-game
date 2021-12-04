@@ -47,8 +47,8 @@ io.on('connection', (socket: any) => {
         socket.broadcast.to(game.ID).emit('move', ID, location)
     })
 
-    socket.on('bounce', (victimID: number, direction: Direction) => {
-        socket.broadcast.to(game.ID).emit('bounce', victimID, direction)
+    socket.on('bounce', (victimID: number, direction: Direction, multiplier?: number) => {
+        socket.broadcast.to(game.ID).emit('bounce', victimID, direction, multiplier)
     })
 
     socket.on('gameEnded', () => {
